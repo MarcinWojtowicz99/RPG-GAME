@@ -1,0 +1,3 @@
+C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
+C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
