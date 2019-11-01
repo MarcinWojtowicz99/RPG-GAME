@@ -1,3 +1,14 @@
 C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
 C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
 C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
+C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.exe
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.deps.json
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.json
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.dev.json
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.pdb

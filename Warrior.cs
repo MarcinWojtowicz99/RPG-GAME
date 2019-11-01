@@ -7,14 +7,15 @@ namespace RPG_GAME
     class Warrior:Character
     {
         
-        public Warrior(string name, int hp=500) :base(name,hp)
+        public Warrior(string name) :base(name)
         {
-           string weapon = "sword";
-            hp = hp + 200;
+            
+            
         }
-        public void Fight()
+        public virtual void Fight()
         {
 
         }
+
     }
 }

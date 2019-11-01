@@ -6,14 +6,19 @@ namespace RPG_GAME
 {
     class Sorcerer:Character
     {
-        public Sorcerer(string weapon, string name, int hp) : base(name, hp)
+        public Sorcerer(string name) : base(name)
         {
-            weapon = "wand";
-            
+
+           
         }
-        public void Teleport()
+        public static void Teleport()
         {
 
         }
+        public virtual void Fight()
+        {
+
+        }
+        
     }
 }

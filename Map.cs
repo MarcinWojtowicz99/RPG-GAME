@@ -6,15 +6,19 @@ namespace RPG_GAME
 {
     class Map
     {
-       public void GoToTavern()
+       public void Tavern()
         {
 
         }
-        public void GoToTheForest()
+        public void Forest()
         {
 
         }
-        public void GoToTheShopkeeper()
+        public void Shopkeeper()
+        {
+
+        }
+        public void Queen()
         {
 
         }
