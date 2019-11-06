@@ -12,3 +12,5 @@ C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.dll
 C:\Users\marci\source\repos\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
 C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.dll
 C:\Users\marci\source\repos\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\Documents\GitHub\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.pdb

@@ -11,7 +11,8 @@ namespace RPG_GAME
         static int score;
         static int money_player;
         public static int moneyPlayer { get { return money_player; } }
-       public static int basic_hp=500;
+       public static int basic_hp;
+        public static int Basic_hp { get { return basic_hp; } }
         public static int actual_hp;
         static int[,] equipment;
         static int enemy_hp;
