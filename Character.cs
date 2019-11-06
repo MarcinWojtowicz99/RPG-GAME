@@ -9,21 +9,31 @@ namespace RPG_GAME
         public string name;
         static string nick;
         static int score;
-        int money_player;
+        static int money_player;
+        public static int moneyPlayer { get { return money_player; } }
        public static int basic_hp=500;
         public static int actual_hp;
-       static int[] equipment;
+        static int[,] equipment;
         static int enemy_hp;
+        int maxequipment;
         public static int HP { get { return enemy_hp; } }
         static int enemy_score;
         public static int SCORE { get { return enemy_score; } }
 
         public string Name{get {return name;} }
 
-        public Character (string name, int hp=500)
+        public Character (string name, int basic_hp, int maxequipment)
         {
             this.name = name;
             nick = name;
+            this.maxequipment = maxequipment;
+            equipment = new int[maxequipment, 2];
+            for(int i=0; i<maxequipment;i++)
+            {
+                equipment[i,0] = 0;
+                equipment[i, 1] = 0;
+
+            }
 
         }
         public void Pay(int value, int indexnb)
@@ -37,24 +47,46 @@ namespace RPG_GAME
             money_player += value;
             RemoveFromEquipment(indexEQ);
         }
-        public void UseItem(int indexEQ, int indexnb)
+       public void AddMoney(int cash)
         {
-            Item.Use(indexnb);
-            if(indexnb<20)
-            {
-                RemoveFromEquipment(indexEQ);
-            }
-
-            
+            money_player += cash;
         }
+        public static void RemoveMoney(int cash)
+        {
+            money_player -= cash;
+        }
+        public void Use(int nbofuse, int indexEQ)
+        {
+            if ( equipment[indexEQ,1]>0)
+            {
+                if (equipment[indexEQ,0] < 20)
+                {
+
+                    equipment[indexEQ,1] -= 1;
+                    if(equipment[indexEQ, 1]==0)
+                    {
+                        RemoveFromEquipment(indexEQ);
+                    }
+                    
+                }
+            }
+        }
+        
         public void checkyourequipment()
         {
 
         }
-        public virtual static void Fight()
+        
+        public int Attack()
+        {
+            int attack =0;
+            return attack;
+        }
+        public static void Fight()
         {
             if(actual_hp>0)
             {
+                enemy_hp -=attack;
                 if(enemy_hp<0)
                 {
                     score += enemy_score;
@@ -89,19 +121,30 @@ namespace RPG_GAME
                 } while (actual_hp > 0);
             }
          }
-        public static void AddToEquipment(int index)
+        int nb;
+        public void AddToEquipment(int index)
         {
             for(int i=0; i<equipment.Length;i++)
             {
-                if(equipment[i]!=null)
-                equipment[i] = index;
+                if(equipment[i,0]!=0)
+                equipment[i,0] = index;
+                nb = Item.NB_Of_Uses(index);
+                equipment[i, 1] = nb;
             }
             
         }
         
-        public static void RemoveFromEquipment(int index)
+        public void RemoveFromEquipment(int index)
         {
-
+            for(int i=0; i<equipment.Length;i++)
+            {
+                if(equipment[i,0]==index)
+                {
+                    equipment[i,0] = 0;
+                    equipment[i, 1] = 0;
+                    break;
+                }
+            }
         }
 
         
@@ -116,6 +159,8 @@ namespace RPG_GAME
             Console.WriteLine("b) Forest");
             Console.WriteLine("c) Shop");
             Console.WriteLine("d) Queen");
+           
         }
+        
     }
 }

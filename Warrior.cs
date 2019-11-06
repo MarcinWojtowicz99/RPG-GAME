@@ -6,16 +6,13 @@ namespace RPG_GAME
 {
     class Warrior:Character
     {
+        int hpboost;
+        public Warrior(string name, int basic_hp, int maxequipment, int hpboost) :base(name, basic_hp,maxequipment)
+        {
+            this.hpboost = hpboost;
+            basic_hp += hpboost;
+        }
         
-        public Warrior(string name) :base(name)
-        {
-            
-            
-        }
-        public virtual void Fight()
-        {
-
-        }
 
     }
 }

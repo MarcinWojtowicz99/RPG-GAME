@@ -7,7 +7,8 @@ namespace RPG_GAME
     class NPC
     {
        static int money;
-      
+        static int money_player;
+        public static int moneyPlayer { get { return money_player; } }
         int nbofequipment;
         static int actual_hp;
         static int basic_hp;
@@ -34,28 +35,47 @@ namespace RPG_GAME
 
 
         }
-        public static void GiveBeer()
+      public static void GiveBeer_Sorcerer()
         {
-            
+            char decision;
             do
             {
                 Console.Clear();
-                Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? *Type \"y\" for yes or \"n\" for no*");
-                char decicion = Console.ReadKey().KeyChar;
+                Random rnd3 = new Random();
+                int howmuch = rnd3.Next(50,150);
+                Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*",howmuch);
+                decision = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                if (decicion == 'y')
+                if (decision == 'y')
                 {
+                    Console.Clear();
+                    Character.RemoveMoney(howmuch);
+                    Console.WriteLine("Few hours later");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
                     actual_hp = basic_hp;
                     Random rnd = new Random();
                     int rand = rnd.Next(101);
-                    if(rand<=25)
+                    if (rand <= 15)
                     {
-                        Character.Fight();
+                        Random rnd2 = new Random();
+                        int cash = rnd2.Next(0, money_player);
+                        Character.RemoveMoney(cash);
+                        Console.WriteLine("Unfortunatelly you offended someone in the tavern and lost {0} money",cash);
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("-See you again!");
                     }
                     break;
 
                 }
-                else if (decicion == 'n')
+                else if (decision == 'n')
                 {
                     Console.WriteLine("Okay, See you then...");
                     Console.Clear();
@@ -68,7 +88,61 @@ namespace RPG_GAME
                 }
 
 
-            } while (decicion != 'y' && decicion != 'n');
+            } while (decision != 'y' && decision != 'n');
+        }
+        public static void GiveBeer_Warrior()
+        {
+            char decision;
+            do
+            {
+                Console.Clear();
+                Random rnd3 = new Random();
+                int howmuch = rnd3.Next(50, 150);
+                Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*", howmuch);
+                decision = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (decision == 'y')
+                {
+                    Console.Clear();
+                    Character.RemoveMoney(howmuch);
+                    Console.WriteLine("Few hours later");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Write(".");
+                    actual_hp = basic_hp;
+                    Random rnd = new Random();
+                    int rand = rnd.Next(101);
+                    if(rand<=25)
+                    {
+                        
+                        Enemy drunk_guy = new Enemy(basic_hp,200);
+                         Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
+                        Character.Fight();
+                    }
+                    else
+                    {
+                        Console.WriteLine("-See you again!");
+                    }
+                    break;
+
+                }
+                else if (decision == 'n')
+                {
+                    Console.WriteLine("Okay, See you then...");
+                    Console.Clear();
+
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("unknown command, try again...");
+                }
+
+
+            } while (decision != 'y' && decision != 'n');
 
             
         }

@@ -6,19 +6,17 @@ namespace RPG_GAME
 {
     class Sorcerer:Character
     {
-        public Sorcerer(string name) : base(name)
+        public Sorcerer(string name, int basic_hp, int maxequipment) : base(name, basic_hp, maxequipment)
         {
 
            
         }
         public static void Teleport()
         {
+            Console.WriteLine("Where would you like to teleport?");
 
         }
-        public virtual void Fight()
-        {
-
-        }
+        
         
     }
 }

@@ -17,8 +17,7 @@ namespace RPG_GAME
         static void Main(string[] args)
         {
              MainMenu.OpenMainMenu();
-            Clear();
-            Pause();
+            
 
         }
 
