@@ -6,7 +6,7 @@ namespace RPG_GAME
 {
     class Sorcerer:Character
     {
-        public Sorcerer(string name, int basic_hp, int maxequipment) : base(name, basic_hp, maxequipment)
+        public Sorcerer(string name, int basic_hp, int maxequipment, int basic_damage) : base(name, basic_hp, maxequipment,basic_damage)
         {
 
            

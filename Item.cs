@@ -60,9 +60,9 @@ namespace RPG_GAME
             Console.Write(thing[indexnb].name);
             }
         
-        public void Give(int indexnb)
+        public void Give(int indexnb, Character user)
         {
-            Character.AddToEquipment(indexnb);
+            user.AddToEquipment(indexnb);
             Console.WriteLine("You received ");
             Item_Name(indexnb);
         }

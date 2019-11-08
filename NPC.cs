@@ -90,7 +90,10 @@ namespace RPG_GAME
 
             } while (decision != 'y' && decision != 'n');
         }
-        public static void GiveBeer_Warrior()
+        Character user;
+        Item mythings;
+       // Enemy Human;
+        public void GiveBeer_Warrior()
         {
             char decision;
             do
@@ -117,10 +120,11 @@ namespace RPG_GAME
                     int rand = rnd.Next(101);
                     if(rand<=25)
                     {
-                        
-                        Enemy drunk_guy = new Enemy(basic_hp,200);
+
+                        Program.Human();
                          Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
-                        Character.Fight();
+                        user.Fight();
+                        
                     }
                     else
                     {

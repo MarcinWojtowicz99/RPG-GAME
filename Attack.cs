@@ -16,7 +16,5 @@ namespace RPG_GAME
             this.specialinfo = specialinfo;
             
         }
-       
-
     }
 }

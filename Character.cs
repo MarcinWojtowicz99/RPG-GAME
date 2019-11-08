@@ -8,24 +8,26 @@ namespace RPG_GAME
     {
         public string name;
         static string nick;
-        static int score;
+         int score;
         static int money_player;
         public static int moneyPlayer { get { return money_player; } }
        public static int basic_hp;
         public static int Basic_hp { get { return basic_hp; } }
-        public static int actual_hp;
-        static int[,] equipment;
-        static int enemy_hp;
+        public int actual_hp;
+        public int Actual_hp { get { return actual_hp; } }
+        int[,] equipment;
+       
         int maxequipment;
-        public static int HP { get { return enemy_hp; } }
+     
         static int enemy_score;
         public static int SCORE { get { return enemy_score; } }
 
         public string Name{get {return name;} }
-
-        public Character (string name, int basic_hp, int maxequipment)
+        int basic_damage;
+        public Character (string name, int basic_hp, int maxequipment,int basic_damage)
         {
             this.name = name;
+            this.basic_damage=basic_damage;
             nick = name;
             this.maxequipment = maxequipment;
             equipment = new int[maxequipment, 2];
@@ -78,17 +80,43 @@ namespace RPG_GAME
 
         }
         
-        public int Attack()
+      
+        public int enemy_actualhp;
+        public int Enemy_Actual_HP { get { return enemy_actualhp; } }
+        int equip;
+        public bool Equip_Character(int index)
         {
-            int attack =0;
-            return attack;
+            equip = index;
+            return true;
         }
-        public static void Fight()
+        public bool UnEquip()
+        {
+            equip = 0;
+            return false;
+        }
+        public int Attack(Item mythings)
+        {
+            int gen;
+            if(equip!=0)
+            {
+                gen = mythings.Generate_Value(equip);
+            }
+            else
+            {
+                gen = 0;
+            }
+            
+            return basic_damage+gen;
+
+        }
+        public void Fight()
         {
             if(actual_hp>0)
             {
-                enemy_hp -=attack;
-                if(enemy_hp<0)
+                int enemy_hp = Enemy.WhatsMyActualHP();
+               // int attack = Attack();
+              //  Enemy.TakeDamage(attack);
+                if (enemy_hp < 0)
                 {
                     score += enemy_score;
                     
@@ -112,7 +140,7 @@ namespace RPG_GAME
                     }
                     else if (key == 'r')
                     {
-                        MainMenu.OpenMainMenu();
+                        Program.OpenMainMenu();
                         break;
                     }
                     else
@@ -123,13 +151,14 @@ namespace RPG_GAME
             }
          }
         int nb;
+        Item mythings;
         public void AddToEquipment(int index)
         {
             for(int i=0; i<equipment.Length;i++)
             {
                 if(equipment[i,0]!=0)
                 equipment[i,0] = index;
-                nb = Item.NB_Of_Uses(index);
+                nb = mythings.NB_Of_Uses(index);
                 equipment[i, 1] = nb;
             }
             
