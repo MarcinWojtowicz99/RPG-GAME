@@ -13,8 +13,6 @@ namespace RPG_GAME
         {
             this.name = name;
             this.attackvalue = attackvalue;
-            this.specialinfo = specialinfo;
-            
-        }
+            this.specialinfo = specialinfo;        }
     }
 }

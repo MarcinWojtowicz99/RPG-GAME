@@ -39,10 +39,10 @@ namespace RPG_GAME
             }
 
         }
-        public void Pay(int value, int indexnb)
+        public void Pay(int value, int indexnb, Item mythings)
         {
             money_player -= value;
-            AddToEquipment(indexnb);
+            AddToEquipment(indexnb, mythings);
 
         }
         public void Sell(int value, int indexEQ)
@@ -109,11 +109,11 @@ namespace RPG_GAME
             return basic_damage+gen;
 
         }
-        public void Fight()
+        public void Fight(Enemy enemy,Data data)
         {
             if(actual_hp>0)
             {
-                int enemy_hp = Enemy.WhatsMyActualHP();
+                int enemy_hp = enemy.WhatsMyActualHP();
                // int attack = Attack();
               //  Enemy.TakeDamage(attack);
                 if (enemy_hp < 0)
@@ -140,7 +140,7 @@ namespace RPG_GAME
                     }
                     else if (key == 'r')
                     {
-                        Program.OpenMainMenu();
+                        Program.OpenMainMenu(data);
                         break;
                     }
                     else
@@ -151,8 +151,7 @@ namespace RPG_GAME
             }
          }
         int nb;
-        Item mythings;
-        public void AddToEquipment(int index)
+        public void AddToEquipment(int index, Item mythings)
         {
             for(int i=0; i<equipment.Length;i++)
             {
@@ -191,6 +190,11 @@ namespace RPG_GAME
             Console.WriteLine("d) Queen");
            
         }
+        public void ViewEquipment()
+        {
+
+        }
+        
         
     }
 }

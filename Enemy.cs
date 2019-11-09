@@ -36,39 +36,39 @@ namespace RPG_GAME
             }
 
         }
-        public Attack[] attacks;
-        public void Stack(Attack attack)
+       // public Attack[] attacks;
+        public void Stack(Attack attackss)
         {
-            for (int i = 0; i < attacks.Length; i++)
+            for (int i = 0; i < attack.Length; i++)
             {
-                if (attacks[i] == null)
+                if (attack[i] == null)
                 {
-                    attacks[i] = attack;
+                    attack[i] = attackss;
                 }
             }
         }
-        public static int actual_hp;
-        public static int Actual_hp { get { return actual_hp; } }
+        public int actual_hp;
+        public int Actual_hp { get { return actual_hp; } }
         public void Attack_Character()
         {
             Random rnd = new Random();
-            int random = rnd.Next(attacks.Length);
-            int value = attacks[random].attackvalue;
+            int random = rnd.Next(attack.Length);
+            int value = attack[random].attackvalue;
             actual_hp -= value;
 
         }
-        public void Drop_Item(Character user)
+        public void Drop_Item(Character user, Item mythings)
         {
             Random rnd = new Random(counter);
             int ind = rnd.Next();
-            user.AddToEquipment(ind);
+            user.AddToEquipment(ind,mythings);
 
         }
-        public static int WhatsMyActualHP()
+        public int WhatsMyActualHP()
         {
             return actual_hp;
         }
-        public static void TakeDamage(int value)
+        public void TakeDamage(int value)
         {
             actual_hp= - value;
         }
