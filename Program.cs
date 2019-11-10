@@ -28,12 +28,13 @@ namespace RPG_GAME
             Mermaid.Stack(new Attack("Dragon fire", 300, "THAT'S A LOT OF DAMAGE!"));
             Enemy Human = new Enemy(basic_hp, 100, 1);
             Human.Stack(new Attack("Drunk punch", 100, "I'll show you my real power!"));
+
             //gameplay
             OpenMainMenu(data);
             string name = data.ReadData(0);
             string clas = data.ReadData(1);
 
-            if (clas == "Class:Warrior")
+            if (clas == "Class Warrior")
             {
                 Warrior user = new Warrior(name, basic_hp, maxequipment, hpboost, basic_damage);
                 DefaultMenuWarrior(user,data);
@@ -179,8 +180,11 @@ namespace RPG_GAME
                     case '3':
 
                         OpenMainMenu(data);
-                        break;
 
+                        break;
+                    case '4':
+                        user.Teleport();
+                        break;
 
                     default:
                         Console.WriteLine("Unknown option!");
@@ -255,11 +259,11 @@ namespace RPG_GAME
                 Console.WriteLine();
                 if (classification == 'a')
                 {
-                    data.AddtoData("Class:Warrior", 1);
+                    data.AddtoData("Class Warrior", 1);
                 }
                 else if (classification == 'b')
                 {
-                    data.AddtoData("Class:Sorcerer", 1);
+                    data.AddtoData("Class Sorcerer", 1);
                 }
                 else
                 {

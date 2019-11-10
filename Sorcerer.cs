@@ -11,7 +11,7 @@ namespace RPG_GAME
 
            
         }
-        public static void Teleport()
+        public void Teleport()
         {
             Console.WriteLine("Where would you like to teleport?");
 
