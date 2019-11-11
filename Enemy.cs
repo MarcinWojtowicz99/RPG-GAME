@@ -7,22 +7,26 @@ namespace RPG_GAME
     class Enemy
     {
         int enemy_hp;
-        public int HP { get { return enemy_hp; } }
-        public int enemy_actualhp;
-        public int Enemy_Actual_HP { get { return enemy_actualhp; } }
-        int counter;
-        public int Nb_Of_Items { get { return counter; } }
-        int enemy_score;
-        public int SCORE { get { return enemy_score; } }
         
+       
+       
+        int enemy_score;
+        public int Enemyscore { get { return enemy_score; }set { enemy_score = value; } }
+        public int enemy_actualhp;
+        public int Enemy_Actual_HP { get { return enemy_actualhp; } set { enemy_actualhp = value; } }
 
         public Attack[] attack;
         int totalnbofattacks;
         public Enemy(int enemy_hp,int enemy_score, int totalnbofattacks)
         {
             this.enemy_hp = enemy_hp;
+            enemy_actualhp = enemy_hp;
             this.enemy_score = enemy_score;
             attack = new Attack[totalnbofattacks];
+        }
+        public void RestoreHealth()
+        {
+            enemy_actualhp = enemy_hp;
         }
         public Enemy(Enemy enemy)
         {
@@ -59,7 +63,7 @@ namespace RPG_GAME
         }
         public void Drop_Item(Character user, Item mythings)
         {
-            Random rnd = new Random(counter);
+            Random rnd = new Random(mythings.Nb_Of_Items);
             int ind = rnd.Next();
             user.AddToEquipment(ind,mythings);
 

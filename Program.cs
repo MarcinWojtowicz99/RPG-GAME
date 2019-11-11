@@ -1,19 +1,33 @@
 ﻿using System;
 using System.IO;
-
+using System.Diagnostics;
+using System.Threading;
 namespace RPG_GAME
 {
     class Program
-    {
-        public static int basic_hp = 1000;
-        public static int maxequipment = 10;
-        public static int basic_damage = 50;
-        public static int hpboost = 500;
-        public static int nbofdata = 50;
+    { //basic game values
+        public static int basic_hp = 1000; //easy changable nb of basic HP of character
+        public static int maxequipment = 10; //max nb of equipment character can carry
+        public static int startmoney = 1000;
+        public static int basic_damage = 50; //character "punch" damage
+        public static int hpboost = 500; //extra hp for warrior
+        public static int nbofdata = 10;//nb of data stored-changable in case future game plot changes
+        public static int nbofitems = 5;//nb of items
+        public static int nbofshopkeeperequipment = 3;//nb of items which shopkeeper can show you during one visit
+        public int NbOfShopkeeperEQ{get{return nbofshopkeeperequipment;} set{nbofshopkeeperequipment=value;} }
         public static int Basic_hp { get { return basic_hp; } }
+       
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
             //listofitems
+            Item mythings = new Item(nbofitems);
+            mythings.Stack(new Unit("Rubber Duck",12,25,0,int.MaxValue,"Rubbish"));
+            mythings.Stack(new Unit("Broken sword", 45, 125, 20, int.MaxValue, "Sword"));
+            mythings.Stack(new Unit("Small potion", 45, 500, 50, 1, "Potion"));
+            mythings.Stack(new Unit("Medium potion", 45, 1100, 50, 1, "Potion"));
+            mythings.Stack(new Unit("Large potion", 45, 1500, 50, 1, "Potion"));
             //below <20 non-weapons items
             //item index cannot equal zero
             Data data = new Data(nbofdata);
@@ -26,9 +40,19 @@ namespace RPG_GAME
             Mermaid.Stack(new Attack("Tail punch", 300, "THAT'S A LOT OF DAMAGE!"));
             Mermaid.Stack(new Attack("Dragon fire", 300, "THAT'S A LOT OF DAMAGE!"));
             Mermaid.Stack(new Attack("Dragon fire", 300, "THAT'S A LOT OF DAMAGE!"));
-            Enemy Human = new Enemy(basic_hp, 100, 1);
-            Human.Stack(new Attack("Drunk punch", 100, "I'll show you my real power!"));
+            
+            //Loading NPC
+            // NPC shopkeeper = new NPC(nbofshopkeeperequipment,mythings);
 
+            stopwatch.Stop();
+            for (int i = 0; i <= 100; ++i)
+            {
+                Console.Write("\rLoading: {0}%", i);
+                System.Threading.Thread.Sleep(10);
+            }
+            Console.WriteLine();
+            Console.WriteLine("It took me: {0}ms to start! :D", stopwatch.ElapsedMilliseconds);
+            System.Threading.Thread.Sleep(2000); 
             //gameplay
             OpenMainMenu(data);
             string name = data.ReadData(0);
@@ -36,21 +60,29 @@ namespace RPG_GAME
 
             if (clas == "Class Warrior")
             {
-                Warrior user = new Warrior(name, basic_hp, maxequipment, hpboost, basic_damage);
-                DefaultMenuWarrior(user,data);
+                Warrior user_Warrior = new Warrior(name, basic_hp, maxequipment, hpboost, basic_damage,startmoney);
+                Sorcerer user_Sorcerer = new Sorcerer("FAKE", 0,0,0,0);
+
+                DefaultMenu(user_Sorcerer, user_Warrior, data, mythings,Mermaid,Dragon);
             }
             else
             {
-                Sorcerer user = new Sorcerer(name, basic_hp, maxequipment, basic_damage);
-                DefaultMenuSorcerer(user,data);
+                Sorcerer user_Sorcerer = new Sorcerer(name, basic_hp, maxequipment, basic_damage,startmoney);
+                Warrior user_Warrior = new Warrior("NAN", 0, 0, 0, 0,0);
+                DefaultMenu(user_Sorcerer,user_Warrior,data, mythings, Mermaid, Dragon);
             }
-            
+
             //listofattacksforwarrior
 
 
 
             //listofattacksforsorcerer
 
+            bool iscompleted = doPlot(data);
+            if(iscompleted==true)
+            {
+              //  ending_screen(user);
+            }
         }
 
         public static string path = Directory.GetCurrentDirectory(); //universal way to save file and load
@@ -60,8 +92,90 @@ namespace RPG_GAME
         public static bool autosave = true;
         public static bool Autosave { get { return autosave; } }
 
-        
-        
+        public static bool doPlot(Data data)
+        {
+
+            return true;
+        }
+        private static void ending_screen(Character user)
+        {
+            Console.WriteLine("Congratulations, traveler, You defeated the dragon!");
+           // Console.WriteLine("Your final score: "+score);
+        }
+        public static void MakeYourChoice(Data data, bool IsTimeLimit, string description, string optionA, string optionB, string optionC, string optionD)
+        {
+            bool toReturn = false;
+            do
+            {
+                Console.Clear();
+                
+            Console.WriteLine(description);
+           
+            
+            Console.WriteLine("1. "+optionA);
+            Console.WriteLine("2. "+optionB);
+            Console.WriteLine("3. "+optionC);
+            Console.WriteLine("4. "+optionD);
+            Console.Write("Select: ");
+                int toOverWrite =data.WhereIsNull(data);
+            char choice = Console.ReadKey().KeyChar;
+                if (IsTimeLimit == true)
+                {
+                    Console.WriteLine();
+                    for (int i = 10; i >= 0; i--)
+                    {
+                        Console.Write("\rTime left: {0}", i);
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    if(choice!='1'|| choice != '2' || choice != '3' || choice != '4' )
+                    {
+                        Random rnd = new Random();
+                        int random = rnd.Next(4);
+                        if(random==0)
+                        {
+                            choice = '1';
+                        }
+                        else if(random == 1)
+                        {
+                            choice = '2';
+                        }
+                        else if (random == 2)
+                        {
+                            choice = '3';
+                        }
+                        else
+                        {
+                            choice ='4';
+                        }
+                    }
+                }
+                Console.WriteLine();
+            
+                
+                switch (choice)
+                {
+                    case '1':
+                        data.AddtoData(optionA,toOverWrite);
+                        break;
+                    case '2':
+                        data.AddtoData(optionB, toOverWrite);
+                        break;
+                    case '3':
+                        data.AddtoData(optionC, toOverWrite);
+                        break;
+                    case '4':
+                        data.AddtoData(optionD, toOverWrite);
+                        break;
+
+                    default:
+                        toReturn = true;
+                        Console.WriteLine("Unknown option!");
+                        break;
+                }
+
+            }
+            while (toReturn==false);
+        }
         private static void Options()
         {
             string decision;
@@ -69,6 +183,7 @@ namespace RPG_GAME
             do
             {
                 Console.WriteLine("Autosaves turned on? Type \"yes\" or \"no\"...");
+                Console.Write("Your answer: ");
                 decision = Console.ReadLine();
                 if (decision == "yes")
                 {
@@ -91,41 +206,45 @@ namespace RPG_GAME
 
         }
 
-        private static char Menu()
-        {
-            Console.WriteLine("1. New Game");
-            Console.WriteLine("2. Load Game");
-            Console.WriteLine("3. Save Game");
-            Console.WriteLine("4. Options");
-            Console.WriteLine("0. Quit");
-            Console.Write("Select: ");
-
-            char key = Console.ReadKey().KeyChar;
-            Console.WriteLine();
-            return key;
-        }
+       
         public static void OpenMainMenu(Data data)
         {
-
+            bool Toreturn= true;
             char option;
             do
             {
+                Toreturn = true;
                 Console.Clear();
-                option = Menu();
+                Console.WriteLine("1. New Game");
+                Console.WriteLine("2. Load Game");
+                Console.WriteLine("3. Save Game");
+                Console.WriteLine("4. Options");
+                Console.WriteLine("0. Quit");
+                Console.Write("Select: ");
+
+                option = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                Console.Clear();
                 switch (option)
                 {
                     case '1':
                         NewGame(data);
+                        Console.Clear();
                         break;
                     case '2':
                         data.LoadGame(data);
+                        Console.WriteLine("Loaded.");
+                        System.Threading.Thread.Sleep(1000);
+                        Console.Clear();
                         break;
                     case '3':
 
                         data.SaveGame(data);
+                        Toreturn = false;
                         break;
                     case '4':
                         Options();
+                        Toreturn = false;
                         break;
 
                     case '0':
@@ -136,12 +255,14 @@ namespace RPG_GAME
                         break;
                     default:
                         Console.WriteLine("Unknown option!");
+                        Toreturn = false;
+                        System.Threading.Thread.Sleep(1000);
                         break;
                 }
-                Console.WriteLine("Hit [Any] key...");
-                Console.ReadKey();
+                
+                
             }
-            while (option != '1' || option != '2');
+            while (Toreturn != true);
 
 
         }
@@ -154,28 +275,62 @@ namespace RPG_GAME
            
 
         }
-        public static void DefaultMenuSorcerer(Sorcerer user, Data data)
+        public static void DefaultMenu(Sorcerer user_Sorcerer,Warrior user_Warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon)
         {
-            Console.WriteLine("What would you like to do now?");
-
-            Console.WriteLine("1. Open Equipment");
+            bool ToReturn = true ;
+            do
+            {
+                Console.Clear();
+                if (data.gamedata[1] == "Class Warrior")
+                {
+                    Console.WriteLine("Money: " + user_Warrior.Money_player);
+                    Console.WriteLine("HP: " + user_Warrior.Actual_hp);
+                    Console.WriteLine("Score: " + user_Warrior.Score);
+                }
+                else
+                {
+                    Console.WriteLine("Money: " + user_Sorcerer.Money_player);
+                    Console.WriteLine("HP: " + user_Sorcerer.Actual_hp);
+                    Console.WriteLine("Score: " + user_Sorcerer.Score);
+                }
+                Console.WriteLine("What would you like to do now?");
+                
+                Console.WriteLine("1. Open Equipment");
             Console.WriteLine("2. Open Map");
             Console.WriteLine("3. Main Menu");
-            Console.WriteLine("4. Teleport");
+            if(data.gamedata[1]!= "Class Warrior")
+            {
+                Console.WriteLine("4. Teleport");
+            }
             Console.Write("Select: ");
 
             char key = Console.ReadKey().KeyChar;
             Console.WriteLine();
-            do
-            {
+            
                 Console.Clear();
                 switch (key)
                 {
                     case '1':
-                        user.ViewEquipment();
+                        if (data.gamedata[1] != "Class Warrior")
+                        {
+                            user_Sorcerer.ViewEquipment(mythings, user_Sorcerer, data,mermaid, dragon);
+                        }
+                        else
+                        {
+                            user_Warrior.ViewEquipment(mythings, user_Warrior, data, mermaid, dragon);
+                        }
+                        
                         break;
                     case '2':
-                        user.Walk();
+                        if (data.gamedata[1] != "Class Warrior")
+                        {
+                            user_Sorcerer.Walk(data, user_Sorcerer,user_Warrior, mythings, mermaid, dragon);
+
+                        }
+                        else
+                        {
+                            user_Warrior.Walk(data, user_Sorcerer, user_Warrior, mythings, mermaid, dragon);
+                        }
                         break;
                     case '3':
 
@@ -183,55 +338,26 @@ namespace RPG_GAME
 
                         break;
                     case '4':
-                        user.Teleport();
+                        if (data.gamedata[1] != "Class Warrior")
+                        {
+                            user_Sorcerer.Teleport();
+                        }
+                        else
+                        {
+                            ToReturn = false;
+                        }
                         break;
 
                     default:
                         Console.WriteLine("Unknown option!");
+                        ToReturn = false;
                         break;
                 }
 
             }
-            while (key != '1' || key != '2' || key != '3');
+            while (ToReturn!=true);
         }
-        public static void DefaultMenuWarrior(Warrior user,Data data)
-            {
-
-            Console.WriteLine("What would you like to do now?");
-          
-            Console.WriteLine("1. Open Equipment");
-            Console.WriteLine("2. Open Map");
-            Console.WriteLine("3. Main Menu");
-            Console.Write("Select: ");
-
-            char key = Console.ReadKey().KeyChar;
-            Console.WriteLine();
-            do
-            {
-                Console.Clear();
-                switch (key)
-                {
-                    case '1':
-                        user.ViewEquipment();
-                        break;
-                    case '2':
-                        user.Walk();
-                        break;
-                    case '3':
-
-                        OpenMainMenu(data);
-                        break;
-                    
-
-                    default:
-                        Console.WriteLine("Unknown option!");
-                        break;
-                }
-                
-            }
-            while (key != '1' || key != '2'||key!='3');
-
-        }
+        
         public static string name;
         public static DateTime localDate = DateTime.Now;
         public static string loc1 = localDate.ToString();
@@ -276,67 +402,8 @@ namespace RPG_GAME
                 data.AutoSaveGame(data);
             
         }
-        public static void MainStory()
-        {
-
-        }
-        //public void Choice(int dataindex, string question, string optionA, string optionB, string optionC, string optionD)
-        //{
-        //    char classification;
-        //    do
-        //    {
-        //        Console.WriteLine(question);
-
-        //        classification = Console.ReadKey().KeyChar;
-        //        Console.WriteLine();
-        //        if (classification == 'a')
-        //        {
-
-        //        }
-        //        else if (classification == 'b')
-        //        {
-
-        //        }
-        //        if (classification == 'c')
-        //        {
-
-        //        }
-        //        else if (classification == 'd')
-        //        {
-
-        //        }
-        //        else if (classification == 'e')
-        //        {
-
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("unknown command, try again...");
-        //        }
-
-
-        //    } while (classification != 'b' && classification != 'a' && classification != 'c' && classification != 'd' && classification != 'e' );
-        //    if (autosave == true)
-        //    {
-        //        Data.AddtoData(classification.ToString(), dataindex);
-        //    }
-        //    static void Checkpoint()
-        //    {
-        //        if (autosave == true)
-        //        {
-
-        //            StreamWriter writer = new StreamWriter(fileName);
-        //            for (int i = 0; i < gamedata.Length; i++)
-        //            {
-        //                writer.WriteLine(gamedata[i]);
-        //            }
-
-        //            writer.Close();
-
-
-        //        }
-        //    }
-        // }
+        
+       
     }
 
 

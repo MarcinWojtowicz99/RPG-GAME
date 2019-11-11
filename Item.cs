@@ -9,79 +9,74 @@ namespace RPG_GAME
         int value_min;
         int value_max;
         int damageorhealvalueafteruse;
-
-        int counter = 0;
         int index;
         int nbofuses;
         string nameofitem;
-        public int Nb_Of_Items { get { return counter; } }
+        int nbofitem;
+        public int Nb_Of_Items { get { return nbofitem; } set { nbofitem = value; } }
 
         string name;
-        int numberofitems;
         public string Name { get { return name; } }
         double total;
-        public int Numberofitems { get { return numberofitems; } }
-      
+       
+
         public double totalvalue { get { return total; } }
-        public Item[] thing;
-        
+        public Unit[] unit;
 
-        public Item(string name, int numberofitems, string nameofitem, int value_min, int value_max, int damageorhealvalueafteruse, int nbofuses)
+
+        public Item(int nbofitems)
         {
-            this.numberofitems = numberofitems;
-            this.nbofuses = nbofuses;
-            this.nameofitem = nameofitem;
-            this.value_min = value_min;
-            this.value_max = value_max;
-            this.damageorhealvalueafteruse = damageorhealvalueafteruse;
-            counter++;
-            this.name = name;
-            thing = new Item[numberofitems];
-
+            nbofitem = nbofitems;
+            unit = new Unit[nbofitems];
         }
         public Item(Item things)
         {
-            this.name = things.name;
-            this.nbofuses = things.nbofuses;
-            this.nameofitem = things.nameofitem;
-            this.value_min = things.value_min;
-            this.value_max = things.value_max;
-            this.damageorhealvalueafteruse = things.damageorhealvalueafteruse;
-
-            this.thing = new Item[things.thing.Length];
-            for (int i = 1; i < thing.Length+1; i++)
+            this.unit = new Unit[things.unit.Length];
+            for (int i = 1; i < unit.Length + 1; i++)
             {
-                thing[i] = things.thing[i];
+                unit[i] = things.unit[i];
+            }
+        }
+        public void Stack(Unit units)
+        {
+            for (int i = 0; i < unit.Length; i++)
+            {
+                if (unit[i] == null)
+                {
+                    unit[i] = units;
+                }
             }
         }
 
-        public void Item_Name(int indexnb)
-            {
-            Console.Write(thing[indexnb].name);
-            }
-        
+        public void Item_Name(int indexnb,Item mythings)
+        {
+            Console.Write(mythings.unit[indexnb].nameofitem);
+        }
+
         public void Give(int indexnb, Character user, Item mythings)
         {
             user.AddToEquipment(indexnb, mythings);
-            Console.WriteLine("You received ");
-            Item_Name(indexnb);
+            Console.Write("You received: ");
+            Item_Name(indexnb, mythings);
+            Console.WriteLine();
         }
-        public int DamageOrHeal(int indexnb)
+        public int DamageOrHeal(int indexnb, Item mythings)
         {
-            return thing[indexnb].damageorhealvalueafteruse;
+            return mythings.unit[indexnb].damageorhealvalueafteruse;
         }
-        public int Generate_Value(int indexnb)
+        
+
+        public int NB_Of_Uses(int indexnb, Item mythings)
         {
-            Random rnd = new Random();
-            int random = rnd.Next(thing[indexnb].value_min, thing[indexnb].value_max);
-            return random;
-        }
-       
-        public int NB_Of_Uses(int indexnb)
-        {
-           int nb = thing[indexnb].nbofuses;
+            int nb = mythings.unit[indexnb].nbofuses;
             return nb;
         }
+        public string Type(int indexnb, Item mythings)
+        {
+            string nb = mythings.unit[indexnb].type;
+            return nb;
+        }
+        
         
     }
 }

@@ -90,35 +90,28 @@ namespace RPG_GAME
                 string finalpathforsave = path + "\\" + gamedata[0] + date + ".txt";
                 string finalpathforsave3 = path + "\\SaveGame\\" + gamedata[0] + date + ".txt";
                 StreamWriter writer = new StreamWriter(finalpathforsave);
-               
-
-
                 for (int i = 0; i < gamedata.Length; i++)
                 {
-                    if (gamedata[i] != null)
 
+                    if (gamedata[i] != null)
                     {
                         writer.WriteLine(gamedata[i]);
-                      
-                     
+
+                    }
+                    else
+                    {
+                        break;
                     }
 
                 }
-
                 writer.Close();
                 EncryptFile(finalpathforsave, finalpathforsave3);
                 File.Delete(finalpathforsave);
-
-               
             }
         }
-           
         public void LoadGame(Data data) 
         {
-            try
-
-            {
-                
+            
                 string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");         
                 if (filePaths.Length > 1)
                 {
@@ -127,31 +120,62 @@ namespace RPG_GAME
                     {
                         Console.WriteLine("{0}. {1}",i,filePaths[i]);
                     }
-                    int pather = Convert.ToInt32(Console.ReadLine());
-                    string finalpathforsave3 = path + @"\NEW.txt";
+                // int pather = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Select: ");
+                char A = Console.ReadKey().KeyChar;
+                int pather=CharUnicodeInfo.GetDecimalDigitValue(A);//convert key character nb to integer value
+                string finalpathforsave3 = path + @"\NEW.txt";
+                Console.WriteLine();
+                   
+                try
+                {
                     DecryptFile(filePaths[pather], finalpathforsave3);
                     StreamReader reader = new StreamReader(finalpathforsave3);
                     for (int i = 0; i < gamedata.Length; i++)
                     {
-                        {
+                        
                             gamedata[i] = reader.ReadLine();
-                        } while (reader.ReadLine() != null);
+                        
+                          
                     }
                     reader.Close();
-                    File.Delete(finalpathforsave3);
+                }
+                catch (FormatException e)
+                {
+                    Exception bex = new Exception("The file is corrupted!", e);
+                    throw bex;
+                }
+                File.Delete(finalpathforsave3);
                     
                 }
                 else if(filePaths.Length == 1)
                 {
                     string finalpathforsave3 = path + "NEW.txt";
                     DecryptFile(filePaths[0], finalpathforsave3);
-                    StreamReader reader = new StreamReader(finalpathforsave3);
-                    for (int i = 0; i < gamedata.Length; i++)
+                    try
                     {
-                        gamedata[i] = reader.ReadLine();
+                        StreamReader reader = new StreamReader(finalpathforsave3);
+                        for (int i = 0; i < gamedata.Length; i++)
+                        {
+
+                        if (reader.ReadLine() != null)
+                        {
+                            gamedata[i] = reader.ReadLine();
+                        }
+                        else
+                        {
+                            break;
+                        }
+
                     }
-                    reader.Close();
-                    File.Delete(finalpathforsave3);
+                        reader.Close();
+                        File.Delete(finalpathforsave3);
+                    }
+                    catch(FormatException e)
+                    {
+                        Exception bex = new Exception("The file is corrupted!", e);
+                        throw bex;
+                    }
 
                    
                 }
@@ -160,35 +184,56 @@ namespace RPG_GAME
                     Console.WriteLine("You have no savefile :c");
                 }
 
-            }
-            catch (FormatException e)
-            {
-                Exception bex = new Exception("The file is corrupted!", e);
-                throw bex;
-            }
-            catch (ArgumentNullException e)
-            {
-                throw new Exception("You have no savegame :c");
-            }
+            
+            
+            
         }
         public void SaveGame(Data data)
         {
-
+            
+           
             Console.WriteLine("Type the name of your save: ");
             string nameoffile = Console.ReadLine();
-            string finalpathforsave = path + @"\SaveGame\" + nameoffile + ".txt";
-            string finalpathforsave2 = path + nameoffile + ".txt";
-            EncryptFile(finalpathforsave2, finalpathforsave);
+            
+            string finalpathforsave = path +@"\"+ nameoffile + ".txt";
+            string finalpathforsave2 = path + @"\SaveGame\" + nameoffile + ".txt";
+
             StreamWriter writer = new StreamWriter(finalpathforsave);
             for (int i = 0; i < gamedata.Length; i++)
             {
+
+                if (gamedata[i] != null)
+                {
+                    writer.WriteLine(gamedata[i]);
+                    
+                }
+                else
+                {
+                    break;
+                }
                 
-                writer.WriteLine(gamedata[i]);
+
+                
             }
 
             writer.Close();
-            File.Delete(finalpathforsave2);
+            EncryptFile(finalpathforsave, finalpathforsave2);
+            File.Delete(finalpathforsave);
 
+        }
+        public int WhereIsNull(Data data)
+        {
+            int a=0;
+            for (int i = 0; i < gamedata.Length; i++)
+            {
+                if (gamedata[i] == null)
+                {
+                    a = i;
+                    break;
+                }
+                   
+            }
+            return a;
         }
 
         public Data(int nbofdata)
@@ -197,6 +242,7 @@ namespace RPG_GAME
         }
         public void AddtoData(string info,int order)
         {
+
             gamedata[order] = info;
         }
         public string[] ReadDataSeries(int order1, int order2)
