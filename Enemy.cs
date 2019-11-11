@@ -24,9 +24,9 @@ namespace RPG_GAME
             this.enemy_score = enemy_score;
             attack = new Attack[totalnbofattacks];
         }
-        public void RestoreHealth()
+        public int RestoreHealth(Enemy enemy)
         {
-            enemy_actualhp = enemy_hp;
+          return  enemy.enemy_actualhp = enemy.enemy_hp;
         }
         public Enemy(Enemy enemy)
         {
@@ -51,35 +51,28 @@ namespace RPG_GAME
                 }
             }
         }
-        public int actual_hp;
-        public int Actual_hp { get { return actual_hp; } }
-        public void Attack_Character()
+        
+        public void Attack_Character(Enemy enemy, Character user)
         {
             Random rnd = new Random();
-            int random = rnd.Next(attack.Length);
-            int value = attack[random].attackvalue;
-            actual_hp -= value;
+            int random = rnd.Next(enemy.attack.Length);
+            int value = enemy.attack[random].attackvalue;
+            user.Actual_hp -= value;
 
         }
         public void Drop_Item(Character user, Item mythings)
         {
             Random rnd = new Random(mythings.Nb_Of_Items);
             int ind = rnd.Next();
-            user.AddToEquipment(ind,mythings);
+            user.AddToEquipment(ind,mythings,user);
 
         }
-        public int WhatsMyActualHP()
+        
+        public void TakeDamage(int value, Enemy enemy)
         {
-            return actual_hp;
+            enemy.Enemy_Actual_HP -= value;
         }
-        public void TakeDamage(int value)
-        {
-            actual_hp= - value;
-        }
-        //public int attack_enemy()
-        //{
-        //    return attack_value;
-        //}
+        
 
     }
 }

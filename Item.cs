@@ -12,8 +12,8 @@ namespace RPG_GAME
         int index;
         int nbofuses;
         string nameofitem;
-        int nbofitem;
-        public int Nb_Of_Items { get { return nbofitem; } set { nbofitem = value; } }
+        int nbofitems;
+        public int Nb_Of_Items { get { return nbofitems; } set { nbofitems = value; } }
 
         string name;
         public string Name { get { return name; } }
@@ -26,7 +26,7 @@ namespace RPG_GAME
 
         public Item(int nbofitems)
         {
-            nbofitem = nbofitems;
+            this.nbofitems = nbofitems;
             unit = new Unit[nbofitems];
         }
         public Item(Item things)
@@ -55,7 +55,7 @@ namespace RPG_GAME
 
         public void Give(int indexnb, Character user, Item mythings)
         {
-            user.AddToEquipment(indexnb, mythings);
+            user.AddToEquipment(indexnb, mythings,user);
             Console.Write("You received: ");
             Item_Name(indexnb, mythings);
             Console.WriteLine();
