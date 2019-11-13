@@ -24,9 +24,8 @@ namespace RPG_GAME
      
         public bool Equip_Character(int index, Item mythings, Warrior warrior, Data data)
         {
+
             warrior.Equip = index;
-            //weapondamage= mythings.unit[index].damageorhealvalueafteruse;
-            
             data.gamedata[6] = "Equipped: "+index;
             return true;
         }
@@ -106,6 +105,36 @@ namespace RPG_GAME
             }
             return attack;
 
+        }
+        public void Teleporter(Item mythings, Character user, Sorcerer user_sorcerer, Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
+        {
+           while (true)
+            {
+                Console.WriteLine("Hello. I'm the teleporter! I'm here to send you to dragon's valley, but you need to pay me 20000 and show me your ring");
+                Console.WriteLine("1. Okay");
+                Console.WriteLine("2. No, thank you");
+                char b = Console.ReadKey().KeyChar;
+                switch (b)
+                {
+                    case '1':
+                        if(user.Money_player-20000>=0)
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("You don't have enough money, come here when you'll be ready");
+                        }
+                        break;
+                    case '2':
+                        Program.DefaultMenu(user,user_sorcerer,user_warrior,data,mythings,Mermaid,Dragon,Human);
+                        break;
+                    default:
+                        Console.WriteLine("Incorrect sign");
+                        break;
+                }
+            }
+            
         }
     }
 }

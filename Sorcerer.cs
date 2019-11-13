@@ -12,7 +12,7 @@ namespace RPG_GAME
         {
             equipment = Equipment;
         }
-        public void Teleport()
+        public void Teleport(Item mythings,Character user,Sorcerer user_Sorcerer,Warrior user_Warrior,Data data,Enemy mermaid,Enemy dragon,Enemy Human)
         {
             Console.WriteLine("Where would you like to teleport?");
         }

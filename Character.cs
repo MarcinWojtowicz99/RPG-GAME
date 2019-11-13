@@ -149,72 +149,6 @@ namespace RPG_GAME
             
             return money_player -= cash;
         }
-        //public void Use(int indexEQ, Character user, Sorcerer user_sorcerer,Warrior user_warrior, Item mythings, Data data)
-        //{
-            
-        //    if (user.equipment[indexEQ, 1] > 0)
-        //    {
-        //        if (user.equipment[indexEQ, 0] < Program.BorderBetweenIndexes)
-        //        {
-
-        //            user.equipment[indexEQ, 1] -= 1;
-        //            data.gamedata[5] = "Items: ";
-        //            for (int j = 0; j < user.Equipment.Length / 2; j++)
-        //            {
-        //                data.gamedata[5] += user.Equipment[j, 0] + "-";
-        //                data.gamedata[5] += user.Equipment[j, 1] + ";";
-        //            }
-
-        //            if (user.equipment[indexEQ, 1] == 0)
-        //            {
-
-        //                RemoveFromEquipment(indexEQ, user, data);
-        //                data.gamedata[5] = "Items: ";
-        //                for (int j = 0; j < user.Equipment.Length / 2; j++)
-        //                {
-        //                    data.gamedata[5] += user.Equipment[j, 0] + "-";
-        //                    data.gamedata[5] += user.Equipment[j, 1] + ";";
-        //                }
-
-        //            }
-        //            else
-        //            {
-        //                user.equipment[indexEQ, 1] -= 1;
-        //                data.gamedata[5] = "Items: ";
-        //                for (int j = 0; j < user.Equipment.Length / 2; j++)
-        //                {
-        //                    data.gamedata[5] += user.Equipment[j, 0] + "-";
-        //                    data.gamedata[5] += user.Equipment[j, 1] + ";";
-        //                }
-        //                if (user.equipment[indexEQ, 0] == user_warrior.Equip)
-        //                {
-        //                    RemoveFromEquipment(indexEQ, user, data);
-        //                    user_warrior.UnEquip(user_warrior, data);
-        //                    data.gamedata[5] = "Items: ";
-        //                    for (int j = 0; j < user.Equipment.Length / 2; j++)
-        //                    {
-        //                        data.gamedata[5] += user.Equipment[j, 0] + "-";
-        //                        data.gamedata[5] += user.Equipment[j, 1] + ";";
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (data.gamedata[1] != "Class Sorcerer" )
-        //            {
-        //                user_warrior.Equip_Character(indexEQ, mythings, user_warrior, data);
-        //                Console.WriteLine("Equiped.");
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("You cannot equip a sword...");
-        //                System.Threading.Thread.Sleep(2000);
-        //            }
-        //        }
-        //    }
-            
-        //}
         int equip;
         public int Equip
         {
@@ -222,11 +156,6 @@ namespace RPG_GAME
             set { equip = value; }
         }
         public int[,] Equipment { get { return equipment; }set { equipment = value; } }
-        // public int weapondamage;
-
-
-       
-        
         public double Attack(Item mythings, Character user)
         {
             double gen;
@@ -269,10 +198,6 @@ namespace RPG_GAME
             
             
         }
-        //public void Use()
-        //{
-        //   if (mythings.Type(index, mythings) == "Sword"
-        //}
         public void ViewEquipment(Item mythings, Character user,Sorcerer user_sorcerer,Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human, bool duringfight)
         {
             bool endloop = true;
@@ -853,7 +778,7 @@ namespace RPG_GAME
                     case '1':
                         if (data.gamedata[1]=="Class Warrior")
                         {
-                            
+                            war.UnEquip(war,data);
                             shopkeeper.GiveBeer_Warrior(user,war,data, mythings,Mermaid, Dragon,Human);
                         }
                         else

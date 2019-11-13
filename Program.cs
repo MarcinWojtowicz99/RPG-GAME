@@ -87,8 +87,6 @@ namespace RPG_GAME
 
                 DefaultMenu(user,user_Sorcerer,user_Warrior,data, mythings, Mermaid, Dragon,Human);
             }
-            //listofattacksforwarrior
-            //listofattacksforsorcerer
             bool iscompleted = doPlot(data);
             if(iscompleted==true)
             {
@@ -406,6 +404,10 @@ namespace RPG_GAME
             {
                 Console.WriteLine("4. Teleport");
             }
+            else
+                {
+                    Console.WriteLine("4. Go to the teleporter");
+                }
             Console.Write("Select: ");
             char key = Console.ReadKey().KeyChar;
             Console.WriteLine();
@@ -439,11 +441,11 @@ namespace RPG_GAME
                     case '4':
                         if (data.gamedata[1] != "Class Warrior")
                         {
-                            user_Sorcerer.Teleport();
+                            user_Sorcerer.Teleport(mythings, user, user_Sorcerer, user_Warrior, data, mermaid, dragon, Human);
                         }
                         else
                         {
-                            ToReturn = false;
+                            user_Warrior.Teleporter(mythings,user,user_Sorcerer,user_Warrior,data,mermaid,dragon,Human);
                         }
                         break;
                     default:
