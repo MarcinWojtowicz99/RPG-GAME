@@ -6,7 +6,7 @@ namespace RPG_GAME
 {
     class Attack
     {
-        string name; public int attackvalue; string specialinfo;
+       public string name; public int attackvalue; public string specialinfo;
        
         
         public Attack(string name, int attackvalue, string specialinfo)

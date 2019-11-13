@@ -16,5 +16,27 @@ namespace RPG_GAME
         {
             Console.WriteLine("Where would you like to teleport?");
         }
+        public static double Sorcerer_Spells(double value,int type)
+        {
+            if (type == 1)
+            {
+               
+
+            }
+            else if (type == 2)
+            {
+                
+
+            }
+            else
+            {
+
+
+               
+            }
+
+
+            return value;
+        }
     }
 }

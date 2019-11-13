@@ -37,15 +37,17 @@ namespace RPG_GAME
                 unit[i] = things.unit[i];
             }
         }
-        public void Stack(Unit units)
+        public bool Stack(Unit units)
         {
             for (int i = 0; i < unit.Length; i++)
             {
                 if (unit[i] == null)
                 {
                     unit[i] = units;
+                    return true;
                 }
             }
+            return false;
         }
 
         public void Item_Name(int indexnb,Item mythings)
@@ -53,9 +55,9 @@ namespace RPG_GAME
             Console.Write(mythings.unit[indexnb].nameofitem);
         }
 
-        public void Give(int indexnb, Character user, Item mythings)
+        public void Give(int indexnb, Character user, Item mythings, Data data)
         {
-            user.AddToEquipment(indexnb, mythings,user);
+            user.AddToEquipment(indexnb, mythings,user,data);
             Console.Write("You received: ");
             Item_Name(indexnb, mythings);
             Console.WriteLine();
@@ -76,7 +78,15 @@ namespace RPG_GAME
             string nb = mythings.unit[indexnb].type;
             return nb;
         }
-        
-        
+        public void DoQuack(int indexnb, Item mythings)//easter egg
+        {
+            string nb = mythings.unit[indexnb].nameofitem;
+            if(nb== "Rubber Duck")
+            {
+                Console.WriteLine("QUACK!");
+            }
+           
+        }
+
     }
 }

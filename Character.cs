@@ -22,7 +22,7 @@ namespace RPG_GAME
             get { return score; }
             set { score = value; }
         }
-        public static int basic_hp;
+        int basic_hp;
         public int actual_hp;
 
         public int Actual_hp
@@ -35,15 +35,32 @@ namespace RPG_GAME
             get { return basic_hp; }
             set { basic_hp = value; }
         }
+        public void UpdateEnemyKilled(Enemy enemy,Data data)
+        {
+            if(enemy.Enemy_Name=="Dragon")
+            {
+                data.gamedata[7]= "Dragons_killed: " + Convert.ToString(enemy.EnemyKilled);
+            }
+            else if(enemy.Enemy_Name == "Mermaid")
+            {
+                data.gamedata[8] = "Mermaids_killed: " + Convert.ToString(enemy.EnemyKilled);
+            }
+            else if (enemy.Enemy_Name == "Human")
+            {
+                data.gamedata[9] = "People_killed: " + Convert.ToString(enemy.EnemyKilled);
+            }
+            else
+            {
+                data.gamedata[10] = "Unknowns_killed: " + Convert.ToString(enemy.EnemyKilled);
+            }
+        }
         int[,] equipment;
     
-        public virtual void UpdateHealth(Data data)
+        public void UpdateHealth(Character user,Data data)
         {
-            data.AddtoData(Convert.ToString(actual_hp), 3);
+            data.gamedata[4]="Health_status: "+Convert.ToString(user.Actual_hp);
         }
         int maxequipment;
-
-        static int enemy_score;
 
         public string Name { get { return name; } }
         int basic_damage;
@@ -53,9 +70,12 @@ namespace RPG_GAME
             this.startmoney = startmoney;
             score = 0;
             actual_hp = basic_hp;
+            Actual_hp = actual_hp;
             money_player= startmoney ;
             money_player = startmoney;
             this.name = name;
+            this.basic_hp = basic_hp;
+            Basic_hp = basic_hp;
             this.basic_damage = basic_damage;
               this.maxequipment = maxequipment;
             equipment = new int[maxequipment, 2];
@@ -65,16 +85,21 @@ namespace RPG_GAME
                 equipment[i, 1] = 0;
 
             }
-            equip = 0;
+            Equip = 0;
 
         }
-        
-        public int Pay(int value, int indexnb, Item mythings,Character user, int shopkeeperCash)
+        public bool UpdateMoney(Character user, Data data)
+        {
+            data.gamedata[2] = "AccountStatus: " +user.Money_player;
+            return true;
+        }
+        public int Pay(int value, int indexnb, Item mythings,Character user, int shopkeeperCash, Data data)
         {
            if(user.Money_player-value>=0)
             {
                 user.Money_player -= value;
-                AddToEquipment(indexnb, mythings, user);
+                user.UpdateMoney(user, data);
+                AddToEquipment(indexnb, mythings, user,data);
                 shopkeeperCash += value;
             }
             else
@@ -84,16 +109,16 @@ namespace RPG_GAME
             }
             
 
-            return money_player;
+            return shopkeeperCash;
 
         }
-        public int Sell(int value, int indexEQ, Character user, int shopkeeperCash)
+        public int Sell(int value, int indexEQ, Character user, int shopkeeperCash, Data data)
         {
             if(shopkeeperCash-value>=0)
             {
                 user.Money_player += value;
-
-                RemoveFromEquipment(indexEQ, user);
+                user.UpdateMoney(user, data);
+                user.RemoveFromEquipment(indexEQ, user, data);
                 shopkeeperCash -= value;
             }
             else
@@ -103,50 +128,93 @@ namespace RPG_GAME
             }
             return shopkeeperCash;
         }
-        public int AddMoney(int cash, Character user)
+        public int AddMoney(int cash, Character user, Data data)
         {
             user.Money_player += cash;
+            user.UpdateMoney(user, data);
             return money_player += cash;
         }
-        public int RemoveMoney(int cash, Character user)
+        public int RemoveMoney(int cash, Character user, Data data)
         {
             if(user.Money_player - cash>=0)
             {
                 user.Money_player -= cash;
+                user.UpdateMoney(user, data);
             }
             else
             {
                 user.Money_player = 0;
+                user.UpdateMoney(user, data);
             }
             
             return money_player -= cash;
         }
-        public void Use(int indexEQ, Character user, Sorcerer user_sorcerer,Warrior user_warrior, Item mythings, Data data)
-        {
-            if(data.gamedata[1]!="Class Sorcerer"&&mythings.unit[indexEQ].type=="Sword")
-            {
-                user_warrior.Equip_Character(indexEQ, mythings, user_warrior);
-            }
-            if (user.equipment[indexEQ, 1] > 0)
-            {
-                if (user.equipment[indexEQ, 0] < 20)
-                {
+        //public void Use(int indexEQ, Character user, Sorcerer user_sorcerer,Warrior user_warrior, Item mythings, Data data)
+        //{
+            
+        //    if (user.equipment[indexEQ, 1] > 0)
+        //    {
+        //        if (user.equipment[indexEQ, 0] < Program.BorderBetweenIndexes)
+        //        {
 
-                    user.equipment[indexEQ, 1] -= 1;
-                    
-                    if (user.equipment[indexEQ, 1] == 0)
-                    {
+        //            user.equipment[indexEQ, 1] -= 1;
+        //            data.gamedata[5] = "Items: ";
+        //            for (int j = 0; j < user.Equipment.Length / 2; j++)
+        //            {
+        //                data.gamedata[5] += user.Equipment[j, 0] + "-";
+        //                data.gamedata[5] += user.Equipment[j, 1] + ";";
+        //            }
 
-                        RemoveFromEquipment(indexEQ, user);
-                        if (user.equipment[indexEQ, 0] == user_warrior.Equip)
-                        {
-                            user_warrior.UnEquip(user_warrior);
-                        }
-                    }
+        //            if (user.equipment[indexEQ, 1] == 0)
+        //            {
 
-                }
-            }
-        }
+        //                RemoveFromEquipment(indexEQ, user, data);
+        //                data.gamedata[5] = "Items: ";
+        //                for (int j = 0; j < user.Equipment.Length / 2; j++)
+        //                {
+        //                    data.gamedata[5] += user.Equipment[j, 0] + "-";
+        //                    data.gamedata[5] += user.Equipment[j, 1] + ";";
+        //                }
+
+        //            }
+        //            else
+        //            {
+        //                user.equipment[indexEQ, 1] -= 1;
+        //                data.gamedata[5] = "Items: ";
+        //                for (int j = 0; j < user.Equipment.Length / 2; j++)
+        //                {
+        //                    data.gamedata[5] += user.Equipment[j, 0] + "-";
+        //                    data.gamedata[5] += user.Equipment[j, 1] + ";";
+        //                }
+        //                if (user.equipment[indexEQ, 0] == user_warrior.Equip)
+        //                {
+        //                    RemoveFromEquipment(indexEQ, user, data);
+        //                    user_warrior.UnEquip(user_warrior, data);
+        //                    data.gamedata[5] = "Items: ";
+        //                    for (int j = 0; j < user.Equipment.Length / 2; j++)
+        //                    {
+        //                        data.gamedata[5] += user.Equipment[j, 0] + "-";
+        //                        data.gamedata[5] += user.Equipment[j, 1] + ";";
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (data.gamedata[1] != "Class Sorcerer" )
+        //            {
+        //                user_warrior.Equip_Character(indexEQ, mythings, user_warrior, data);
+        //                Console.WriteLine("Equiped.");
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("You cannot equip a sword...");
+        //                System.Threading.Thread.Sleep(2000);
+        //            }
+        //        }
+        //    }
+            
+        //}
         int equip;
         public int Equip
         {
@@ -165,10 +233,12 @@ namespace RPG_GAME
             if (user.equip != 0)
             {
                 Random rnd = new Random();
-                double a = Convert.ToDouble(mythings.unit[equip].damageorhealvalueafteruse);
+                int ba = mythings.unit[user.equip].damageorhealvalueafteruse;
+                double a = Convert.ToDouble(ba);
                 double random = rnd.Next(5, 15);
                 double b = Convert.ToDouble(random / 10);
                 gen = b * a;
+                gen = Math.Abs(gen);
             }
             else
             {
@@ -190,7 +260,11 @@ namespace RPG_GAME
             
             
         }
-        public void ViewEquipment(Item mythings, Character user,Sorcerer user_sorcerer,Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon)
+        //public void Use()
+        //{
+        //   if (mythings.Type(index, mythings) == "Sword"
+        //}
+        public void ViewEquipment(Item mythings, Character user,Sorcerer user_sorcerer,Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
             bool endloop = true;
             do
@@ -201,15 +275,18 @@ namespace RPG_GAME
 
                     if (equipment[i, 0] != 0)
                     {
-                        Console.Write("{0}. ", i);
+                        Console.Write("{0}. ", i+1);
                         int index = equipment[i, 0];
                         mythings.Item_Name(index, mythings);
                         Console.WriteLine("Uses: " + equipment[i, 1]);
                     }
+                    else
+                    {
+                        Console.WriteLine("{0}. [EMPTY]",i+1);
+                    }
                 }
                 bool toReturn = true;
-                do
-                {
+                
 
                     Console.WriteLine("Wanna use some equipment? y/n");
 
@@ -222,28 +299,88 @@ namespace RPG_GAME
                     switch (choice)
                     {
                         case 'y':
-                            Console.WriteLine("Type number of equipment to equip or use: ");
-                            int nb = CharUnicodeInfo.GetDecimalDigitValue(Console.ReadKey().KeyChar);
-                            int index = equipment[nb, 0];
-                            if(data.gamedata[1]!="Class Sorcerer")
+                        do
+                        {
+                            int counter=0;
+                            Console.Write("Type number of equipment to equip or use: ");
+                            int nb = CharUnicodeInfo.GetDecimalDigitValue(Console.ReadKey().KeyChar)-1;
+                            Console.WriteLine();
+                            try
                             {
-                                if (mythings.Type(index, mythings) == "Sword")
+                                int index = equipment[nb, 0];
+                            
+                            if (index == 0)
+                            {
+                                Console.WriteLine("Item does not exist");
+                                    
+                                    if (counter==3)
+                                    {
+                                        toReturn = true;
+                                    }
+                                    else 
+                                    {
+                                        toReturn = false;
+                                    }
+                                    counter++;
+
+                                }
+                            else if(mythings.Type(index, mythings) == "Sword")
+                            {
+                                if (data.gamedata[1] != "Class Sorcerer")
                                 {
-                                    user_warrior.Equip_Character(index, mythings, user_warrior);
+                                   
+                                        user_warrior.Equip_Character(index, mythings, user_warrior,data);
+                                        user.Equipment[nb, 1] -= 1;
+                                        if (user.Equipment[nb, 1] == 0)
+                                        {
+                                            Console.WriteLine("You broke your sword!");
+                                            user.RemoveFromEquipment(nb, user, data);
+                                            user_warrior.UnEquip(user_warrior, data);
+                                        }
+
+                                    } 
+                                else
+                                {
+                                        Console.WriteLine("You cannot use this item!");
+                                        System.Threading.Thread.Sleep(4000);
+                                        toReturn = false;
+                                        //Warrior war2 = new Warrior("N", 0, 0, 0, 0, 0);
+                                        //user.Heal(index, mythings, data, user);
+
+                                    }
+                                //user.Use(nb, user, user_sorcerer, user_warrior, mythings, data);
+                            }
+                            else if (mythings.Type(index, mythings) == "Potion")
+                                {
+                                    user.Heal(index,mythings,data,user);
+                                    user.Equipment[nb, 1] -= 1;
+                                    if(user.Equipment[nb, 1]==0)
+                                    {
+                                        user.RemoveFromEquipment(nb,user,data);
+                                    }
+                                }
+                            else if (mythings.Type(index, mythings) == "Rubbish")
+                                {
+                                    Console.WriteLine("You cannot use this item!");
+                                    mythings.DoQuack(index,mythings);
+                                    System.Threading.Thread.Sleep(4000);
+                                    toReturn = false;
                                 }
                             }
-                            
-                            else
+                            catch (IndexOutOfRangeException ex)
                             {
-                                Warrior war2 = new Warrior("N", 0, 0, 0, 0, 0);
-                                Heal(index, mythings, data, user);
+                                toReturn = false;
+                                Console.WriteLine(ex.Message);
+                                Console.WriteLine("Wrong key!");
+
+                                System.Threading.Thread.Sleep(1000);
                             }
-                            user.Use(nb,user, user_sorcerer, user_warrior,mythings,data);
-                            toReturn = false;
-                            break;
+                        } while (toReturn != true);
+
+                        break;
                         case 'n':
                             Warrior war = new Warrior("FAKE", 0, 0, 0, 0, 0);
-                            Program.DefaultMenu(user, user_sorcerer,user_warrior, data, mythings, Mermaid, Dragon);
+                            Program.DefaultMenu(user, user_sorcerer,user_warrior, data, mythings, Mermaid, Dragon,Human);
                             Console.Clear();
 
 
@@ -251,94 +388,391 @@ namespace RPG_GAME
 
 
                         default:
-                            toReturn = false;
                             endloop = false;
                             Console.WriteLine("Unknown option!");
+
+                            System.Threading.Thread.Sleep(1000);
+                            Console.Clear();
                             break;
                     }
-                } while (toReturn != true);
+                
 
             } while (endloop != true);
 
 
         }
-        public void Fight(Enemy enemy, Data data, Character user)
+        public void UpdateScore(Character user,Data data)
         {
-            if (actual_hp > 0)
-            {
-                int enemy_hp = enemy.Enemy_Actual_HP;
-                // int attack = Attack();
-                //  Enemy.TakeDamage(attack);
-                if (enemy_hp < 0)
-                {
-                    user.score += enemy.Enemyscore;
-                    data.AddtoData(Convert.ToString(user.Actual_hp), 3);
-                    data.AddtoData(Convert.ToString(user.Score), 4);
-                }
-            }
-            else
-            {
+            data.gamedata[3] = "Score: "+Convert.ToString(user.Score);
+        }
+        public void Fight(Enemy enemy, Data data, Character user,Item mythings,Sorcerer sorcerer, Warrior warrior, Enemy mermaid,Enemy dragon,Enemy Human)
+        {
+            
+               
                 Console.Clear();
-                Console.WriteLine("YOU ARE DEAD!");
-                Console.WriteLine("YOUR SCORE WAS: " + score);
-                Console.WriteLine("Press \"r\" to go back to main menu or \"ESC\" to quit");
-                char key = Console.ReadKey().KeyChar;
-                Console.WriteLine();
+                Console.WriteLine("Let's start the fight!");
+                System.Threading.Thread.Sleep(4000);
+                
+
+                    // int attack = Attack();
+                    //  Enemy.TakeDamage(attack);
+                   
+                    
+                        Console.Clear();
+
+
+            if (data.gamedata[1] == "Class Sorcerer")
+            {
+
+                bool toReturn = false;
                 do
                 {
-                    if (Console.ReadKey().Key == ConsoleKey.Escape)
+                    if (enemy.Enemy_Actual_HP <= 0)
                     {
-                        Console.WriteLine("Bye!");
-                        System.Threading.Thread.Sleep(5000);
-                        Environment.Exit(0);//terminate console
-                    }
-                    else if (key == 'r')
-                    {
-                        Program.OpenMainMenu(data);
+                        Console.Clear();
+                        Console.WriteLine("You've slain an enemy!");
+                        System.Threading.Thread.Sleep(4000);
+                        user.score += enemy.Enemyscore;
+                        Console.WriteLine("+{0} points", user.Score);
+                        enemy.Drop_Item(user, mythings, data);
+                        enemy.EnemyKilled += 1;
+                        enemy.RestoreHealth(enemy);
+                        user.UpdateHealth(user, data);
+                        user.UpdateScore(user, data);
+                        System.Threading.Thread.Sleep(7000);
+                        Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
                         break;
+
+                    }
+                    else if (user.Actual_hp > 0)
+                    {
+                        Console.Clear();
+                        System.Threading.Thread.Sleep(2000);
+                        double value = enemy.Attack_Character(enemy, user);
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
+                        Console.WriteLine("Enemy HP: " + enemy.Enemy_Actual_HP);
+                        Console.WriteLine("Your HP: " + user.Actual_hp);
+                        Console.WriteLine("What are you going to do?");
+                        Console.WriteLine("1. Use Fiat Aqua");
+                        Console.WriteLine("2. Use Confusion");
+                        Console.WriteLine("3. Use Fireball");
+                        Console.WriteLine("4. Use teleportation");
+                        Console.Write("Select: ");
+                        int toOverWrite = data.WhereIsNull(data);
+                        char choice = Console.ReadKey().KeyChar;
+                        double attack_sorc_value;
+                        Console.WriteLine();
+                        switch (choice)
+                        {
+                            case '1':
+
+                                attack_sorc_value = Sorcerer.Sorcerer_Spells(user.Attack(mythings, user), choice);
+                                System.Threading.Thread.Sleep(5000);
+                                break;
+                            case '2':
+                                attack_sorc_value = Sorcerer.Sorcerer_Spells(user.Attack(mythings, user), choice);
+                                System.Threading.Thread.Sleep(5000);
+                                break;
+                            case '3':
+                                attack_sorc_value = Sorcerer.Sorcerer_Spells(user.Attack(mythings, user), choice);
+                                System.Threading.Thread.Sleep(5000);
+                                break;
+                            case '4':
+                                enemy.RestoreHealth(enemy);
+                                user.UpdateHealth(user, data);
+                                Console.WriteLine("HOCUS POCUS!");
+                                System.Threading.Thread.Sleep(5000);
+                                Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
+
+                                break;
+                            default:
+                                toReturn = true;
+                                Console.WriteLine("Unknown option!");
+                                System.Threading.Thread.Sleep(4000);
+                                break;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Unknown option!");
+                        Console.Clear();
+                        Console.WriteLine("YOU ARE DEAD!");
+                        System.Threading.Thread.Sleep(2000);
+                        Console.WriteLine("YOUR SCORE WAS: " + score);
+                        Console.WriteLine("Press \"r\" to go back to main menu or \"ESC\" to quit");
+                        var key = Console.ReadKey();
+                        Console.WriteLine();
+                        while (true)
+                        {
+                            if (key.Key == ConsoleKey.Escape)
+                            {
+                                Console.WriteLine("Bye!");
+                                System.Threading.Thread.Sleep(5000);
+                                Environment.Exit(0);//terminate console
+                            }
+                            else if (key.KeyChar == 'r')
+                            {
+                                Program.OpenMainMenu(data);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Unknown option!");
+                            }
+                        }
                     }
-                } while (actual_hp > 0);
+                }
+                while (toReturn == false);
+                enemy.Enemy_Actual_HP -= user.Attack(mythings, user);
+                Console.WriteLine("Hit value: " + user.Attack(mythings, user));
+                System.Threading.Thread.Sleep(2000);
             }
+            else
+            {//WARRIOR FIGHT IMPLEMENTATION
+
+                int strength;
+                double finalattack;
+                bool toReturn = false;
+                do
+                {
+                    if (enemy.Enemy_Actual_HP <= 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("You've slain an enemy!");
+                        System.Threading.Thread.Sleep(4000);
+                        user.score += enemy.Enemyscore;
+                        Console.WriteLine("+{0} points", user.Score);
+                        enemy.Drop_Item(user, mythings, data);
+                        enemy.EnemyKilled += 1;
+                        enemy.RestoreHealth(enemy);
+                        user.UpdateHealth(user, data);
+                        user.UpdateScore(user, data);
+                        System.Threading.Thread.Sleep(7000);
+                        Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
+                        break;
+
+                    }
+                    else if (user.Actual_hp > 0)
+                    {
+                        Console.Clear();
+                        System.Threading.Thread.Sleep(2000);
+                        double value = enemy.Attack_Character(enemy, user);
+                        System.Threading.Thread.Sleep(4000);
+                        Console.Clear();
+                        Console.WriteLine("Enemy HP: " + enemy.Enemy_Actual_HP);
+                        Console.WriteLine("Your HP: " + user.Actual_hp);
+                        Console.WriteLine("What are you going to do?");
+                        Console.WriteLine("1. Use quick attack");
+                        Console.WriteLine("2. Use normal attack");
+                        Console.WriteLine("3. Use powerful attack");
+                        Console.Write("Select: ");
+                        char choice = Console.ReadKey().KeyChar;
+
+                        Console.WriteLine();
+                        switch (choice)
+                        {
+                            case '1':
+                                strength = 1;
+                                finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
+                                enemy.Enemy_Actual_HP -= finalattack;
+                                Console.WriteLine("Hit value: " + finalattack);
+                                System.Threading.Thread.Sleep(2000);
+                                if (user.Equip != 0)
+                                {
+                                    int EQNB = 0;
+                                    for (int i = 0; i < Equipment.Length / 2; i++)
+                                    {
+                                        if (user.Equip == user.Equipment[i, 0])
+                                        {
+                                            EQNB = i;
+                                            break;
+                                        }
+                                    }
+                                    user.Equipment[EQNB, 1] -= 1;
+                                    if (user.Equipment[EQNB, 1] == 0)
+                                    {
+                                        Console.WriteLine("You broke your sword!");
+                                        user.RemoveFromEquipment(nb, user, data);
+                                        warrior.UnEquip(warrior, data);
+                                    }
+                                }
+                                break;
+                            case '2':
+                                strength = 2;
+                                finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
+                                enemy.Enemy_Actual_HP -= finalattack;
+                                Console.WriteLine("Hit value: " + finalattack);
+                                System.Threading.Thread.Sleep(2000);
+                                if (user.Equip != 0)
+                                {
+                                    int EQNB=0;
+                                    for(int i=0;i<Equipment.Length/2;i++)
+                                    {
+                                        if(user.Equip==user.Equipment[i,0])
+                                        {
+                                            EQNB = i;
+                                            break;
+                                        }
+                                    }
+                                    user.Equipment[EQNB, 1] -= 1;
+                                    if (user.Equipment[EQNB, 1] == 0)
+                                    {
+                                        Console.WriteLine("You broke your sword!");
+                                        user.RemoveFromEquipment(nb, user, data);
+                                        warrior.UnEquip(warrior, data);
+                                    }
+                                }
+                                break;
+                            case '3':
+                                strength = 3;
+                                finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
+                                enemy.Enemy_Actual_HP -= finalattack;
+                                Console.WriteLine("Hit value: " + finalattack);
+                                System.Threading.Thread.Sleep(2000);
+                                if (user.Equip != 0)
+                                {
+                                    int EQNB = 0;
+                                    for (int i = 0; i < Equipment.Length / 2; i++)
+                                    {
+                                        if (user.Equip == user.Equipment[i, 0])
+                                        {
+                                            EQNB = i;
+                                            break;
+                                        }
+                                    }
+                                    user.Equipment[EQNB, 1] -= 1;
+                                    if (user.Equipment[EQNB, 1] == 0)
+                                    {
+                                        Console.WriteLine("You broke your sword!");
+                                        user.RemoveFromEquipment(nb, user, data);
+                                        warrior.UnEquip(warrior, data);
+                                    }
+                                }
+
+                                break;
+
+                            default:
+                                toReturn = true;
+                                Console.WriteLine("Unknown option!");
+                                System.Threading.Thread.Sleep(4000);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        while (true)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("YOU ARE DEAD!");
+                            System.Threading.Thread.Sleep(2000);
+                            Console.WriteLine("YOUR SCORE WAS: " + score);
+                            Console.WriteLine("Press \"r\" to go back to main menu or \"ESC\" to quit");
+                            var key = Console.ReadKey();
+                            Console.WriteLine();
+
+                            if (key.Key == ConsoleKey.Escape)
+                            {
+                                Console.WriteLine("Bye!");
+                                System.Threading.Thread.Sleep(5000);
+                                Environment.Exit(0);//terminate console
+                            }
+                            else if (key.KeyChar == 'r')
+                            {
+                                Program.OpenMainMenu(data);
+                                break;
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Unknown option!");
+                                System.Threading.Thread.Sleep(5000);
+                                break;
+                            }
+
+
+
+                        }
+
+
+                    }
+
+                } while (true);
+
+
+
+
+            }    
+            
         }
         int nb;
-        public void AddToEquipment(int index, Item mythings, Character user)
+        public bool AddToEquipment(int index, Item mythings, Character user, Data data)
         {
-            for (int i = 0; i < user.Equipment.Length; i++)
+            bool a = false;
+            for (int i = 0; i < user.Equipment.Length / 2; i++)
             {
-                if (user.Equipment[i, 0] == 0)
+                if (mythings.unit[user.Equipment[i, 0]].nameofitem == mythings.unit[index].nameofitem)
                 {
-                    user.Equipment[i, 0] = index;
-                    nb = mythings.NB_Of_Uses(index, mythings);
-                    user.Equipment[i, 1] = nb;
-                    break;
+                    user.Equipment[i, 1] += 1;
+                    a = true;
+                    data.gamedata[5] = "Items: ";
+                    for (int j = 0; j < user.Equipment.Length / 2; j++)
+                    {
+                        data.gamedata[5] += user.Equipment[j, 0] + "-";
+                        data.gamedata[5] += user.Equipment[j, 1] + ";";
+                    }
+                    return true;
                 }
-                    
-                
-            }
 
+            }
+            if (a == false)
+            {
+                for (int i = 0; i < user.Equipment.Length / 2; i++)
+                {
+                    if (user.Equipment[i, 0] == 0)
+                    {
+                        user.Equipment[i, 0] = index;
+                        nb = mythings.NB_Of_Uses(index, mythings);
+                        user.Equipment[i, 1] = nb;
+                        data.gamedata[5] = "Items: ";
+                        for (int j = 0; j < user.Equipment.Length / 2; j++)
+                        {
+                            data.gamedata[5] += user.Equipment[j, 0] + "-";
+                            data.gamedata[5] += user.Equipment[j, 1] + ";";
+                        }
+                       
+                        return true;
+                    }
+                    else if (i == (user.Equipment.Length / 2) - 1)
+                    {
+                        Console.WriteLine("You don't have enough space!");
+                        System.Threading.Thread.Sleep(4000);
+                        return false;
+                    }
+                }
+               
+            }
+            return true;
+            }
+          
+
+        
+
+
+        public void RemoveFromEquipment(int indexEQ,Character user, Data data)
+        {
+                        user.Equipment[indexEQ, 0] = 0;
+                        user.Equipment[indexEQ, 1] = 0;
+            data.gamedata[5] = "Items: ";
+            for (int j = 0; j < user.Equipment.Length / 2; j++)
+            {
+                data.gamedata[5] += user.Equipment[j, 0] + "-";
+                data.gamedata[5] += user.Equipment[j, 1] + ";";
+            }
         }
 
 
-        public void RemoveFromEquipment(int index,  Character user)
-        {
-            for (int i = 0; i < user.Equipment.Length; i++)
-            {
-                if (user.Equipment[i, 0] == index)
-                {
-                    user.Equipment[i, 0] = 0;
-                    user.Equipment[i, 1] = 0;
-                    break;
-                }
-            }
-        }
 
-
-
-        public void Walk(Character user,Data data, Sorcerer sorc, Warrior war, Item mythings,Enemy Mermaid, Enemy Dragon)
+        public void Walk(Character user,Data data, Sorcerer sorc, Warrior war, Item mythings,Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
             bool toReturn = true;
             do
@@ -365,37 +799,36 @@ namespace RPG_GAME
                 Console.Write("Select: ");
                 char choice = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                NPC shopkeeper = new NPC(3, mythings);
+                NPC shopkeeper = new NPC(3, mythings,user);
 
                 switch (choice)
                 {
                     case '1':
-                       
-                        
-                        
                         if (data.gamedata[1]=="Class Warrior")
                         {
-                            Enemy Human = new Enemy(basic_hp, 100, 1);
-                            Human.Stack(new Attack("Drunk punch", 100, "I'll show you my real power!"));
-                            shopkeeper.GiveBeer_Warrior(Human,war,data);
+                            
+                            shopkeeper.GiveBeer_Warrior(user,war,data, mythings,Mermaid, Dragon,Human);
                         }
                         else
                         {
-                            shopkeeper.GiveBeer_Sorcerer(sorc,data);
+                            shopkeeper.GiveBeer_Sorcerer(user,sorc, mythings,data, Mermaid, Dragon,Human);
                         }
                         
                         break;
                     case '2':
                         
+                            user.Fight(Mermaid,data,user,mythings,sorc,war,Mermaid,Dragon,Human);
+                        
+                        
                         break;
                     case '3':
-                        shopkeeper.ShowItems(user,sorc,war,mythings,data,Mermaid,Dragon,shopkeeper);
+                        shopkeeper.ShowItems(user,sorc,war,mythings,data,Mermaid,Dragon,shopkeeper,Human);
                         break;
                     case '4':
                         Program.doPlot(data);
                         break;
                     case '5':
-                        Program.DefaultMenu(user, sorc,war,data,mythings,Mermaid,Dragon);
+                        Program.DefaultMenu(user, sorc,war,data,mythings,Mermaid,Dragon,Human);
                         break;
                     default:
                         toReturn = false;

@@ -7,7 +7,7 @@ namespace RPG_GAME
 {
     class NPC
     {
-        static int money;
+       int money;
         static int money_player;
         public static int moneyPlayer { get { return money_player; } }
         int nbofequipment;
@@ -17,118 +17,205 @@ namespace RPG_GAME
         public static int Actual { get { return actual_hp; } }
         public static int Basic { get { return basic_hp; } }
         int[,] equipment;
-        public NPC(int nbofequipment, Item mythings)
+        int[] arrayofindexes;
+        public int[] ReturnToArray { get { return arrayofindexes; } set { arrayofindexes = value; } }
+        int[] Value;
+        public int[] ValueOfItem { get { return Value; } set { Value = value; } }
+        public int[] value2;
+        public int[] ValueOfMYItem { get { return value2; } set { value2 = value; } }
+      
+        public int ShopKeeperMoney { get { return money; } set { money = value; } }
+        public NPC(int nbofequipment, Item mythings, Character user)
         {
             this.nbofequipment = nbofequipment;
-        }
-        public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper)
-        {
-            int[] arrayofindexes = new int[shopkeeper.Nb];
-            for (int i = 0; i < shopkeeper.Nb; i++)
+            int[] arrayofindexes = new int[nbofequipment];
+            int[] Value = new int[nbofequipment];
+            int[] value2 = new int[user.Equipment.Length / 2];
+            Random rnd1 = new Random();
+            money = rnd1.Next(100, 1000);
+            for (int i = 0; i < nbofequipment; i++)
             {
                 Random rnd = new Random();
                 arrayofindexes[i] = rnd.Next(1, mythings.Nb_Of_Items);
-            }
+                Value[i]= mythings.unit[arrayofindexes[i]].Generate_Value();
+                value2[i]= mythings.unit[user.Equipment[i,0]].Generate_Value();
 
+            }
+            ReturnToArray = arrayofindexes;
+            ValueOfItem = Value;
+            ValueOfMYItem = value2;
+            ShopKeeperMoney = money;
+
+        }
+        
+        public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper, Enemy Human)
+        {
+
+            
             while (true)
             {
                 Console.Clear();
-                Random rnd = new Random();
-                money = rnd.Next(100, 1000);
                 
-                Console.WriteLine("Shopkeeper account value: " + money);
+
+                Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
                 Console.WriteLine("Your account value: " + user.Money_player);
                 Console.WriteLine("Today I can offer you: ");
-                int[] value = new int[arrayofindexes.Length];
-                for (int i = 0; i < arrayofindexes.Length; i++)
+                for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
                 {
-                    Console.WriteLine(arrayofindexes[i]);
-                    value[i] = mythings.unit[arrayofindexes[i]].Generate_Value();
-                    Console.WriteLine("{0}. {1}: {2}PLN", i, mythings.unit[arrayofindexes[i]].nameofitem, value[i]);
+                    Console.WriteLine("{0}. {1}: {2}PLN", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]);
+                   
                 }
-                Console.WriteLine("{0}. I wanna sell you something", arrayofindexes.Length + 1);
-                Console.WriteLine("{0}. No, thank you", arrayofindexes.Length + 2);
+                Console.WriteLine("{0}. I wanna sell you something", shopkeeper.ReturnToArray.Length + 1);
+                Console.WriteLine("{0}. No, thank you", shopkeeper.ReturnToArray.Length + 2);
                 Console.Write("Select: ");
                 int key = CharUnicodeInfo.GetDecimalDigitValue(Console.ReadKey().KeyChar);
                 Console.WriteLine();
                 Console.WriteLine(key);
 
 
-                if (key <= arrayofindexes.Length)
+                if (key <= shopkeeper.ReturnToArray.Length)
                 {
-                    for (int i = 0; i < arrayofindexes.Length; i++)
+                    for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
                     {
                         if (key == i)
                         {
-                            user.Pay(value[i], arrayofindexes[i], mythings, user,money);
+                            shopkeeper.ShopKeeperMoney=user.Pay(shopkeeper.Value[i], shopkeeper.ReturnToArray[i], mythings, user, shopkeeper.ShopKeeperMoney,data);
                         }
 
                     }
 
 
                 }
-                else if (key == arrayofindexes.Length + 1)
+                else if (key == shopkeeper.ReturnToArray.Length + 1)
                 {
                    
                     while (true)
                     {
-                        equipment = user.Equipment;
+
                         Console.Clear();
-                        Console.WriteLine("Shopkeeper account value: " + money);
+                        Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
                         Console.WriteLine("Your account value: " + user.Money_player);
                         Console.WriteLine("What do you wanna sell? ");
                         Console.WriteLine("Your equipment: ");
-                        int[] value2 = new int[equipment.Length / 2];
-                        for (int i = 0; i < equipment.Length / 2; i++)
+                        for (int i = 0; i < user.Equipment.Length / 2; i++)
                         {
-                            if (equipment[i, 0] != 0)
+                            if (user.Equipment[i, 0] != 0)
                             {
-                                value[i] = mythings.unit[equipment[i, 0]].Generate_Value();
-                                Console.WriteLine("{0}. {1}: {2}PLN", i, mythings.unit[equipment[i, 0]].nameofitem, value2[i]);
-                                break;
+                                if(shopkeeper.value2[i]==0)
+                                {
+                                    shopkeeper.value2[i]=mythings.unit[user.Equipment[i, 0]].Generate_Value();
+                                    if(user.Equipment[i,1]>1)
+                                    {
+                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}PLN [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("{0}. {1}  Cost: {2}PLN", i, mythings.unit[user.Equipment[i, 0]].nameofitem,  shopkeeper.value2[i]);
+                                    }
+                                   
+                                }
+                                else
+                                {
+                                    if (user.Equipment[i, 1] > 1)
+                                    {
+                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}PLN [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("{0}. {1}  Cost: {2}PLN", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
+                                    }
+                                }
+                                
                             }
+                            else
+                            {
+                                Console.WriteLine("{0}. [Empty slot]",i);
+                            }
+                            
 
                         }
-                        Console.WriteLine("{0}. I resign", arrayofindexes.Length + 1);
+                        Console.WriteLine("{0}. I resign", user.Equipment.Length/2);
                         Console.Write("Select: ");
                         char nb2 = Console.ReadKey().KeyChar;
                         int key2 = CharUnicodeInfo.GetDecimalDigitValue(nb2);
                         Console.WriteLine();
 
-
-                        if (key2 <= arrayofindexes.Length)
+                        try
                         {
-                            for (int i = 0; i < arrayofindexes.Length; i++)
+                            if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] != 0)
                             {
-                                if (key2 == i)
+                                Console.WriteLine(user.Equipment[key2, 1]);
+                                if(user.Equipment[key2, 1]>1)
                                 {
-                                    money=user.Sell(value[i], i, user,money);
+                                    do
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Please, write the number of items to sell: ");
+                                       char nb= Console.ReadKey().KeyChar;
+                                        int key3 = CharUnicodeInfo.GetDecimalDigitValue(nb);
+                                        if (key3 < user.Equipment[key2,1] &&nb>0)
+                                        {
+                                            if(shopkeeper.money>=shopkeeper.value2[key2] * key3)
+                                            {
+                                                user.Equipment[key2, 1] -= key3;
+                                                user.AddMoney(shopkeeper.value2[key2] * key3, user, data);
+                                                shopkeeper.money -= shopkeeper.value2[key2] * key3;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("I don't have enopugh money!");
+                                                System.Threading.Thread.Sleep(2000);
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Wrong key!");
+                                            System.Threading.Thread.Sleep(2000);
+
+                                        }
+                                    } while (true);
+                                    
                                 }
+                                else
+                                {
+                                    shopkeeper.ShopKeeperMoney = user.Sell(shopkeeper.value2[key2] * user.Equipment[key2, 1], key2, user, shopkeeper.ShopKeeperMoney, data);
+                                }
+                                
 
                             }
-
+                            else if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] == 0)
+                            {
+                                Console.WriteLine("Item does not exist");
+                                System.Threading.Thread.Sleep(4000);
+                            }
+                            else if (key2 == user.Equipment.Length / 2)
+                            {
+                                break;
+                            }
+                        }
                             
-                        }
-                        else if (key == arrayofindexes.Length + 1)
+                        
+                       catch(IndexOutOfRangeException ex)
                         {
-                            break;
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine("Unknown sign!");
+                            System.Threading.Thread.Sleep(2000);
+                            Console.Clear();
                         }
-
-                        else
-                        {
-
-
-                            Console.WriteLine("Unknown option!");
-
-                        }
+                        
+                            
+                        
+                       
                     } 
 
                 }
 
-                else if (key == arrayofindexes.Length + 2)
+                else if (key == shopkeeper.ReturnToArray.Length + 2)
                 {
                     Console.WriteLine("Bye");
-                    Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon);
+                    Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon,Human);
                 }
                 else
                 {
@@ -143,7 +230,7 @@ namespace RPG_GAME
         
             
 }
-      public void GiveBeer_Sorcerer(Sorcerer user, Data data)
+      public void GiveBeer_Sorcerer(Character user, Sorcerer user_sorcerer, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
             Warrior war = new Warrior("N",0,0,0,0,0);
             char decision;
@@ -153,12 +240,15 @@ namespace RPG_GAME
                 Random rnd3 = new Random();
                 int howmuch = rnd3.Next(50,150);
                 Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*",howmuch);
+
                 decision = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 if (decision == 'y')
                 {
                     Console.Clear();
-                    user.RemoveMoney(howmuch,user);
+                    user.RemoveMoney(howmuch,user,data);
+                    user.Actual_hp = user.Basic_hp;
+                    Console.WriteLine(user.Basic_hp);
                     Console.WriteLine("Few hours later");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");
@@ -173,13 +263,17 @@ namespace RPG_GAME
                     {
                         Random rnd2 = new Random();
                         int cash = rnd2.Next(0, money_player);
-                        user.RemoveMoney(cash, user);
+                        user.RemoveMoney(cash, user,data);
+                        Console.Clear();
                         Console.WriteLine("Unfortunatelly you offended someone in the tavern and lost {0} money",cash);
-                        
+                        System.Threading.Thread.Sleep(5000);
+
                     }
                     else
                     {
                         Console.WriteLine("-See you again!");
+                        System.Threading.Thread.Sleep(5000);
+                        Console.Clear();
                     }
                     break;
 
@@ -187,6 +281,7 @@ namespace RPG_GAME
                 else if (decision == 'n')
                 {
                     Console.WriteLine("Okay, See you then...");
+                    System.Threading.Thread.Sleep(5000);
                     Console.Clear();
 
                     break;
@@ -194,15 +289,20 @@ namespace RPG_GAME
                 else
                 {
                     Console.WriteLine("unknown command, try again...");
+                    System.Threading.Thread.Sleep(5000);
+                    Console.Clear();
                 }
 
 
             } while (decision != 'y' && decision != 'n');
+
+            Warrior user_warrior = new Warrior("Fake",0,0,0,0,0);
+            Program.DefaultMenu(user,user_sorcerer,user_warrior,data,mythings,Mermaid,Dragon,Human);
         }
         
       
       
-        public void GiveBeer_Warrior(Enemy Human, Warrior user, Data data)
+        public void GiveBeer_Warrior(Character user, Warrior user_warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Sorcerer sor = new Sorcerer("N", 0, 0, 0, 0);
             char decision;
@@ -217,7 +317,8 @@ namespace RPG_GAME
                 if (decision == 'y')
                 {
                     Console.Clear();
-                    user.RemoveMoney(howmuch,user);
+                    user.RemoveMoney(howmuch,user,data);
+                    user.Actual_hp = user.Basic_hp;
                     Console.WriteLine("Few hours later");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");
@@ -225,18 +326,23 @@ namespace RPG_GAME
                     Console.Write(".");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");
-                    actual_hp = basic_hp;
+                   
                     Random rnd = new Random();
                     int rand = rnd.Next(101);
                     if(rand<=25)
                     {
-
+                        Console.Clear();
                         Sorcerer sor2 = new Sorcerer("N", 0,  0, 0,0);                        
                             Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
-                        user.Fight(Human,data,user);                    }
+
+                        System.Threading.Thread.Sleep(4000);
+                        user.Fight(Human,data,user,mythings,sor2, user_warrior, mermaid, dragon, Human);                    }
                     else
                     {
                         Console.WriteLine("-See you again!");
+
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
                     }
                     break;
 
@@ -255,8 +361,8 @@ namespace RPG_GAME
 
 
             } while (decision != 'y' && decision != 'n');
-
-            
+            Sorcerer user_sorcerer = new Sorcerer("Fake", 0, 0, 0, 0);
+            Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, mermaid, dragon, Human);
         }
 
     }
