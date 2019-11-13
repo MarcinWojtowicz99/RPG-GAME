@@ -82,66 +82,77 @@ namespace RPG_GAME
         {
             if (Program.autosave == true)
             {
-                string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");
-                if (filePaths.Length<10)
+                do
                 {
-                    DateTime localDate = DateTime.Now;
-                    string date0 = localDate.ToString();
-                    string date = date0.Replace(':', '.');
-                    string finalpathforsave = path + "\\" + Gamedata[0] + date + ".txt";
-                    string finalpathforsave3 = path + "\\SaveGame\\[AUTO]" + Gamedata[0] + date + ".txt";
-                    StreamWriter writer = new StreamWriter(finalpathforsave);
-                    for (int i = 0; i < Gamedata.Length; i++)
+                    string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");
+                    if (filePaths.Length < 10)
                     {
-
-                        if (Gamedata[i] != null)
+                        DateTime localDate = DateTime.Now;
+                        string date0 = localDate.ToString();
+                        string date = date0.Replace(':', '.');
+                        string finalpathforsave = path + "\\" + Gamedata[0] + date + ".txt";
+                        string finalpathforsave3 = path + "\\SaveGame\\[AUTO]" + Gamedata[0] + date + ".txt";
+                        StreamWriter writer = new StreamWriter(finalpathforsave);
+                        for (int i = 0; i < Gamedata.Length; i++)
                         {
-                            writer.WriteLine(Gamedata[i]);
+
+                            if (Gamedata[i] != null)
+                            {
+                                writer.WriteLine(Gamedata[i]);
+
+                            }
+                            else
+                            {
+                                break;
+                            }
 
                         }
-                        else
-                        {
-                            break;
-                        }
-
+                        writer.Close();
+                        EncryptFile(finalpathforsave, finalpathforsave3);
+                        File.Delete(finalpathforsave);
+                        break;
                     }
-                    writer.Close();
-                    EncryptFile(finalpathforsave, finalpathforsave3);
-                    File.Delete(finalpathforsave);
-                }
-                else
-                {
-                    Console.Clear();
-                   
-                    do
+                    else
                     {
                         Console.Clear();
-                        string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
-                        Console.WriteLine("Choose file or files to delete and press ESC to continue");
-                        for (int i = 0; i < filePathsUpdate.Length; i++)
+
+                        do
                         {
-                            Console.WriteLine("{0}. {1}", i, filePathsUpdate[i]);
-                        }
-                        Console.Write("Select: ");
-                        var A = Console.ReadKey();
-                        if(A.Key == ConsoleKey.Escape)
-                        {
-                            break;
-                        }
-                        int pather = CharUnicodeInfo.GetDecimalDigitValue(A.KeyChar);
-                        if (pather <= filePathsUpdate.Length && pather >= 0)
-                        {
-                            File.Delete(filePathsUpdate[pather]);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unknown path!");
-                            Console.ReadKey();
-                        }
-                    } while (true);
-                    
-                }
-                
+                            Console.Clear();
+                            string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
+                            Console.WriteLine("Choose file or files to delete and press ESC to continue");
+                            for (int i = 0; i < filePathsUpdate.Length; i++)
+                            {
+                                Console.WriteLine("{0}. {1}", i, filePathsUpdate[i]);
+                            }
+                            Console.Write("Select: ");
+                            var A = Console.ReadKey();
+                            if (A.Key == ConsoleKey.Escape)
+                            {
+                                break;
+                            }
+                            int pather = CharUnicodeInfo.GetDecimalDigitValue(A.KeyChar);
+                            if (pather <= filePathsUpdate.Length && pather >= 0)
+                            {
+                                try
+                                {
+                                    File.Delete(filePathsUpdate[pather]);
+                                }
+                                catch (IndexOutOfRangeException)
+                                {
+                                    Console.WriteLine("Unknown path!");
+                                    Console.ReadKey();
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Unknown path!");
+                                Console.ReadKey();
+                            }
+                        } while (true);
+
+                    }
+                } while (true);
             }
         }
         public void LoadGame(Data data) 

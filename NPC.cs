@@ -248,7 +248,6 @@ namespace RPG_GAME
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
                     user.Actual_hp = user.Basic_hp;
-                    Console.WriteLine(user.Basic_hp);
                     Console.WriteLine("Few hours later");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");
@@ -312,13 +311,16 @@ namespace RPG_GAME
                 Random rnd3 = new Random();
                 int howmuch = rnd3.Next(50, 150);
                 Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*", howmuch);
+                user.Actual_hp = 0;
+                user.Actual_hp = user.Basic_hp;
+                user.Actual_hp = user_warrior.BoostMe();
                 decision = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 if (decision == 'y')
                 {
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
-                    user.Actual_hp = user.Basic_hp;
+                   
                     Console.WriteLine("Few hours later");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");

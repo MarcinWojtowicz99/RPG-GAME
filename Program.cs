@@ -12,7 +12,7 @@ namespace RPG_GAME
         public static int basichp = 1000; //easy changable nb of basic HP of character
         public static int maxequipment = 9; //max nb of equipment character can carry
         public static int startmoney = 1000;
-        public static bool autosave = false;
+        public static bool autosave = true;
         public static int index_border = 10;//border of indexes between Potion and Weapon
         public static int basic_damage = 50; //character "punch" damage
         public static int hpboost = 500; //extra hp for warrior
@@ -415,11 +415,11 @@ namespace RPG_GAME
                     case '1':
                         if (data.gamedata[1] != "Class Warrior")
                         {
-                            user_Sorcerer.ViewEquipment(mythings,user, user_Sorcerer, user_Warrior, data,mermaid, dragon, Human);
+                            user_Sorcerer.ViewEquipment(mythings,user, user_Sorcerer, user_Warrior, data,mermaid, dragon, Human,false);
                         }
                         else
                         {
-                            user_Warrior.ViewEquipment(mythings, user, user_Sorcerer, user_Warrior, data, mermaid, dragon,Human);
+                            user_Warrior.ViewEquipment(mythings, user, user_Sorcerer, user_Warrior, data, mermaid, dragon,Human,false);
                         }
                         break;
                     case '2':
