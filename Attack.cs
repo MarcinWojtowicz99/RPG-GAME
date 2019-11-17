@@ -11,8 +11,9 @@ namespace RPG_GAME
         
         public Attack(string name, int attackvalue, string specialinfo)
         {
-            this.name = name;
-            this.attackvalue = attackvalue;
-            this.specialinfo = specialinfo;        }
+            this.name = name;//name of attack displayed on a screen during attack
+            this.attackvalue = attackvalue;//basic attack value for monsters
+            this.specialinfo = specialinfo;    //stores special quote for attack
+        }
     }
 }

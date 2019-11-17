@@ -5,11 +5,11 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
-    class Warrior:Character
+    class Warrior : Character
     {
         int hpboost;
-       
-        
+        double nbofuseOfEquipmentbeforeitcracks = 250.0;
+        public double NbOfUseEQ {get{ return nbofuseOfEquipmentbeforeitcracks; } set{ nbofuseOfEquipmentbeforeitcracks = value; } }
         int[,] equipment;
         public Warrior(string name, int basic_hp, int maxequipment, int hpboost, int basic_damage, int startmoney) : base(name, basic_hp, maxequipment, basic_damage, startmoney)
         {
@@ -21,19 +21,33 @@ namespace RPG_GAME
         {
             return actual_hp += hpboost;
         }
-     
+     public double GenerateNbOfUse()
+        {
+            Random rnd = new Random();
+            int random = rnd.Next(5,10);
+            double nb = Convert.ToDouble(random)*0.1;
+            return NbOfUseEQ * nb;
+        }
         public bool Equip_Character(int index, Item mythings, Warrior warrior, Data data)
         {
-
+            warrior.NbOfUseEQ = GenerateNbOfUse();
             warrior.Equip = index;
             data.gamedata[6] = "Equipped: "+index;
+            Console.WriteLine("Equipped: "+index);
+            System.Threading.Thread.Sleep(4000);
             return true;
         }
-        public bool UnEquip(Warrior warrior,Data data)
+        public bool UnEquip(Warrior warrior,Item mythings,Data data)
         {
+            if (warrior.Equip != 0)
+                            {
+                                int index = warrior.Equip;
+                                warrior.AddToEquipment(index,mythings,warrior,data);
+                            }
             warrior.Equip = 0;
             data.gamedata[6] = "Equipped: No";
-            return false;
+            
+                return false;
         }
         public static double WarriorAttacks(double attack,int Strength)
         {
@@ -114,16 +128,25 @@ namespace RPG_GAME
                 Console.WriteLine("1. Okay");
                 Console.WriteLine("2. No, thank you");
                 char b = Console.ReadKey().KeyChar;
+                bool ring = user.FindInEquipment(mythings, user, "Queen's ring");
                 switch (b)
                 {
                     case '1':
-                        if(user.Money_player-20000>=0)
+                        if(user.Money_player-20000>=0&&ring==true)
                         {
+                            Console.Clear();
+                            Console.WriteLine("Teleporting...");
+                            System.Threading.Thread.Sleep(2000);
+                            Console.Clear();
+                            user.GameComplete = true;
+                            user.Fight(Dragon, data,user,mythings,user_sorcerer,user_warrior,Mermaid,Dragon,Human);
 
                         }
                         else
                         {
-                            Console.WriteLine("You don't have enough money, come here when you'll be ready");
+                            Console.WriteLine("I see, come back when you'll be ready");
+                            Console.ReadKey();
+                            Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon, Human);
                         }
                         break;
                     case '2':
@@ -136,5 +159,6 @@ namespace RPG_GAME
             }
             
         }
+       
     }
 }

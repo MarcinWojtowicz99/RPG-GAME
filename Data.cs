@@ -114,20 +114,21 @@ namespace RPG_GAME
                     }
                     else
                     {
-                        Console.Clear();
+                       
 
                         do
                         {
                             Console.Clear();
                             string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
-                            Console.WriteLine("Choose file or files to delete and press ESC to continue");
+                            Console.WriteLine("Choose file or files to delete and press ENTER to continue");
                             for (int i = 0; i < filePathsUpdate.Length; i++)
                             {
-                                Console.WriteLine("{0}. {1}", i, filePathsUpdate[i]);
+                                string[] filePathsToShow = filePaths[i].Split(@"\");
+                                Console.WriteLine("{0}. {1}", i, filePathsToShow[filePathsToShow.Length - 1]);
                             }
                             Console.Write("Select: ");
                             var A = Console.ReadKey();
-                            if (A.Key == ConsoleKey.Escape)
+                            if (A.Key == ConsoleKey.Enter)
                             {
                                 break;
                             }
@@ -158,13 +159,15 @@ namespace RPG_GAME
         public void LoadGame(Data data) 
         {
             
-                string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");         
+                string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");
+            
                 if (filePaths.Length > 1)
                 {
-                    Console.WriteLine("Which save would you like to read? Type only the name of text file .txt");
+                    Console.WriteLine("Which save would you like to read?");
                     for (int i = 0; i < filePaths.Length; i++)
                     {
-                        Console.WriteLine("{0}. {1}",i,filePaths[i]);
+                    string[] filePathsToShow = filePaths[i].Split(@"\");
+                    Console.WriteLine("{0}. {1}",i, filePathsToShow[filePathsToShow.Length-1]);
                     }
                 // int pather = Convert.ToInt32(Console.ReadLine());
                 Console.Write("Select: ");
@@ -311,7 +314,7 @@ namespace RPG_GAME
             int a=0;
             for (int i = 0; i < Gamedata.Length; i++)
             {
-                if (Gamedata[i] == null)
+                if (Gamedata[i] == "NO DATA"&&i!=11&&i!=12)//11 and 12 is for side event
                 {
                     a = i;
                     break;
@@ -341,11 +344,11 @@ namespace RPG_GAME
             }
             return toReturn;
         }
-        public void ReadData(Data data, Character user, Warrior warrior, Item mythings)
+        public void ReadData(Data data, Character user, Warrior warrior, Item mythings, Sorcerer user_Sorcerer, Enemy dragon, Enemy human, Enemy mermaid)
         {
-            string[] datas = new String[data.gamedata.Length];
+            string[] datas = new String[11];
             
-            for (int i=2; i<data.gamedata.Length-2;i++)
+            for (int i=2; i<11;i++)
             {
                     string[] reader = new String[2];
                     reader = data.gamedata[i].Split(' ');
@@ -370,6 +373,13 @@ namespace RPG_GAME
             {
                 warrior.Equip_Character(Convert.ToInt32(datas[6]),mythings,warrior,data);
             }
+                if(warrior.name== "NAN")
+            {
+                user_Sorcerer.DemonsKilled=Convert.ToInt32(datas[10]);
+            }
+                mermaid.EnemyKilled= Convert.ToInt32(datas[8]);
+            dragon.EnemyKilled = Convert.ToInt32(datas[7]);
+            human.EnemyKilled = Convert.ToInt32(datas[9]);
         }
     }
 }

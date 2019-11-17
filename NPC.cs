@@ -23,7 +23,6 @@ namespace RPG_GAME
         public int[] ValueOfItem { get { return Value; } set { Value = value; } }
         public int[] value2;
         public int[] ValueOfMYItem { get { return value2; } set { value2 = value; } }
-      
         public int ShopKeeperMoney { get { return money; } set { money = value; } }
         public NPC(int nbofequipment, Item mythings, Character user)
         {
@@ -36,7 +35,7 @@ namespace RPG_GAME
             for (int i = 0; i < nbofequipment; i++)
             {
                 Random rnd = new Random();
-                arrayofindexes[i] = rnd.Next(1, mythings.Nb_Of_Items);
+                arrayofindexes[i] = rnd.Next(1, mythings.Nb_Of_Items-2);
                 Value[i]= mythings.unit[arrayofindexes[i]].Generate_Value();
                 value2[i]= mythings.unit[user.Equipment[i,0]].Generate_Value();
 
@@ -50,20 +49,15 @@ namespace RPG_GAME
         
         public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper, Enemy Human)
         {
-
-            
             while (true)
             {
                 Console.Clear();
-                
-
                 Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
                 Console.WriteLine("Your account value: " + user.Money_player);
                 Console.WriteLine("Today I can offer you: ");
                 for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
                 {
                     Console.WriteLine("{0}. {1}: {2}PLN", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]);
-                   
                 }
                 Console.WriteLine("{0}. I wanna sell you something", shopkeeper.ReturnToArray.Length + 1);
                 Console.WriteLine("{0}. No, thank you", shopkeeper.ReturnToArray.Length + 2);
@@ -71,8 +65,6 @@ namespace RPG_GAME
                 int key = CharUnicodeInfo.GetDecimalDigitValue(Console.ReadKey().KeyChar);
                 Console.WriteLine();
                 Console.WriteLine(key);
-
-
                 if (key <= shopkeeper.ReturnToArray.Length)
                 {
                     for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
@@ -81,14 +73,10 @@ namespace RPG_GAME
                         {
                             shopkeeper.ShopKeeperMoney=user.Pay(shopkeeper.Value[i], shopkeeper.ReturnToArray[i], mythings, user, shopkeeper.ShopKeeperMoney,data);
                         }
-
                     }
-
-
                 }
                 else if (key == shopkeeper.ReturnToArray.Length + 1)
                 {
-                   
                     while (true)
                     {
 
@@ -209,7 +197,6 @@ namespace RPG_GAME
                         
                        
                     } 
-
                 }
 
                 else if (key == shopkeeper.ReturnToArray.Length + 2)
@@ -219,16 +206,9 @@ namespace RPG_GAME
                 }
                 else
                 {
-
                     Console.WriteLine("Unknown option!");
-
                 }
-                
             }
-
-            
-        
-            
 }
       public void GiveBeer_Sorcerer(Character user, Sorcerer user_sorcerer, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
@@ -299,8 +279,6 @@ namespace RPG_GAME
             Program.DefaultMenu(user,user_sorcerer,user_warrior,data,mythings,Mermaid,Dragon,Human);
         }
         
-      
-      
         public void GiveBeer_Warrior(Character user, Warrior user_warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Sorcerer sor = new Sorcerer("N", 0, 0, 0, 0);
@@ -335,8 +313,7 @@ namespace RPG_GAME
                     {
                         Console.Clear();
                         Sorcerer sor2 = new Sorcerer("N", 0,  0, 0,0);                        
-                            Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
-
+                        Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
                         System.Threading.Thread.Sleep(4000);
                         user.Fight(Human,data,user,mythings,sor2, user_warrior, mermaid, dragon, Human);                    }
                     else

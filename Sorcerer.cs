@@ -8,13 +8,112 @@ namespace RPG_GAME
     class Sorcerer:Character
     {
         int[,] equipment;
+        int demonskilled;
+        public int DemonsKilled { get {return demonskilled; } set { demonskilled = value; } }
         public Sorcerer(string name, int basic_hp, int maxequipment, int basic_damage, int startmoney) : base(name, basic_hp, maxequipment,basic_damage,startmoney)
         {
             equipment = Equipment;
+            activskil = false;
+            demonskilled = 0;
         }
+       bool activskil;
+       public bool Activeskill { get { return activskil; }set { activskil = value; } }
         public void Teleport(Item mythings,Character user,Sorcerer user_Sorcerer,Warrior user_Warrior,Data data,Enemy mermaid,Enemy dragon,Enemy Human)
         {
-            Console.WriteLine("Where would you like to teleport?");
+            bool toReturn = false;
+            do
+            {
+                Console.WriteLine("Where would you like to teleport? (Press [ESC] to go back)");
+                Console.WriteLine("1. Gyouku Mountain");//May find jewels
+                Console.WriteLine("2. Schu-chan Temple");//basic damage increase temporarly 
+                user.GameComplete = true;
+                bool ring = user.FindInEquipment(mythings, user, "Queen's ring");
+                if (ring == true)
+                {
+                    Console.WriteLine("3. Dragon Valley");
+                }
+                var a = Console.ReadKey();
+                if (a.Key == ConsoleKey.Escape)
+                {
+                    Program.DefaultMenu(user, user_Sorcerer, user_Warrior, data, mythings, mermaid, dragon, Human);
+                    break;
+                }
+                char choice = Console.ReadKey().KeyChar;
+                Console.Clear();
+                switch (choice)
+                {
+                    case '1':
+                        Random rnd = new Random();
+                        int ind = rnd.Next(100);
+                        if (ind < 2)
+                        {
+                            bool got = user.AddToEquipment(2, mythings, user, data);
+                            if (got == true)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("You have found jewels!");
+                                System.Threading.Thread.Sleep(2000);
+                                Console.Clear();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Your storage is full :c");
+                                System.Threading.Thread.Sleep(2000);
+                                Console.Clear();
+                            }
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Unfortunately you didn't find jewels :(");
+                            System.Threading.Thread.Sleep(2000);
+                            Console.Clear();
+                        }
+
+
+                        break;
+                    case '2':
+
+                        Basic_damage *= 2;
+                        user_Sorcerer.Activeskill = true;
+                        Console.Clear();
+                        Console.WriteLine("Your mana increased!");
+                        Console.WriteLine("+200 points!");
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
+                        user.Score += 200;
+                        user.UpdateScore(user, data);
+
+                        break;
+                    case '3':
+
+
+                        if (ring == true)
+                        {
+                            user.GameComplete = true;
+                            user.Fight(dragon, data, user, mythings, user_Sorcerer, user_Warrior, mermaid, dragon, Human);
+                            toReturn = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong key!");
+                            System.Threading.Thread.Sleep(2000);
+                            Console.Clear();
+                            toReturn = false;
+                        }
+                        break;
+                    default:
+
+                        Console.WriteLine("Wrong key!");
+                        toReturn = false;
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
+                        break;
+                }
+                Console.Clear();
+
+            } while (toReturn != true);
         }
         public static double Sorcerer_Spells(double value,int type, Enemy enemy, Sorcerer user, Item mythings, Data data,bool firedamageenabled,Enemy Mermaid, Enemy Human, Enemy Dragon)
         {
@@ -80,8 +179,15 @@ namespace RPG_GAME
                            
                             Random rnd3 = new Random();
                             int random3 = rnd3.Next(100);
-
-                            if (random3 < 50)
+                            bool isholywater = false ;
+                            for(int i=0;i<user.Equipment.Length/2;i++)
+                            {
+                                if(mythings.unit[user.Equipment[i,0]].nameofitem=="Holy water")
+                                {
+                                    isholywater = true;
+                                }
+                            }
+                            if (random3 < 50||isholywater==true)
                             {
                                 Console.WriteLine("Congratulations! You used secret spell and defeated the demon! Unfortunately you lost half of you HP in this battle and your main enemy HP has been restored...");
                                 user.Money_player += 6000;
@@ -95,10 +201,12 @@ namespace RPG_GAME
                                 user.UpdateMoney(user, data);
                                 user.UpdateScore(user, data);
                                 Console.ReadKey();
+                                user.DemonsKilled++;
+                                data.gamedata[10] = "Unknowns: " + user.DemonsKilled;
                             }
                             else
                             {
-                                Console.WriteLine("Unfortunately goldfish has changed into demon who took you soul");
+                                Console.WriteLine("Unfortunately goldfish has changed into the demon who took you soul");
                                 Console.WriteLine("GAME OVER!");
                                 user.Actual_hp = 0;
                                 Console.ReadKey();
@@ -125,13 +233,14 @@ namespace RPG_GAME
                     System.Threading.Thread.Sleep(500);
                     Console.Write(".");
                     value *= 2;
+                    
                 }
             }
             else if (type == '2')
             {
 
                 Console.Clear();
-                Console.Write("You used FIREBALL... Flaming damage enabled!");
+                Console.WriteLine("You used FIREBALL... Flaming damage enabled!");
                 System.Threading.Thread.Sleep(1500);
                 firedamageenabled = true;
                 
@@ -151,7 +260,11 @@ namespace RPG_GAME
             if (firedamageenabled == true)
             {
                 Console.WriteLine("+FLAMING DAMAGE");
-                return value+456;
+                Console.Clear();
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Your attack value: " + value);
+                System.Threading.Thread.Sleep(2000);
+                return value+(0.15*enemy.Enemy_Actual_HP);
             }
             else
             {
