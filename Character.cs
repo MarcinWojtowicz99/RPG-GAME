@@ -214,13 +214,15 @@ namespace RPG_GAME
                 for (int i = 0; i < equipment.Length / 2; i++)
                 {
 
-                    if (equipment[i, 0] != 0)
+                    if (user.Equipment[i, 0] != 0)
                     {
                         Console.Write("{0}. ", i + 1);
                         int index = equipment[i, 0];
                         mythings.Item_Name(index, mythings);
-                        Console.WriteLine(" [Uses: {0}]", equipment[i, 1]);
-                        System.Threading.Thread.Sleep(2000);
+                        if (user.Equipment[i, 1] > 0)
+                            Console.WriteLine(" [Uses: {0}]", equipment[i, 1]);
+                        else
+                            Console.WriteLine();
                     }
                     else
                     {
@@ -250,12 +252,7 @@ namespace RPG_GAME
                         {
                             if (data.gamedata[1] != "Class Sorcerer"&&user_warrior.Equip!=index)
                             {
-                            
-                            
-                                
-                               
-                         
-                            user_warrior.Equip_Character(index, mythings, user_warrior, data);
+                            user_warrior.Equip_Character(index, mythings, user_warrior, data, user);
                             user.Equipment[nb, 1] -= 1;
                         }
                             else
@@ -303,6 +300,7 @@ namespace RPG_GAME
         public void Fight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Console.Clear();
+            data.AutoSaveGame(data);
             Console.WriteLine("Let's start the fight!");
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
@@ -380,12 +378,16 @@ namespace RPG_GAME
                                         enemy.Enemy_Actual_HP -= finalattack;
                                         if (finalattack != 0)
                                         {
+                                            if(warrior.Equip!=0)
+                                            {
+                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
+                                            }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack);
+                                            Console.WriteLine("Your hit value: " + finalattack+ mythings.unit[warrior.Equip].damageorhealvalueafteruse);
                                             System.Threading.Thread.Sleep(2000);
                                         }
 
-                                        if (user.Equip != 0)
+                                        if (warrior.Equip != 0)
                                         {
                                             
                                             warrior.NbOfUseEQ -= 1;
@@ -393,7 +395,7 @@ namespace RPG_GAME
                                             {
                                                 Console.WriteLine("You broke your sword!");
                                                 System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior,mythings, data);
+                                                warrior.UnEquip(warrior,mythings, data, user);
                                             }
                                         }
                                         break;
@@ -404,12 +406,15 @@ namespace RPG_GAME
                                         enemy.Enemy_Actual_HP -= finalattack;
                                         if (finalattack != 0)
                                         {
-
+                                            if (warrior.Equip != 0)
+                                            {
+                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
+                                            }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack);
+                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
                                             System.Threading.Thread.Sleep(2000);
                                         }
-                                        if (user.Equip != 0)
+                                        if (warrior.Equip != 0)
                                         {
                                             
                                             warrior.NbOfUseEQ -= 1;
@@ -417,7 +422,7 @@ namespace RPG_GAME
                                             {
                                                 Console.WriteLine("You broke your sword!");
                                                 System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior, mythings, data);
+                                                warrior.UnEquip(warrior, mythings, data, user);
                                             }
                                         }
                                         break;
@@ -428,11 +433,15 @@ namespace RPG_GAME
                                         enemy.Enemy_Actual_HP -= finalattack;
                                         if (finalattack != 0)
                                         {
+                                            if (warrior.Equip != 0)
+                                            {
+                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
+                                            }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack);
+                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
                                             System.Threading.Thread.Sleep(2000);
                                         }
-                                        if (user.Equip != 0)
+                                        if (warrior.Equip != 0)
                                         {
                                             
                                             warrior.NbOfUseEQ -= 1;
@@ -440,7 +449,7 @@ namespace RPG_GAME
                                             {
                                                 Console.WriteLine("You broke your sword!");
                                                 System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior, mythings, data);
+                                                warrior.UnEquip(warrior, mythings, data, user);
                                             }
                                             
                                         }
@@ -644,7 +653,12 @@ namespace RPG_GAME
                                 }
                                 else if (key.KeyChar == 'r')
                                 {
-                                    Program.OpenMainMenu(data);
+
+                                System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);//start new process
+
+                                //Close the current process
+                                Environment.Exit(0);
+                                Program.OpenMainMenu(data);
                                     break;
                                 }
                                 else
@@ -670,6 +684,7 @@ namespace RPG_GAME
             {
                 if (mythings.unit[user.Equipment[i, 0]].nameofitem == itemname)
                 {
+
                     isitem = true;
                 }
             }
@@ -780,7 +795,7 @@ namespace RPG_GAME
                     case '1':
                         if (data.gamedata[1]=="Class Warrior")
                         {
-                            war.UnEquip(war, mythings, data);
+                            war.UnEquip(war, mythings, data, user);
                             shopkeeper.GiveBeer_Warrior(user,war,data, mythings,Mermaid, Dragon,Human);
                         }
                         else
@@ -799,7 +814,7 @@ namespace RPG_GAME
                         shopkeeper.ShowItems(user,sorc,war,mythings,data,Mermaid,Dragon,shopkeeper,Human);
                         break;
                     case '4':
-                        Program.doPlot(data, user, Mermaid);
+                        Program.doPlot(data, user, Mermaid,sorc,war,mythings,Mermaid,Dragon,Human);
                         break;
                     
                     default:

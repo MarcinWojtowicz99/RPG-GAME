@@ -49,15 +49,34 @@ namespace RPG_GAME
         
         public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper, Enemy Human)
         {
+            Console.Clear();
+            int additionalprize = 0;
+            if (data.gamedata[13] != "Watch out!"  && data.gamedata[13] != "NO DATA" && data.gamedata[20] == "NO DATA")
+                {
+                    Program.Print("I don't like people like you. Stay away from our Kingdom!", "yellow");
+                    additionalprize = 110;
+                }
+                else if (data.gamedata[20] == "+You saved the Queen"&&data.gamedata[13] != "Watch out!")
+                {
+                    Program.Print("You are a hero! You saved our queen! I've just realized how much I was wrong", "yellow");
+                }
+                else
+                {
+                    Program.Print("Welcome in my shop, traveler, what do you need?", "yellow");
+                }
+                System.Threading.Thread.Sleep(2000);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.White;
             while (true)
             {
+               
                 Console.Clear();
                 Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
                 Console.WriteLine("Your account value: " + user.Money_player);
                 Console.WriteLine("Today I can offer you: ");
                 for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
                 {
-                    Console.WriteLine("{0}. {1}: {2}PLN", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]);
+                    Console.WriteLine("{0}. {1}: {2}Dragon Coins", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]+ additionalprize);
                 }
                 Console.WriteLine("{0}. I wanna sell you something", shopkeeper.ReturnToArray.Length + 1);
                 Console.WriteLine("{0}. No, thank you", shopkeeper.ReturnToArray.Length + 2);
@@ -71,7 +90,7 @@ namespace RPG_GAME
                     {
                         if (key == i)
                         {
-                            shopkeeper.ShopKeeperMoney=user.Pay(shopkeeper.Value[i], shopkeeper.ReturnToArray[i], mythings, user, shopkeeper.ShopKeeperMoney,data);
+                            shopkeeper.ShopKeeperMoney=user.Pay(shopkeeper.Value[i]+ additionalprize, shopkeeper.ReturnToArray[i], mythings, user, shopkeeper.ShopKeeperMoney+ additionalprize, data);
                         }
                     }
                 }
@@ -94,11 +113,11 @@ namespace RPG_GAME
                                     shopkeeper.value2[i]=mythings.unit[user.Equipment[i, 0]].Generate_Value();
                                     if(user.Equipment[i,1]>1)
                                     {
-                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}PLN [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
                                     }
                                     else
                                     {
-                                        Console.WriteLine("{0}. {1}  Cost: {2}PLN", i, mythings.unit[user.Equipment[i, 0]].nameofitem,  shopkeeper.value2[i]);
+                                        Console.WriteLine("{0}. {1}  Cost: {2}Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem,  shopkeeper.value2[i]);
                                     }
                                    
                                 }
@@ -106,11 +125,11 @@ namespace RPG_GAME
                                 {
                                     if (user.Equipment[i, 1] > 1)
                                     {
-                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}PLN [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
                                     }
                                     else
                                     {
-                                        Console.WriteLine("{0}. {1}  Cost: {2}PLN", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
+                                        Console.WriteLine("{0}. {1}  Cost: {2}Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
                                     }
                                 }
                                 
@@ -219,8 +238,20 @@ namespace RPG_GAME
                 Console.Clear();
                 Random rnd3 = new Random();
                 int howmuch = rnd3.Next(50,150);
-                Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*",howmuch);
-
+                if (data.gamedata[13] != "Watch out!"&&howmuch<=70&& data.gamedata[13] != "NO DATA"&& data.gamedata[20] =="NO DATA")
+                {
+                    Program.Print("I heard that you made our princess upset. I have an advice for you for your safety do what she wants.","yellow");
+                }
+                else if(data.gamedata[20]== "+You saved the Queen")
+                {
+                    Program.Print("You are a hero! You saved our queen! It's on me! [Y/N]", "yellow");
+                    howmuch = 0;
+                }
+                else
+                {
+                    Program.Print("-Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", "yellow");
+                }
+                Console.ForegroundColor = ConsoleColor.White;
                 decision = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 if (decision == 'y')
@@ -228,7 +259,7 @@ namespace RPG_GAME
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
                     user.Actual_hp = user.Basic_hp;
-                    Console.WriteLine("Few hours later");
+                    Program.Print("Few hours later", "white");
                     System.Threading.Thread.Sleep(1000);
                     Console.Write(".");
                     System.Threading.Thread.Sleep(1000);
@@ -244,13 +275,13 @@ namespace RPG_GAME
                         int cash = rnd2.Next(0, money_player);
                         user.RemoveMoney(cash, user,data);
                         Console.Clear();
-                        Console.WriteLine("Unfortunatelly you offended someone in the tavern and lost {0} money",cash);
+                        Program.Print("Unfortunatelly you offended someone in the tavern and lost "+Convert.ToString(cash)+" money","white");
                         System.Threading.Thread.Sleep(5000);
 
                     }
                     else
                     {
-                        Console.WriteLine("-See you again!");
+                        Program.Print("-See you again!","yellow");
                         System.Threading.Thread.Sleep(5000);
                         Console.Clear();
                     }
@@ -259,7 +290,7 @@ namespace RPG_GAME
                 }
                 else if (decision == 'n')
                 {
-                    Console.WriteLine("Okay, See you then...");
+                    Program.Print("Okay, See you then...", "yellow");
                     System.Threading.Thread.Sleep(5000);
                     Console.Clear();
 
@@ -288,7 +319,21 @@ namespace RPG_GAME
                 Console.Clear();
                 Random rnd3 = new Random();
                 int howmuch = rnd3.Next(50, 150);
-                Console.WriteLine("-Tough day, huh? Maybe wanna have some beer? Only {0} *Type \"y\" for yes or \"n\" for no*", howmuch);
+                if (data.gamedata[13] != "Watch out!" && howmuch <= 70 && data.gamedata[13] != "NO DATA" && data.gamedata[20] == "NO DATA")
+                {
+                    Program.Print("I heard that you made our princess upset. I have an advice for you for your safety do what she wants.", "yellow");
+                }
+                else if (data.gamedata[20] == "+You saved the Queen")
+                {
+                    Program.Print("You are a hero! You saved our queen! It's on me! [Y/N]", "yellow");
+                    howmuch = 0;
+                }
+                else
+                {
+                    Program.Print("-Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", "yellow");
+                }
+                Console.ForegroundColor = ConsoleColor.White;
+
                 user.Actual_hp = 0;
                 user.Actual_hp = user.Basic_hp;
                 user.Actual_hp = user_warrior.BoostMe();
@@ -312,13 +357,14 @@ namespace RPG_GAME
                     if(rand<=25)
                     {
                         Console.Clear();
-                        Sorcerer sor2 = new Sorcerer("N", 0,  0, 0,0);                        
-                        Console.WriteLine("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?");
+                        Sorcerer sor2 = new Sorcerer("N", 0,  0, 0,0);
+                        Program.Print("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?","red");
                         System.Threading.Thread.Sleep(4000);
+                        Console.ForegroundColor = ConsoleColor.White;
                         user.Fight(Human,data,user,mythings,sor2, user_warrior, mermaid, dragon, Human);                    }
                     else
                     {
-                        Console.WriteLine("-See you again!");
+                        Program.Print("-See you again!", "yellow");
 
                         System.Threading.Thread.Sleep(2000);
                         Console.Clear();
@@ -328,7 +374,7 @@ namespace RPG_GAME
                 }
                 else if (decision == 'n')
                 {
-                    Console.WriteLine("Okay, See you then...");
+                    Program.Print("Okay, See you then...", "yellow");
                     Console.Clear();
 
                     break;

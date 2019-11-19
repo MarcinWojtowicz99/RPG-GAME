@@ -38,7 +38,7 @@ namespace RPG_GAME
                     Program.DefaultMenu(user, user_Sorcerer, user_Warrior, data, mythings, mermaid, dragon, Human);
                     break;
                 }
-                char choice = Console.ReadKey().KeyChar;
+                char choice = a.KeyChar;
                 Console.Clear();
                 switch (choice)
                 {
@@ -52,6 +52,9 @@ namespace RPG_GAME
                             {
                                 Console.Clear();
                                 Console.WriteLine("You have found jewels!");
+                                Console.WriteLine("+200 points!");
+                                user.Score += 200;
+                                user.UpdateScore(user, data);
                                 System.Threading.Thread.Sleep(2000);
                                 Console.Clear();
                             }
@@ -79,11 +82,9 @@ namespace RPG_GAME
                         user_Sorcerer.Activeskill = true;
                         Console.Clear();
                         Console.WriteLine("Your mana increased!");
-                        Console.WriteLine("+200 points!");
                         System.Threading.Thread.Sleep(2000);
                         Console.Clear();
-                        user.Score += 200;
-                        user.UpdateScore(user, data);
+                        
 
                         break;
                     case '3':

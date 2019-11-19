@@ -28,21 +28,22 @@ namespace RPG_GAME
             double nb = Convert.ToDouble(random)*0.1;
             return NbOfUseEQ * nb;
         }
-        public bool Equip_Character(int index, Item mythings, Warrior warrior, Data data)
+        public bool Equip_Character(int index, Item mythings, Warrior warrior, Data data, Character user)
         {
             warrior.NbOfUseEQ = GenerateNbOfUse();
+            warrior.UnEquip(warrior,mythings,data,user);
             warrior.Equip = index;
             data.gamedata[6] = "Equipped: "+index;
             Console.WriteLine("Equipped: "+index);
             System.Threading.Thread.Sleep(4000);
             return true;
         }
-        public bool UnEquip(Warrior warrior,Item mythings,Data data)
+        public bool UnEquip(Warrior warrior,Item mythings,Data data, Character user)
         {
             if (warrior.Equip != 0)
                             {
                                 int index = warrior.Equip;
-                                warrior.AddToEquipment(index,mythings,warrior,data);
+                                user.AddToEquipment(index,mythings,warrior,data);
                             }
             warrior.Equip = 0;
             data.gamedata[6] = "Equipped: No";
@@ -55,6 +56,7 @@ namespace RPG_GAME
             int random = rnd.Next(100);
             Random rnd2 = new Random();
             int critical_hit = rnd.Next(100);
+            
             
             if (Strength == 1)
             {
@@ -154,6 +156,8 @@ namespace RPG_GAME
                         break;
                     default:
                         Console.WriteLine("Incorrect sign");
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                 }
             }
