@@ -383,7 +383,14 @@ namespace RPG_GAME
                                                 enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
                                             }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack+ mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            if(warrior.Equip == 0)
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            }
                                             System.Threading.Thread.Sleep(2000);
                                         }
 
@@ -411,7 +418,15 @@ namespace RPG_GAME
                                                 enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
                                             }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            if(warrior.Equip==0)
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            }
+                                            
                                             System.Threading.Thread.Sleep(2000);
                                         }
                                         if (warrior.Equip != 0)
@@ -438,7 +453,14 @@ namespace RPG_GAME
                                                 enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
                                             }
                                             Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            if (warrior.Equip == 0)
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
+                                            }
                                             System.Threading.Thread.Sleep(2000);
                                         }
                                         if (warrior.Equip != 0)

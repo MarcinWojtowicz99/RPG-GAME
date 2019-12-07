@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 
 using System.Collections;
@@ -10,9 +11,12 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Main story of the game
+    /// </summary>
     class Program
     { //basic game values
-        public static int basichp = 2000; //easy changable nb of basic HP of character
+        public static int basichp = 2500; //easy changable nb of basic HP of character
         public static int maxequipment = 9; //max nb of equipment character can carry
         public static int startmoney = 1000;
         public static bool autosave = true;
@@ -548,14 +552,19 @@ namespace RPG_GAME
                 Console.ReadKey();
                 Console.Clear();
             }
+            
+            
             Console.ForegroundColor = ConsoleColor.White;
             char[][] JaggedArrayOfChars=new char[10][];
             JaggedArrayOfChars[0] = "Congratulations, traveler, You defeated the dragon!".ToCharArray();
             JaggedArrayOfChars[1] = ("Money gain: " + user.Money_player + " Dragon Coins").ToCharArray();
-            JaggedArrayOfChars[2] = (data.Gamedata[7]).ToCharArray();
-            JaggedArrayOfChars[3] = (data.Gamedata[8]).ToCharArray();
-            JaggedArrayOfChars[4] = (data.Gamedata[9]).ToCharArray();
-            JaggedArrayOfChars[5] = (data.Gamedata[10]).ToCharArray();
+            if(JaggedArrayOfChars!=null)
+            {
+                JaggedArrayOfChars[2] = (data.Gamedata[7]).ToCharArray();
+                JaggedArrayOfChars[3] = (data.Gamedata[8]).ToCharArray();
+                JaggedArrayOfChars[4] = (data.Gamedata[9]).ToCharArray();
+                JaggedArrayOfChars[5] = (data.Gamedata[10]).ToCharArray();
+            }
             JaggedArrayOfChars[6] = ("Your final score: " + user.Score).ToCharArray();
             JaggedArrayOfChars[7] = "Thank you for playing!".ToCharArray();
             JaggedArrayOfChars[8]= "Game made by Marcin Wojtowicz".ToCharArray();
@@ -669,7 +678,7 @@ namespace RPG_GAME
                 Console.Clear();
                 data.AutoSaveGame(data);
             }
-            else if(random>0&&random<6)
+            else if(random>0&&random<2)
             {
                 Console.WriteLine("RANDOM EVENT!");
                 System.Threading.Thread.Sleep(2000);
@@ -792,7 +801,7 @@ namespace RPG_GAME
                Print("-Cousin! It's me, Mergoth. Listen... I need some money [2000 Dragon Coins]","orange");
                 Console.WriteLine("1. Okay, take them");
                 Console.WriteLine("2. Go away, Mergoth");
-                Console.WriteLine("3. How do I know you will give them back?");
+                Console.WriteLine("3. How do I know you will give it back?");
                 char choice = Console.ReadKey().KeyChar;
                 Console.Clear();
                 switch (choice)
@@ -826,8 +835,8 @@ namespace RPG_GAME
                         }
                         break;
                     case '3':
-                        Print(user.name + ": How do I know you will give them back?", "blue");
-                        Print("Mergoth: Please, I pinky-promise!", "orange");
+                        Print(user.name + ": How do I know you will give it back?", "blue");
+                        Print("Mergoth: Pretty please, I pinky-promise!", "orange");
                         Console.WriteLine("1. Okay");
                         Console.WriteLine("2. Go away");
                         char option2 = Console.ReadKey().KeyChar;
@@ -1052,12 +1061,8 @@ namespace RPG_GAME
                     {
 
                         Console.Write("\rHacking pentagon servers, please wait");
-                        
-                        for(int j=0;j<3;j++)
-                        {
-                            Console.Write(".");
-                            System.Threading.Thread.Sleep(1000);
-                        }
+
+                        WaitDots();
                         Console.Clear();
                     }
                     Console.WriteLine("Connected! :D");
@@ -1264,7 +1269,15 @@ namespace RPG_GAME
             while (ToReturn!=true);
         }
 
-      
+      public static void WaitDots()
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                Console.Write(".");
+                System.Threading.Thread.Sleep(100);
+            }
+            Console.WriteLine();
+        }
         public static void Prologue(Data data)
         {
             char classification;
@@ -1292,7 +1305,6 @@ namespace RPG_GAME
                 }
                 else
                 {
-
                     Console.WriteLine("unknown command, try again...");
                     System.Threading.Thread.Sleep(2000);
                     Console.Clear();

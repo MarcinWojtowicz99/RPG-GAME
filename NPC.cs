@@ -261,11 +261,7 @@ namespace RPG_GAME
                     user.Actual_hp = user.Basic_hp;
                     Program.Print("Few hours later", "white");
                     System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
+                    Program.WaitDots();
                     actual_hp = basic_hp;
                     Random rnd = new Random();
                     int rand = rnd.Next(101);
@@ -344,13 +340,8 @@ namespace RPG_GAME
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
                    
-                    Console.WriteLine("Few hours later");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
+                    Console.Write("Few hours later");
+                    Program.WaitDots();
                    
                     Random rnd = new Random();
                     int rand = rnd.Next(101);

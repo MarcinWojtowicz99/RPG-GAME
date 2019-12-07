@@ -229,13 +229,7 @@ namespace RPG_GAME
 
                 Console.Clear();
                 Console.Write("You used confusion... Your enemy is falling asleep");
-                for (int i = 0; i < 4; i++)
-                {
-                    System.Threading.Thread.Sleep(500);
-                    Console.Write(".");
-                    value *= 2;
-                    
-                }
+                Program.WaitDots();
             }
             else if (type == '2')
             {
@@ -255,7 +249,7 @@ namespace RPG_GAME
                 Console.WriteLine("Your spell ricocheted!");
                 System.Threading.Thread.Sleep(3000);
                 user.Actual_hp -=Convert.ToInt32(value);
-                value = 0.0;
+                return 0.0;
 
             }
             if (firedamageenabled == true)
@@ -263,7 +257,7 @@ namespace RPG_GAME
                 Console.WriteLine("+FLAMING DAMAGE");
                 Console.Clear();
                 System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Your attack value: " + value);
+                Console.WriteLine("Your attack value: " + (value + (0.15 * enemy.Enemy_Actual_HP)));
                 System.Threading.Thread.Sleep(2000);
                 return value+(0.15*enemy.Enemy_Actual_HP);
             }
