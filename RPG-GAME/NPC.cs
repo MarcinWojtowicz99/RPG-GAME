@@ -171,7 +171,7 @@ namespace RPG_GAME
                 Console.WriteLine("Today I can offer you: ");
                 for (int i = 0; i < shopkeeper.ReturnToArray.Length; i++)
                 {
-                    Console.WriteLine("{0}. {1}: {2}Dragon Coins", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]+ additionalprize);
+                    Console.WriteLine("{0}. {1}: {2} Dragon Coins", i, mythings.unit[shopkeeper.ReturnToArray[i]].nameofitem, shopkeeper.Value[i]+ additionalprize);
                 }
                 Console.WriteLine("{0}. I wanna sell you something", shopkeeper.ReturnToArray.Length + 1);
                 Console.WriteLine("{0}. No, thank you", shopkeeper.ReturnToArray.Length + 2);

@@ -29,7 +29,7 @@ namespace RPG_GAME
             {
                 byte[] key = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//encryption keycode
 
-                byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//used to achieve better security. This key everytime generates another value
+                byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//used to achieve better security
 
                 using (FileStream fsCrypt = new FileStream(outputFile, FileMode.Create))//locating the output file and file to create new filestream
                 {
@@ -42,7 +42,7 @@ namespace RPG_GAME
                                 int data;
                                 while ((data = fsIn.ReadByte()) != -1)//set readposition for particular byte
                                 {
-                                    cs.WriteByte((byte)data);//write byte to ouput
+                                    cs.WriteByte((byte)data);//write byte to output
                                 }
                             }
                         }
@@ -61,7 +61,7 @@ namespace RPG_GAME
             using (RijndaelManaged aes = new RijndaelManaged())//new class of encryption
             {
                 byte[] key = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//encryption keycode
-                byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//used to achieve better security. This key everytime generates another value
+                byte[] IV = ASCIIEncoding.UTF8.GetBytes("1234512345678976");//used to achieve better security
 
                 using (FileStream fsCrypt = new FileStream(inputFile, FileMode.Open))//load input file
                 {

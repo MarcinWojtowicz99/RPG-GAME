@@ -139,10 +139,10 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
             Program.Print("Ziva: If you want to be in my Kingdom you need to stop causing trouble. I called you to help me with various ", 'y');
-            Program.Print("problems and it would be impossible if you were stuck frever in this stinky cell. I'll release you on one ", 'y');
+            Program.Print("problems and it would be impossible if you were stuck forever in this stinky cell. I'll release you on one ", 'y');
             Program.Print("condition. You have to help me protect the Kingdom. It is not asking for serving me, but a simple deal.", 'y');
             Program.Print(user.name + ":Yes, I'm sorry for causing trouble, Your Highness", 'b');
-            Program.Print("Ziva: RONALD!, Release him!", 'y');
+            Program.Print("Ziva: RONALD, Release him!", 'y');
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
             Program.Print("Next day", 'w');
@@ -181,7 +181,7 @@ namespace RPG_GAME
                 Program.Print("Ziva: Good.", 'y');
             }
             Program.Print("Ziva: Now I want you to know what is going on outside of our Kingdom. I want to know everything.", 'y');
-            Program.Print(user.name + ":Do you want from me to spy?", 'b');
+            Program.Print(user.name + ":Do you want me to spy?", 'b');
             Program.Print("Ziva: Yes, If you get caught like most of my spies. Do not tell anything... Now, do you mind if I ask you to", 'y');
             Program.Print("leave? I need to make important Program.Decisions for the Kingdom", 'y');
             Console.Clear();
@@ -195,7 +195,7 @@ namespace RPG_GAME
             Console.Clear();
             Program.Print("King Zorg: Don't let me down, pour my guests best wine in the beginning of the meeting. When they will get drunk,", 'r');
             Program.Print(" pour the lowest class possible", 'r');
-            Program.Print(user.name + "Yes, your Majesty", 'w');
+            Program.Print(user.name + ": Yes, your Majesty", 'w');
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
             Program.Print("Few hours later...", 'w');
@@ -781,16 +781,16 @@ namespace RPG_GAME
             int howmuch = rnd.Next(50, 150);
             if (data.gamedata[13] != Program.Decisions["1b"] && howmuch <= 70 && data.gamedata[13] != Program.Decisions["null"] && data.gamedata[20] == Program.Decisions["null"])
             {
-                Program.Print("I heard that you made our princess upset. I have an advice for you for your safety do what she wants.", 'y');
+                Program.Print("Innkeeper: I heard that you made our princess upset. I have an advice for you for your safety do what she wants.", 'y');
             }
             else if (data.gamedata[20] == Program.Decisions["6a"])
             {
-                Program.Print("You are a hero! You saved our queen! It's on me! [Y/N]", 'y');
+                Program.Print("Innkeeper: You are a hero! You saved our queen! It's on me! [Y/N]", 'y');
                 howmuch = 0;
             }
             else
             {
-                Program.Print("-Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", 'y');
+                Program.Print("Innkeeper: Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", 'y');
             }
             return howmuch;
         }
@@ -804,16 +804,16 @@ namespace RPG_GAME
             int additionalprize = 0;
             if (data.gamedata[13] != Program.Decisions["1b"] && data.gamedata[13] != Program.Decisions["null"] && data.gamedata[20] == Program.Decisions["null"])
             {
-                Program.Print("I don't like people like you. Stay away from our Kingdom!", 'y');
+                Program.Print("Shopkeeper: I don't like people like you. Stay away from our Kingdom!", 'y');
                 additionalprize = 110;
             }
             else if (data.gamedata[20] == Program.Decisions["6a"] && data.gamedata[13] != Program.Decisions["1b"])
             {
-                Program.Print("You are a hero! You saved our queen! I've just realized how much I was wrong", 'y');
+                Program.Print("Shopkeeper: You are a hero! You saved our queen! I've just realized how much I was wrong", 'y');
             }
             else
             {
-                Program.Print("Welcome in my shop, traveler, what do you need?", 'y');
+                Program.Print("Shopkeeper: Welcome in my shop, traveler, what do you need?", 'y');
             }
             System.Threading.Thread.Sleep(2000);
             Console.Clear();

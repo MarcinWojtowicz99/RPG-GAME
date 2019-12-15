@@ -1,0 +1,10 @@
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME.deps.json
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME.runtimeconfig.json
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME.runtimeconfig.dev.json
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME.dll
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\bin\Release\netcoreapp3.0\linux-x64\RPG-GAME.pdb
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\obj\Release\netcoreapp3.0\linux-x64\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\obj\Release\netcoreapp3.0\linux-x64\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\obj\Release\netcoreapp3.0\linux-x64\RPG-GAME.dll
+C:\Users\marci\source\repos\RPG-GAME\RPG-GAME\obj\Release\netcoreapp3.0\linux-x64\RPG-GAME.pdb

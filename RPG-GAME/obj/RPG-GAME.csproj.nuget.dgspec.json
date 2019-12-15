@@ -1,26 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marci\\Desktop\\RPG-GAME\\RPG-GAME.csproj": {}
+    "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME\\RPG-GAME.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marci\\Desktop\\RPG-GAME\\RPG-GAME.csproj": {
+    "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME\\RPG-GAME.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marci\\Desktop\\RPG-GAME\\RPG-GAME.csproj",
+        "projectUniqueName": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME\\RPG-GAME.csproj",
         "projectName": "RPG-GAME",
-        "projectPath": "C:\\Users\\marci\\Desktop\\RPG-GAME\\RPG-GAME.csproj",
+        "projectPath": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME\\RPG-GAME.csproj",
         "packagesPath": "C:\\Users\\marci\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marci\\Desktop\\RPG-GAME\\obj\\",
+        "outputPath": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
           "C:\\Users\\marci\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
