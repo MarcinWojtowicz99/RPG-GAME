@@ -5,29 +5,58 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Derived class for warrior
+    /// </summary>
     class Warrior : Character
     {
         int hpboost;
         double nbofuseOfEquipmentbeforeitcracks = 250.0;
         public double NbOfUseEQ {get{ return nbofuseOfEquipmentbeforeitcracks; } set{ nbofuseOfEquipmentbeforeitcracks = value; } }
         int[,] equipment;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="basic_hp"></param>
+        /// <param name="maxequipment"></param>
+        /// <param name="hpboost">Adds more health for warrior</param>
+        /// <param name="basic_damage"></param>
+        /// <param name="startmoney"></param>
         public Warrior(string name, int basic_hp, int maxequipment, int hpboost, int basic_damage, int startmoney) : base(name, basic_hp, maxequipment, basic_damage, startmoney)
         {
             this.hpboost = hpboost;
             equipment = Equipment;
             BoostMe();
         }
+        /// <summary>
+        /// Adds more health for warrior
+        /// </summary>
+        /// <returns></returns>
         public int BoostMe()
         {
             return actual_hp += hpboost;
         }
-     public double GenerateNbOfUse()
+        /// <summary>
+        /// Generate random number of use befor it breaks
+        /// </summary>
+        /// <returns></returns>
+        public double GenerateNbOfUse()
         {
             Random rnd = new Random();
             int random = rnd.Next(5,10);
             double nb = Convert.ToDouble(random)*0.1;
             return NbOfUseEQ * nb;
         }
+        /// <summary>
+        /// Equips a sword
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="mythings"></param>
+        /// <param name="warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool Equip_Character(int index, Item mythings, Warrior warrior, Data data, Character user)
         {
             warrior.NbOfUseEQ = GenerateNbOfUse();
@@ -38,6 +67,14 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(4000);
             return true;
         }
+        /// <summary>
+        /// Unequip a sword
+        /// </summary>
+        /// <param name="warrior"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool UnEquip(Warrior warrior,Item mythings,Data data, Character user)
         {
             if (warrior.Equip != 0)
@@ -50,12 +87,24 @@ namespace RPG_GAME
             
                 return false;
         }
+        /// <summary>
+        /// Missed attack info
+        /// </summary>
+        /// <returns></returns>
         public static double Missed()
         {
             Console.WriteLine("YOU MISSED!");
             System.Threading.Thread.Sleep(2000);
             return 0.0;
         }
+        /// <summary>
+        /// Method for attacking an enemy
+        /// </summary>
+        /// <param name="attack">Value of attack</param>
+        /// <param name="Strength">Type of attack</param>
+        /// <param name="warrior"></param>
+        /// <param name="mythings"></param>
+        /// <returns>Returns value of attack</returns>
         public static double WarriorAttacks(double attack,int Strength,Warrior warrior,Item mythings)
         {
             
@@ -120,6 +169,13 @@ namespace RPG_GAME
             return attack;
 
         }
+        /// <summary>
+        /// Method for breaking a sword
+        /// </summary>
+        /// <param name="warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
         public void IsSwordBroken(Warrior warrior, Data data, Character user, Item mythings)
         {
             if (warrior.Equip != 0)
@@ -134,6 +190,20 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Continues fight as a warrior
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="sorcerer"></param>
+        /// <param name="warrior"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
+        /// <param name="toBreak"></param>
+        /// <returns></returns>
         public bool ContinueFight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human, bool toBreak)
         {
 
@@ -186,6 +256,11 @@ namespace RPG_GAME
             } while (toBreak != true);
             return true;
         }
+        /// <summary>
+        /// Displays info about available attacks
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="enemy"></param>
         public void AttacksAvailable(Warrior user, Enemy enemy)
         {
             Console.Clear();
@@ -198,6 +273,18 @@ namespace RPG_GAME
             Console.WriteLine("4. Manage Equipment");
             Console.Write("Select: ");
         }
+        /// <summary>
+        /// Method for teleportation to the final boss
+        /// </summary>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <param name="user_sorcerer"></param>
+        /// <param name="user_warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Dragon"></param>
+        /// <param name="Human"></param>
+        /// <returns></returns>
         public bool Teleporter(Item mythings, Character user, Sorcerer user_sorcerer, Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
            
         {

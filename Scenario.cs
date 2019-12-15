@@ -4,9 +4,14 @@ using System.Text;
 
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Used for storing all the text which appears in the game
+    /// </summary>
     class Scenario
     {
-
+        /// <summary>
+        /// Main Menu Text
+        /// </summary>
         public static void MainMenu()
         {
             Console.Clear();
@@ -21,7 +26,13 @@ namespace RPG_GAME
             Console.WriteLine("0. Quit");
             Console.Write("Select: ");
         }
-
+        /// <summary>
+        /// Default Menu Text
+        /// </summary>
+        /// <param name="money">Player's money</param>
+        /// <param name="acthp">Player's health points</param>
+        /// <param name="score">Player's score</param>
+        /// <param name="clas">Player's character class</param>
         public static void DefaultMenu(int money, int acthp, int score, string clas)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -44,6 +55,10 @@ namespace RPG_GAME
             }
             Console.Write("Select: ");
         }
+        /// <summary>
+        /// Walk menu
+        /// </summary>
+        /// <param name="user">Object needed for basic informations</param>
         public static void WhereToGoMenu(Character user)
         {
             Console.Clear();
@@ -57,7 +72,11 @@ namespace RPG_GAME
             Console.WriteLine("4. Queen Ziva");
             Console.Write("Select: ");
         }
-
+        /// <summary>
+        ///Text after the decision
+        /// </summary>
+        /// <param name="data">Data to save</param>
+        /// <param name="user">Object needed for basic informations</param>
         public static void EndOfDecision(Data data, Character user)
         {
             user.Score += 500;
@@ -70,6 +89,11 @@ namespace RPG_GAME
             Console.Clear(); data.AutoSaveGame(data);
 
         }
+        /// <summary>
+        /// Chapter 1
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter1(Data data, Character user)
         {
             user.Score += 2000;
@@ -85,6 +109,11 @@ namespace RPG_GAME
             Console.WriteLine("MAKE YOUR CHOICE!", 'w');
             Program.MakeYourChoice(user, 13, data, "*You see a huge rock sliding through the roof*", "*Back off quietly*", "Watch out!", "...", "Maybe ask your queen about that");
         }
+        /// <summary>
+        /// Chapter 1: Alternative path when player saves Guardian
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter1a(Data data, Character user)
         {
             Program.Print("Guardian: You saved my life! Thank you. But still, rules are rules. You need to make an appointment", 'y');
@@ -99,6 +128,11 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000);
             Console.ForegroundColor = ConsoleColor.White;
         }
+        /// <summary>
+        /// Chapter 1: Alternative path when player doesn't save Guardian
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter1b(Data data, Character user)
         {
             Program.Print("You killed the guardian and ended up in jail. However, queen visited you in your cell", 'w');
@@ -120,6 +154,11 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000);
             Console.ForegroundColor = ConsoleColor.White;
         }
+        /// <summary>
+        /// Chapter 2
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter2(Data data, Character user)
         {
 
@@ -186,6 +225,11 @@ namespace RPG_GAME
             Console.Clear();
 
         }
+        /// <summary>
+        /// Alternative path if player chooses wrong wine 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter2a(Data data, Character user)
         {
             Program.Print("King Zorg: All you had to do was to pour the wine and you blew it. You are the worst! I sentence you to death. GUAAAARDS!", 'r');
@@ -228,6 +272,11 @@ namespace RPG_GAME
                 user.UpdateScore(user, data);
             }
         }
+        /// <summary>
+        /// Alternative path if player chooses good wine 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter2b(Data data, Character user)
         {
             Program.Print("King Zorg: Everything was perfect. As much perfect as me! Maybe someday you will be my assistant..", 'r');
@@ -237,6 +286,11 @@ namespace RPG_GAME
             user.Score += 2000;
             user.UpdateScore(user, data);
         }
+        /// <summary>
+        /// Alternative path for Sorcerer when he will teleport away from the king
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter3a(Data data, Character user)
         {
             Console.WriteLine("Chapter 3: Training");
@@ -285,7 +339,11 @@ namespace RPG_GAME
 
         }
 
-
+        /// <summary>
+        /// Alternative path when player will not spoil the party
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter3b(Data data, Character user)
         {
             Console.WriteLine("Chapter 3: Training: The choosen one");
@@ -311,6 +369,11 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000); Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
         }
+        /// <summary>
+        /// Alternative path when warrior will give wrong wine
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter3c(Data data, Character user)
         {
             Console.WriteLine("Chapter 3: The choosen one");
@@ -337,6 +400,11 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000); Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
         }
+        /// <summary>
+        /// Chapter 4
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
         public static void Chapter4(Data data, Character user)
         {
             bool isQueenAlive = true;
@@ -408,6 +476,12 @@ namespace RPG_GAME
 
             }
         }
+        /// <summary>
+        /// "Good" ending
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
         public static void QueenSafeEnding(Data data, Character user, Item mythings)
         {
             if (data != null && data.Gamedata[20] == Program.Decisions["6a"])
@@ -429,12 +503,19 @@ namespace RPG_GAME
                 Console.Clear();
             }
         }
+        /// <summary>
+        /// Title for random event
+        /// </summary>
         public static void Title()
         {
             Program.Print("RANDOM EVENT!", 'r');
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
         }
+        /// <summary>
+        /// Event script when player finds money
+        /// </summary>
+        /// <returns></returns>
         public static int EventMoneyFound()
         {
             Title();
@@ -446,6 +527,10 @@ namespace RPG_GAME
             Console.Clear();
             return random2;
         }
+        /// <summary>
+        /// Event script showing player being robbed by someone
+        /// </summary>
+        /// <returns></returns>
         public static int ThiefEvent()
         {
             Title();
@@ -456,6 +541,12 @@ namespace RPG_GAME
             Console.Clear();
             return random;
         }
+        /// <summary>
+        /// Event featured character known from fairy tale
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
         public static void GirlWithMatches(Character user, Item mythings, Data data)
         {
             Title();
@@ -552,102 +643,125 @@ namespace RPG_GAME
             System.Threading.Thread.Sleep(2000);
             Console.Clear(); data.AutoSaveGame(data);
         }
+        /// <summary>
+        /// Event with Mergoth cousin
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
         public static void Mergoth(Character user, Item mythings, Data data)
         {
             Title();
-            Program.Print("*It's so cold... Is that snow? I need to find some warm place to rest. You noticed a child behind the old shop*", 'w');
-            Program.Print(user.name + ": Who are you?", 'b');
-            Program.Print("Girl: Hello, wanna buy some matches? My father won't let me warm until I sell everything. [Your account ballance: " + user.Money_player + "Dragon Coins]", 'm');
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("1. I'll buy one then [cost:10 Dragon Coins]");
-            Console.WriteLine("2. I'll take all of them [cost:250 Dragon Coins]");
-            Console.WriteLine("3. Sorry, I need to go");
-            bool isscarf = user.FindInEquipment(mythings, user, "Scarf");
-            if (isscarf == true)
-            {
-                Console.WriteLine("4. Take my scarf");
-            }
-
+            Program.Print("-Cousin! It's me, Mergoth. Listen... I need some money [2000 Dragon Coins]", 'm');
+            Console.WriteLine("1. Okay, take them");
+            Console.WriteLine("2. Go away, Mergoth");
+            Console.WriteLine("3. How do I know you will give them back?");
             char choice = Console.ReadKey().KeyChar;
             Console.Clear();
             switch (choice)
             {
                 case '1':
-                    Program.Print(user.name + ": Okay, I'll buy one", 'b');
-                    if (10 < user.Money_player)
+                    Program.Print(user.name + ": Okay, take my money", 'b');
+                    if (2000 < user.Money_player)
                     {
-                        Program.Print("Girl: You are a good man, thank you.", 'm');
-                        user.RemoveMoney(10, user, data);
+                        Program.Print("Mergoth: You are a good man, thank you.", 'm');
+                        user.Money_player -= 2000;
                         Console.ReadKey();
                         Console.Clear();
-                        data.Gamedata[11] = Program.Decisions["Add1a"];
+                        data.Gamedata[12] = "+You helped Mergoth";
                     }
                     else
                     {
-                        Program.Print("Girl: I see you are broke too. Thank you for trying anyway", 'm');
+                        Program.Print("Mergoth: I see you are broke too. Thank you for trying anyway", 'm');
                         Console.ReadKey();
                         Console.Clear();
-                        data.Gamedata[11] = Program.Decisions["Add1c"];
+                        data.Gamedata[12] = "+You tried to help Mergoth";
                     }
 
                     break;
                 case '2':
-                    Program.Print(user.name + ": I'll take everything then", 'b');
-                    if (250 < user.Money_player)
                     {
-                        user.Money_player -= 250;
-                        Program.Print("Girl: You are a good man, thank you.", 'm');
+                        Program.Print(user.name + ": I'm busy, go away. You'll never give them back!", 'b');
+                        Program.Print("Mergoth: Okay", 'm');
                         Console.ReadKey();
                         Console.Clear();
-                        data.Gamedata[11] = Program.Decisions["Add1a"];
+                        data.Gamedata[12] = "+You didn't help Mergoth";
                     }
-                    else
-                    {
-                        Program.Print("Girl: I see you are broke too. Thank you for trying anyway", 'm');
-                        Console.ReadKey();
-                        Console.Clear();
-                        data.Gamedata[11] = Program.Decisions["Add1c"];
-                    }
-
-
                     break;
                 case '3':
-
-                    Program.Print(user.name + ": Sorry, I need to go... I have a very important mission", 'b');
-                    Program.Print("Girl: Okay, Sorry for disturbing you.", 'm');
-                    data.Gamedata[11] = Program.Decisions["Add1b"];
-                    Console.ReadKey();
-                    Console.Clear();
-                    break;
-                case '4':
-                    if (isscarf == true)
+                    Program.Print(user.name + ": How do I know you will give them back?", 'b');
+                    Program.Print("Mergoth: Please, I pinky-promise!", 'm');
+                    Console.WriteLine("1. Okay");
+                    Console.WriteLine("2. Go away");
+                    char option2 = Console.ReadKey().KeyChar;
+                    switch (option2)
                     {
-                        Program.Print(user.name + ": Please, take my scarf and come with me. We will find you home", 'b');
-                        Program.Print("Girl: You are a good man, thank you.", 'm');
+                        case '1':
+                            Program.Print(user.name + ": Okay, take my money", 'b');
+                            if (2000 < user.Money_player)
+                            {
+                                Program.Print("Mergoth: You are a good man, thank you.", 'm');
+                                user.Money_player -= 2000;
+                                Console.ReadKey();
+                                Console.Clear();
+                                data.Gamedata[12] = "+You helped Mergoth";
+                            }
+                            else
+                            {
+                                Program.Print("Mergoth: I see you are broke too. Thank you for trying anyway", 'm');
+                                Console.ReadKey();
+                                Console.Clear();
+                                data.Gamedata[12] = "+You tried to help Mergoth";
+                            }
+                            break;
+                        case '2':
+                            Program.Print(user.name + ": I'm busy, go away. You'll never give them back!", 'b');
+                            Program.Print("Mergoth: Okay", 'm');
+                            Console.ReadKey();
+                            Console.Clear();
+                            data.Gamedata[12] = "+You didn't help Mergoth";
+                            break;
+                        default:
+                            Program.Print(user.name + ": ...", 'b');
+                            Program.Print("Mergoth: Okay, Sorry for disturbing you", 'm');
+                            data.Gamedata[12] = "+You didn't help Mergoth";
+                            Console.ReadKey();
+                            break;
+                    }
+                    if (2000 < user.Money_player)
+                    {
+                        user.Money_player -= 2000;
+                        Program.Print("Mergoth: You are a good man, thank you.",'m');
                         Console.ReadKey();
                         Console.Clear();
-                        data.Gamedata[11] = Program.Decisions["Add1a"];
+                        data.Gamedata[12] = "+You helped Mergoth";
                     }
                     else
                     {
-                        Program.Print(user.name + ": ...", 'b');
-                        Program.Print("Girl: Okay, Sorry for disturbing you", 'm');
+                        Program.Print("Mergoth: I see you are broke too. Thank you for trying anyway", 'm');
                         Console.ReadKey();
-                        data.Gamedata[11] = Program.Decisions["Add1b"];
+                        Console.Clear();
+                        data.Gamedata[12] = "+You tried to help Mergoth";
                     }
+
+
                     break;
                 default:
-                    Program.Print(user.name + ": ...", 'b');
-                    Program.Print("Girl: Okay, Sorry for disturbing you", 'm');
-                    data.Gamedata[11] = Program.Decisions["Add1b"];
+                    Program.Print(user.name + ": ...",'b');
+                    Program.Print("Mergoth: Okay, Sorry for disturbing you", 'm');
+                    data.Gamedata[12] = "+You didn't help Mergoth";
                     Console.ReadKey();
                     break;
             }
+            data.Gamedata[12] = "+You helped your cousin";
             Console.Clear();
             Console.WriteLine("Game will remember that...");
             System.Threading.Thread.Sleep(2000);
             Console.Clear(); data.AutoSaveGame(data);
         }
+        /// <summary>
+        /// Random event
+        /// </summary>
         public static void Ambe()
         {
             Title();
@@ -655,6 +769,11 @@ namespace RPG_GAME
             Console.WriteLine("+1000 Dragon Coins");
             System.Threading.Thread.Sleep(2000);
         }
+        /// <summary>
+        /// Inkeeper quotes
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>Depending on your choices, the reaction differ</returns>
         public static int BartenderQuotes(Data data)
         {
             Console.Clear();
@@ -675,6 +794,11 @@ namespace RPG_GAME
             }
             return howmuch;
         }
+        /// <summary>
+        /// Quotes which use shopkeeper
+        /// </summary>
+        /// <param name="data">Depending on your choices, the reaction differ</param>
+        /// <returns></returns>
         public static int ShopkeeperQuotes(Data data)
         {
             int additionalprize = 0;
@@ -697,6 +821,9 @@ namespace RPG_GAME
             return additionalprize;
         }
 
+        /// <summary>
+        /// Quotes when sorcerer randomly spawn a fish
+        /// </summary>
         public static void FishyQuotes()
         {
             Console.Clear();
@@ -706,6 +833,47 @@ namespace RPG_GAME
             Console.WriteLine("3. Leave me alone");
             Console.WriteLine("4. I'll finish you!");
             Console.Write("Select: ");
+        }
+        /// <summary>
+        /// Prologue
+        /// </summary>
+        /// <param name="data"></param>
+        public static void Prologue(Data data)
+        {
+            char classification;
+
+            Console.Clear();
+            Program.Print("-Hello traveler, what's your name?", 'm');
+            string name = Console.ReadLine();
+            data.gamedata[0] = name;
+            do
+            {
+                Program.Print("Nice to meet you, " + name + "! I'm Neth and let me introduce you our" +
+                    " kingdom of Omaghan. During your journey you can serve our queen as a soldier or as a warrior. By the way, could you tell me what's your actual speciality?", 'm');
+
+                Program.Print("1. I'm a warrior.", 'b');
+                Program.Print("2. I'm a sorcerer.", 'b');
+                Console.Write("Select: ");
+                classification = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (classification == '1')
+                {
+                    data.gamedata[1] = Program.Class['w'];
+                }
+                else if (classification == '2')
+                {
+                    data.gamedata[1] = Program.Class['s'];
+                }
+                else
+                {
+                    Console.WriteLine("unknown command, try again...");
+                    System.Threading.Thread.Sleep(2000);
+                    Console.Clear();
+                }
+            } while (classification != '1' && classification != '2');
+
+
+            data.AutoSaveGame(data);
         }
     }
 }

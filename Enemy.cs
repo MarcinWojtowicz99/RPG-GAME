@@ -4,6 +4,9 @@ using System.Text;
 
 namespace RPG_GAME
 {
+    /// <summary>
+    /// An arrayed object which stores attacks of given enemy
+    /// </summary>
     class Enemy
     {
         double enemy_hp;
@@ -19,6 +22,13 @@ namespace RPG_GAME
 
         public Attack[] attack;
         int totalnbofattacks;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="enemy_hp"></param>
+        /// <param name="enemy_score"></param>
+        /// <param name="totalnbofattacks"></param>
         public Enemy(string name,double enemy_hp,int enemy_score, int totalnbofattacks)
         {
             this.name = name;
@@ -30,10 +40,19 @@ namespace RPG_GAME
             this.enemy_score = enemy_score;
             attack = new Attack[totalnbofattacks];
         }
+        /// <summary>
+        /// Restores enemy's health bar after loosing a fight
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
         public double RestoreHealth(Enemy enemy)
         {
           return  enemy.enemy_actualhp = enemy.enemy_hp;
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="enemy"></param>
         public Enemy(Enemy enemy)
         {
             this.attack = new Attack[enemy.attack.Length];
@@ -45,7 +64,10 @@ namespace RPG_GAME
 
             }
 
-        }
+        }/// <summary>
+        /// Stacks attacks
+        /// </summary>
+        /// <param name="attackss"></param>
         public void Stack(Attack attackss)//stores all attacks of one enemy-makes generating value easier
         {
             for (int i = 0; i < attack.Length; i++)
@@ -57,7 +79,12 @@ namespace RPG_GAME
                 }
             }
             
-        }
+        }/// <summary>
+        /// Method for attacking character
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="user"></param>
+        /// <returns>Return attack value</returns>
         public int Attack_Character(Enemy enemy, Character user)
         {
             Console.Clear();
@@ -85,7 +112,12 @@ namespace RPG_GAME
 
             }
                            
-        }
+        }/// <summary>
+        /// Drops random item after death
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
         public void Drop_Item(Character user, Item mythings, Data data)
         {
             Random rnd = new Random();
@@ -97,6 +129,9 @@ namespace RPG_GAME
             }
 
         }
+        /// <summary>
+        /// Special dragon's death screen
+        /// </summary>
         public static void DragonDeath()
         {
             Console.ForegroundColor = ConsoleColor.Red;

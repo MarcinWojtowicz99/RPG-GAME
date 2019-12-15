@@ -2,7 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
+using  System.Threading.Tasks;
 using System.Timers;
 using System.Collections.Generic;
 
@@ -36,7 +36,10 @@ namespace RPG_GAME
         public static int TextFlowSpeed { get { return textflow; } set { TextFlowSpeed = value; } }
         public int NbOfShopkeeperEQ{get{return nbofshopkeeperequipment;} set{nbofshopkeeperequipment=value;} }
         public bool Autosave { get { return autosave; }set { autosave = value; } }
-        
+        /// <summary>
+        /// Starting method. Stores basic settings and all the methods for simplifying the use of program
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             Console.Title = "Dragon's shell v1.0";
@@ -58,11 +61,11 @@ namespace RPG_GAME
             for (int i = 0; i <= 100; ++i)
             {
                 Console.Write("\rLoading: {0}%", i);
-                System.Threading.Thread.Sleep(10);
+                 Thread.Sleep(10);
             }
             Console.WriteLine();
             Console.WriteLine("It took me: {0}ms to start! :D", stopwatch.ElapsedMilliseconds);
-            System.Threading.Thread.Sleep(2000);
+             Thread.Sleep(2000);
             //gameplay
             while (true)
             {
@@ -91,6 +94,13 @@ namespace RPG_GAME
 
             }
         }
+        /// <summary>
+        /// Loads all the enemies
+        /// </summary>
+        /// <param name="Dragon"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Human"></param>
+        /// <returns>Returns if operation was completed succesfully</returns>
         public static bool LoadEnemy(out Enemy Dragon, out Enemy Mermaid, out Enemy Human)
         {
             Dragon = new Enemy("Dragon", 5000, 10000, 7);
@@ -110,6 +120,11 @@ namespace RPG_GAME
             Human.Stack(new Attack("Drunk punch", 100, "I'll show you my real power!"));
             return true;
         }
+        /// <summary>
+        /// Load items
+        /// </summary>
+        /// <param name="mythings"></param>
+        /// <returns>Returns if operation was completed succesfully</returns>
         public static bool LoadItems(Item mythings)
         {
             mythings.Stack(new Unit("Rubber Duck", 12, 25, 0, 1, "Rubbish"));//1
@@ -133,6 +148,11 @@ namespace RPG_GAME
             return true;
 
         }
+        /// <summary>
+        /// Method for printing using a typing effect and text color
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="col"></param>
         public static void Print(string text, char col)
         {
 
@@ -163,17 +183,26 @@ namespace RPG_GAME
             }
             WriteEffect(text);
         }
+        /// <summary>
+        /// Typing effect
+        /// </summary>
+        /// <param name="text"></param>
         public static void WriteEffect(string text)
         {
             char[] ArrayOfChars = text.ToCharArray();
             for (int i = 0; i < ArrayOfChars.Length; i++)
             {
                 Console.Write(ArrayOfChars[i]);
-                System.Threading.Thread.Sleep(TextFlowSpeed);
+                 Thread.Sleep(TextFlowSpeed);
             }
             Console.WriteLine();
-            System.Threading.Thread.Sleep(1000);
+             Thread.Sleep(1000);
         }//Writing effect
+        /// <summary>
+        /// Dictionary which store color simplifications
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static string TextColors(char color)
         {
             Dictionary<char, string> col = new Dictionary<char, string>();
@@ -185,6 +214,10 @@ namespace RPG_GAME
             col.Add('g', "green");
             return col[color];
         }
+        /// <summary>
+        /// Dictionary for simplifying choices
+        /// </summary>
+        /// <returns></returns>
         public static bool AddData()
         {
             Decisions.Add("null", "NO DATA");
@@ -219,6 +252,18 @@ namespace RPG_GAME
            
             return true;
         }
+        /// <summary>
+        /// Manages the whole plot
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="Mermaids"></param>
+        /// <param name="user_Sorcerer"></param>
+        /// <param name="user_Warrior"></param>
+        /// <param name="mythings"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
         public static void PlotManager(Data data, Character user, Enemy Mermaids, Sorcerer user_Sorcerer, Warrior user_Warrior, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Console.Clear();
@@ -235,7 +280,7 @@ namespace RPG_GAME
                 if (Mermaids.EnemyKilled < 3)
                 {
                     Console.WriteLine("You did not fulfill the task, come back later.");
-                    System.Threading.Thread.Sleep(2000);
+                     Thread.Sleep(2000);
                     Program.DefaultMenu(user, user_Sorcerer, user_Warrior, data, mythings, mermaid, dragon, Human);
                 }
                 else
@@ -275,10 +320,16 @@ namespace RPG_GAME
             else
             {
                 Console.WriteLine("Game Complete!");
-                System.Threading.Thread.Sleep(2000);
+                Thread.Sleep(2000);
                 Console.Clear();
             }
         }
+        /// <summary>
+        /// Game ending screen
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <param name="mythings"></param>
         public static void ending_screen(Character user, Data data, Item mythings)
         {
             Enemy.DragonDeath();
@@ -297,14 +348,14 @@ namespace RPG_GAME
             JaggedArrayOfChars[6] = ("Your final score: " + user.Score).ToCharArray();
             JaggedArrayOfChars[7] = "Thank you for playing!".ToCharArray();
             JaggedArrayOfChars[8]= "Game made by Marcin Wojtowicz".ToCharArray();
-            System.Threading.Thread.Sleep(3000);
+             Thread.Sleep(3000);
             JaggedArrayOfChars[9] = "Press any key to continue".ToCharArray();
             user.Score += user.Money_player *12;
             for(int i=0; i<JaggedArrayOfChars.Length;i++)
             {
                 if (i==JaggedArrayOfChars.Length-1)
                 {
-                    System.Threading.Thread.Sleep(3000);
+                     Thread.Sleep(3000);
                 }
                 if(JaggedArrayOfChars[i]!=null)
                 {
@@ -312,7 +363,7 @@ namespace RPG_GAME
                     {
 
                         Console.Write(JaggedArrayOfChars[i][j]);
-                        System.Threading.Thread.Sleep(100);
+                         Thread.Sleep(100);
                     }
                     Console.WriteLine();
                 }
@@ -323,6 +374,10 @@ namespace RPG_GAME
             
             OpenMainMenu(data);
         }
+        /// <summary>
+        /// Method for showing chatacter's decisions during the end of a game
+        /// </summary>
+        /// <param name="data"></param>
         private static void MyDecisions(Data data)
         {
             Console.Clear();
@@ -367,6 +422,16 @@ namespace RPG_GAME
                 Console.ReadKey();
             }
         }
+        /// <summary>
+        /// Updates informations to data object
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="newbe"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Human"></param>
+        /// <param name="Dragon"></param>
+        /// <returns></returns>
         private static bool Updater(Data data, Character user,bool newbe, Enemy Mermaid, Enemy Human, Enemy Dragon)
         {
             if (newbe == true)
@@ -396,6 +461,12 @@ namespace RPG_GAME
             }
             return false;
         }
+        /// <summary>
+        /// Manages random events
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
         public static void RandomThings(Character user, Item mythings, Data data)
         {
             Random rnd = new Random();
@@ -423,6 +494,17 @@ namespace RPG_GAME
             }
 
         }
+        /// <summary>
+        /// Method for making choices by a player and saving to data object
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="toOverWrite"></param>
+        /// <param name="data"></param>
+        /// <param name="description"></param>
+        /// <param name="optionA"></param>
+        /// <param name="optionB"></param>
+        /// <param name="optionC"></param>
+        /// <param name="optionD"></param>
         public static void MakeYourChoice(Character user,int toOverWrite, Data data, string description, string optionA, string optionB, string optionC, string optionD)
         {
             bool toReturn = false;
@@ -442,7 +524,7 @@ namespace RPG_GAME
                 if (choice != '1' && choice != '2' && choice != '3' && choice != '4')
                 {
                     Print("Unknown option", 'w');
-                    System.Threading.Thread.Sleep(2000); Console.Clear();
+                     Thread.Sleep(2000); Console.Clear();
                 }
                 else
                 {
@@ -487,6 +569,9 @@ namespace RPG_GAME
 
 
         }
+        /// <summary>
+        /// In-game options
+        /// </summary>
         private static void Options()
         {
             bool correct;
@@ -513,6 +598,11 @@ namespace RPG_GAME
                 }
             } while (correct != true);
         }
+        /// <summary>
+        /// Easter egg. After typing "/" user finish game
+        /// </summary>
+        /// <param name="option"></param>
+        /// <returns></returns>
         public static bool Hackermode(char option)
         {
             if (option == '/')
@@ -520,7 +610,7 @@ namespace RPG_GAME
                 Console.Clear();
                 Console.Title = "HACKERMODE";
                 Print(@"\Hello world!", 'g');
-                System.Threading.Thread.Sleep(4000);
+                 Thread.Sleep(4000);
                 LoadingEffect("Hacking pentagon servers, please wait", "Connected! :D");
                 Character user2 = new Character("IT", 9999, 9, 9999, 9999);
                 Item mythings2 = new Item(1);
@@ -530,6 +620,11 @@ namespace RPG_GAME
             }
             return false;
         }
+        /// <summary>
+        /// Effect for loading
+        /// </summary>
+        /// <param name="nameofprocess"></param>
+        /// <param name="endofprocess"></param>
         public static void LoadingEffect(string nameofprocess,string endofprocess)
         {
             Console.Clear();
@@ -541,13 +636,18 @@ namespace RPG_GAME
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Clear();
             }
-            System.Threading.Thread.Sleep(100);
+             Thread.Sleep(100);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("\r"+endofprocess);
             Console.ForegroundColor = ConsoleColor.White;
-            System.Threading.Thread.Sleep(1000);
+             Thread.Sleep(1000);
             Console.Clear();
         }
+        /// <summary>
+        /// Opens Main Menu of the game
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool OpenMainMenu(Data data)
         {
                 bool newbie = false;
@@ -573,16 +673,27 @@ namespace RPG_GAME
                         LoadingEffect("Loading","Loading complete!");
                             break;
                         case '3':
+                        if (data.gamedata[0] != null)
+                        {
                             data.SaveGame(data);
                             Toreturn = false;
+                        }
+                        else
+                        {
+                            Toreturn = false;
+                            Console.WriteLine("You have nothing to save");
+                             Thread.Sleep(2000);
+
+                        }
                             break;
+
                         case '4':
                             Options();
                             Toreturn = false;
                             break;
                         case '0':
                             Console.WriteLine("Bye!");
-                            System.Threading.Thread.Sleep(1000);
+                             Thread.Sleep(1000);
                             Environment.Exit(0);//terminates console
                             break;
                         default:
@@ -596,68 +707,88 @@ namespace RPG_GAME
                 while (Toreturn != true);
                 return newbie;
         }
+        /// <summary>
+        /// Easter egg. After clicking wrong keys in main menu, user receives a message to stop doing this
+        /// </summary>
+        /// <param name="counter">Counts number of clicks</param>
         public static void ClickFeature(int counter)
         {
-            System.Threading.Thread.Sleep(1000);
+             Thread.Sleep(1000);
             if (counter == 10)//if user click wrong key 10 times easter egg starts...
             {
                 Console.Clear();
                 Console.WriteLine("Oh, are you trying to break the game?” :c");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
             }
             if (counter == 15)
             {
                 Console.Clear();
                 Console.WriteLine("C'mon stop...");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
             }
             if (counter == 16)
             {
                 Console.Clear();
                 Console.WriteLine("Pls stop...");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
             }
             if (counter == 17)
             {
                 Console.Clear();
                 Console.WriteLine("Okay... I'll crash...");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
             }
             if (counter == 18)
             {
                 Console.Clear();
                 Console.WriteLine("Just kidding..");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
 
             }
             if (counter == 19)
             {
                 Console.Clear();
                 Console.WriteLine("I can do this all they long...");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
 
             }
             if (counter == 20)
             {
                 Console.Clear();
                 Console.WriteLine("I can do this all they long...");
-                System.Threading.Thread.Sleep(2000);
+                 Thread.Sleep(2000);
 
             }
             if (counter == 25)
             {
                 Console.Clear();
                 Console.WriteLine("Okay, you won...");
-                System.Threading.Thread.Sleep(4000);
+                 Thread.Sleep(4000);
                 Environment.Exit(0);
             }
         }
+        /// <summary>
+        /// Loads new game
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool NewGame(Data data)
         {
-            Prologue(data);
+            Scenario.Prologue(data);
             Console.Clear();
             return true;
         }
+        /// <summary>
+        /// Pause menu
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="user_Sorcerer"></param>
+        /// <param name="user_Warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="mythings"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
         public static void DefaultMenu(Character user, Sorcerer user_Sorcerer,Warrior user_Warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             bool ToReturn = true ;
@@ -716,52 +847,19 @@ namespace RPG_GAME
             }
             while (ToReturn!=true);
         }
-
+        /// <summary>
+        /// Method for loading something
+        /// </summary>
       public static void WaitDots()
         {
             for (int j = 0; j < 3; j++)
             {
                 Console.Write(".");
-                System.Threading.Thread.Sleep(100);
+                 Thread.Sleep(100);
             }
             Console.WriteLine();
         }
-        public static void Prologue(Data data)
-        {
-            char classification;
-            
-                Console.Clear();
-            Print("-Hello traveler, what's your name?",'m');
-            string name = Console.ReadLine();
-            data.gamedata[0]=name;
-            do { 
-            Print("Nice to meet you, "+ name + "! I'm Neth and let me introduce you our" +
-                " kingdom of Omaghan. During your journey you can serve our queen as a soldier or as a warrior. By the way, could you tell me what's your actual speciality?", 'm');
-            
-                Print("1. I'm a warrior.",'b');
-                Print("2. I'm a sorcerer.",'b');
-                Console.Write("Select: ");
-                classification = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                if (classification == '1')
-                {
-                    data.gamedata[1]=Class['w'];
-                }
-                else if (classification == '2')
-                {
-                    data.gamedata[1] = Class['s'];
-                }
-                else
-                {
-                    Console.WriteLine("unknown command, try again...");
-                    System.Threading.Thread.Sleep(2000);
-                    Console.Clear();
-                }
-            } while (classification != '1' && classification != '2');
-
-            
-                data.AutoSaveGame(data);
-        }
+        
     }
     
 }

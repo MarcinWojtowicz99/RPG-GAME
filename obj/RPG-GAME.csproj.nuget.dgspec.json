@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME.csproj": {}
+    "C:\\Users\\marci\\OneDrive\\Pulpit\\Dragon's Shell v1.1\\RPG-GAME.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME.csproj": {
+    "C:\\Users\\marci\\OneDrive\\Pulpit\\Dragon's Shell v1.1\\RPG-GAME.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME.csproj",
+        "projectUniqueName": "C:\\Users\\marci\\OneDrive\\Pulpit\\Dragon's Shell v1.1\\RPG-GAME.csproj",
         "projectName": "RPG-GAME",
-        "projectPath": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\RPG-GAME.csproj",
+        "projectPath": "C:\\Users\\marci\\OneDrive\\Pulpit\\Dragon's Shell v1.1\\RPG-GAME.csproj",
         "packagesPath": "C:\\Users\\marci\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marci\\source\\repos\\RPG-GAME\\obj\\",
+        "outputPath": "C:\\Users\\marci\\OneDrive\\Pulpit\\Dragon's Shell v1.1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\marci\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -8,12 +8,20 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Stores and manages data
+    /// </summary>
     class Data
     {
 
         public string[] Gamedata;
         public string[] gamedata { get { return Gamedata; } set { Gamedata = value; } }
         public static string path = Directory.GetCurrentDirectory(); //universal way to save file and load
+        /// <summary>
+        /// Encrypts file
+        /// </summary>
+        /// <param name="inputFile">Path of file to encrypt</param>
+        /// <param name="outputFile">Path to save the encrypted file</param>
         private static void EncryptFile(string inputFile, string outputFile)
         {
 
@@ -42,6 +50,11 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Decrypts file
+        /// </summary>
+        /// <param name="inputFile">Path of file to encrypt</param>
+        /// <param name="outputFile">Path to save the encrypted file</param>
         private static void DecryptFile(string inputFile, string outputFile)
         {
 
@@ -69,6 +82,10 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Deletes file
+        /// </summary>
+        /// <param name="filePaths">Path to delete the file</param>
         public static void ToDelete(string[] filePaths)
         {
             while (true)
@@ -107,6 +124,10 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Autosave feature
+        /// </summary>
+        /// <param name="data">Save data stored in object</param>
         public void AutoSaveGame(Data data)
         {
             
@@ -140,6 +161,11 @@ namespace RPG_GAME
                         File.Delete(finalpathforsave);
             }
         }
+        /// <summary>
+        /// Loads savegame
+        /// </summary>
+        /// <param name="pather">Filepath to read</param>
+        /// <param name="finalpathforsave3">Filepath to decode and read</param>
         public void LoadSave(string pather,string finalpathforsave3)
         {
             try
@@ -171,6 +197,10 @@ namespace RPG_GAME
             }
             File.Delete(finalpathforsave3);
         }
+        /// <summary>
+        /// Loads savegame. If there is more than 10 savegames user has to delete files and then choose the right ones.
+        /// </summary>
+        /// <param name="data">Save data stored in object</param>
         public void LoadGame(Data data)
         {
             string[] filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");
@@ -236,6 +266,10 @@ namespace RPG_GAME
                         Environment.Exit(0);
                     }
         }
+        /// <summary>
+        /// Saves game
+        /// </summary>
+        /// <param name="data">Temporary data to save</param>
         public void SaveGame(Data data)
         {
             do { 
@@ -282,12 +316,26 @@ namespace RPG_GAME
         } while (true);
 
         }
+        /// <summary>
+        /// Data constructor
+        /// </summary>
+        /// <param name="nbofdata">Number of data to be stored</param>
         public Data(int nbofdata)
         {
             Gamedata = new String[nbofdata];
             gamedata = Gamedata;
         }
-        
+        /// <summary>
+        /// Reads data and saves to object
+        /// </summary>
+        /// <param name="data">Temporary data object</param>
+        /// <param name="user">Object used for assigning data from savefile</param>
+        /// <param name="warrior">Object used for assigning data from savefile</param>
+        /// <param name="mythings">Used for equipping the warrior</param>
+        /// <param name="user_Sorcerer">Object used for assigning data from savefile</param>
+        /// <param name="dragon">For assigning number of dragons killed</param>
+        /// <param name="human">For assigning number of people killed</param>
+        /// <param name="mermaid">For assigning number of mermaids killed</param>
         public void ReadData(Data data, Character user, Warrior warrior, Item mythings, Sorcerer user_Sorcerer, Enemy dragon, Enemy human, Enemy mermaid)
         {
             string[] datas = new String[11];

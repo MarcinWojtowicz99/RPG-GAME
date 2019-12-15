@@ -5,11 +5,22 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Derived class for sorcerer
+    /// </summary>
     class Sorcerer:Character
     {
         int[,] equipment;
         int demonskilled;
         public int DemonsKilled { get {return demonskilled; } set { demonskilled = value; } }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="basic_hp"></param>
+        /// <param name="maxequipment"></param>
+        /// <param name="basic_damage"></param>
+        /// <param name="startmoney"></param>
         public Sorcerer(string name, int basic_hp, int maxequipment, int basic_damage, int startmoney) : base(name, basic_hp, maxequipment,basic_damage,startmoney)
         {
             equipment = Equipment;
@@ -18,6 +29,17 @@ namespace RPG_GAME
         }
        bool activskil;
        public bool Activeskill { get { return activskil; }set { activskil = value; } }
+        /// <summary>
+        /// Teleport feature. Sorcerer may teleport anywhere he/she wants
+        /// </summary>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <param name="user_Sorcerer"></param>
+        /// <param name="user_Warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
         public void Teleport(Item mythings,Character user,Sorcerer user_Sorcerer,Warrior user_Warrior,Data data,Enemy mermaid,Enemy dragon,Enemy Human)
         {
             bool toReturn = false;
@@ -91,6 +113,16 @@ namespace RPG_GAME
                 Console.Clear();
             } while (toReturn != true);
         }
+        /// <summary>
+        /// Random event-spawning a goldfish
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Human"></param>
+        /// <param name="Dragon"></param>
         public static void GoldFish(Enemy enemy, Sorcerer user, Item mythings, Data data, Enemy Mermaid, Enemy Human, Enemy Dragon)
         {
             bool ToReturn = true;
@@ -179,6 +211,20 @@ namespace RPG_GAME
                 }
             } 
         }
+        /// <summary>
+        /// Basic spells
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="enemy"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
+        /// <param name="firedamageenabled">Boolean if character use fire spells</param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Human"></param>
+        /// <param name="Dragon"></param>
+        /// <returns></returns>
         public static double BasicSorcerer_Spells(double value,int type, Enemy enemy, Sorcerer user, Item mythings, Data data,bool firedamageenabled,Enemy Mermaid, Enemy Human, Enemy Dragon)
         {
             value = user.Basic_damage;
@@ -231,6 +277,12 @@ namespace RPG_GAME
                 return value;
            
         }
+        /// <summary>
+        /// Spells to unlock
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="enemy"></param>
+        /// <param name="user"></param>
         public static void Advanced_Sorcerer_Spells(int type,Enemy enemy, Sorcerer user)
         {
             if(type==6)
@@ -261,6 +313,12 @@ namespace RPG_GAME
             }
             
         }
+        /// <summary>
+        /// Displays info about available attacks
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="enemy"></param>
+        /// <param name="Resurection_used"></param>
         public void AttacksAvailable(Sorcerer user, Enemy enemy, bool Resurection_used)
         {
             Console.Clear();
@@ -286,6 +344,11 @@ namespace RPG_GAME
 
             Console.Write("Select: ");
         }
+        /// <summary>
+        /// Turns on/off the fire damage
+        /// </summary>
+        /// <param name="firedamageenabled"></param>
+        /// <param name="counter"></param>
         public static void FireOnOff (bool firedamageenabled, int counter)
         {
             if (firedamageenabled == true)
@@ -301,6 +364,26 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Continues fight as a sorcerer
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="sorcerer"></param>
+        /// <param name="warrior"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
+        /// <param name="firedamageenabled">Boolean if firedamage is enabled</param>
+        /// <param name="used"></param>
+        /// <param name="Resurection_used">Boolean if resurrection feature was used</param>
+        /// <param name="counter">Counts number of fire attacks</param>
+        /// <param name="toBreak"></param>
+        /// <param name="sorcererResurection">Boolean if resurrection is possible</param>
+        /// <param name="Exit">Quits fight</param>
+        /// <returns></returns>
         public bool ContinueFight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human, bool firedamageenabled, bool used,out bool Resurection_used,int counter, bool toBreak, out bool sorcererResurection,out bool Exit)
         {
             Exit = false;

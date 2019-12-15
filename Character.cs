@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace RPG_GAME
 {
+    /// <summary>
+    /// Character class which stores informations about character and methods for character's activities
+    /// </summary>
     class Character
     {
         public string name;
@@ -37,6 +40,11 @@ namespace RPG_GAME
             get { return basic_hp; }
             set { basic_hp = value; }
         }
+        /// <summary>
+        /// Save killed enemies 
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="data"></param>
         public void UpdateEnemyKilled(Enemy enemy,Data data)
         {
             if(enemy.Enemy_Name=="Dragon")
@@ -57,7 +65,11 @@ namespace RPG_GAME
             }
         }
         int[,] equipment;
-    
+    /// <summary>
+    /// Update health status
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="data"></param>
         public void UpdateHealth(Character user,Data data)
         {
             data.gamedata[4]="Health_status: "+Convert.ToString(user.Actual_hp);
@@ -68,6 +80,10 @@ namespace RPG_GAME
         int basic_damage;
         public int Basic_damage { get{ return basic_damage; }set { basic_damage = value; } }
         int startmoney;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+       
         public Character(string name, int basic_hp, int maxequipment, int basic_damage, int startmoney)
         {
             this.startmoney = startmoney;
@@ -93,11 +109,27 @@ namespace RPG_GAME
             Equip= 0;
 
         }
+        /// <summary>
+        /// Update money status
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool UpdateMoney(Character user, Data data)
         {
             data.gamedata[2] = "AccountStatus: " +user.Money_player;
             return true;
         }
+        /// <summary>
+        /// Method for payment
+        /// </summary>
+        /// <param name="value">Value of an item</param>
+        /// <param name="indexnb">Number of item in the index</param>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <param name="shopkeeperCash">Shopkeeper's account status</param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public int Pay(int value, int indexnb, Item mythings,Character user, int shopkeeperCash, Data data)
         {
            if(user.Money_player-value>=0)
@@ -117,6 +149,15 @@ namespace RPG_GAME
             return shopkeeperCash;
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value">Value of an item</param>
+        /// <param name="indexEQ">Equipment index</param>
+        /// <param name="user"></param>
+        /// <param name="shopkeeperCash">Shopkeeper's account status</param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public int Sell(int value, int indexEQ, Character user, int shopkeeperCash, Data data)
         {
             if(shopkeeperCash-value>=0)
@@ -133,6 +174,13 @@ namespace RPG_GAME
             }
             return shopkeeperCash;
         }
+        /// <summary>
+        /// Adds money to character's account
+        /// </summary>
+        /// <param name="cash"></param>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public int AddMoney(int cash, Character user, Data data)
         {
             user.Money_player += cash;
@@ -140,6 +188,13 @@ namespace RPG_GAME
             data.AutoSaveGame(data);
             return money_player += cash;
         }
+        /// <summary>
+        /// Removes money from character's account
+        /// </summary>
+        /// <param name="cash"></param>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public int RemoveMoney(int cash, Character user, Data data)
         {
             if(user.Money_player - cash>=0)
@@ -162,6 +217,12 @@ namespace RPG_GAME
             set { equip = value; }
         }
         public int[,] Equipment { get { return equipment; }set { equipment = value; } }
+        /// <summary>
+        /// Method for attacking an enemy
+        /// </summary>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public double Attack(Item mythings, Character user)
         {
             double gen;
@@ -182,7 +243,14 @@ namespace RPG_GAME
 
             return Convert.ToDouble(user.basic_damage)+ Convert.ToDouble(user.basic_damage) + gen;
 
-        }
+        }/// <summary>
+        /// Restores health status
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="user_warrior"></param>
         public void Heal(int index, Item mythings, Data data, Character user, Warrior user_warrior)
         {
             user.Actual_hp += mythings.unit[index].damageorhealvalueafteruse;
@@ -197,6 +265,18 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// View quickly your equipment
+        /// </summary>
+        /// <param name="mythings">Items</param>
+        /// <param name="user"></param>
+        /// <param name="user_sorcerer"></param>
+        /// <param name="user_warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Dragon"></param>
+        /// <param name="Human"></param>
+        /// <param name="duringfight">Returns bool if character currently fight and he should come back to arena</param>
         public void ViewEquipment(Item mythings, Character user, Sorcerer user_sorcerer, Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human, bool duringfight)
         {
             do
@@ -283,16 +363,37 @@ namespace RPG_GAME
             
 
         }
+        /// <summary>
+        /// Updates score
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
         public void UpdateScore(Character user,Data data)
         {
             data.gamedata[3] = "Score: "+Convert.ToString(user.Score);
         }
+        /// <summary>
+        /// Wrong key method
+        /// </summary>
+        /// <returns></returns>
         public static bool UnknownOption()
         {
             Console.WriteLine("Unknown option!");
             System.Threading.Thread.Sleep(4000);
             return false;
         }
+        /// <summary>
+        /// Launches when character wins a fight
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="sorcerer"></param>
+        /// <param name="warrior"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
         public void FightWon(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Console.Clear();
@@ -315,6 +416,10 @@ namespace RPG_GAME
             Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
             
         }
+        /// <summary>
+        /// Dead screen
+        /// </summary>
+        /// <returns></returns>
         public bool GameOverScreen()
         {
             while (true)
@@ -354,6 +459,19 @@ namespace RPG_GAME
             }
             return true;
         }
+        /// <summary>
+        /// Method for controlling a fight
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="data"></param>
+        /// <param name="user"></param>
+        /// <param name="mythings"></param>
+        /// <param name="sorcerer"></param>
+        /// <param name="warrior"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
+        /// <returns></returns>
         public bool Fight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Console.Clear();
@@ -416,6 +534,13 @@ namespace RPG_GAME
           
         }
         int nb;
+        /// <summary>
+        /// Quickly find an item in equipment
+        /// </summary>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <param name="itemname"></param>
+        /// <returns>Returns if item is present in equipment</returns>
         public bool FindInEquipment(Item mythings, Character user, string itemname)
         {
             bool isitem = false;
@@ -429,6 +554,14 @@ namespace RPG_GAME
             }
             return isitem;
         }
+        /// <summary>
+        /// Adds item to character's equipment
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="mythings"></param>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool AddToEquipment(int index, Item mythings, Character user, Data data)
         {
             bool a = false;
@@ -477,7 +610,12 @@ namespace RPG_GAME
             }
             return true;
             }
-          
+          /// <summary>
+          /// Removes item from equipment
+          /// </summary>
+          /// <param name="indexEQ">Index number in character's equipment</param>
+          /// <param name="user"></param>
+          /// <param name="data"></param>
         public void RemoveFromEquipment(int indexEQ,Character user, Data data)
         {
                         user.Equipment[indexEQ, 0] = 0;
@@ -489,7 +627,17 @@ namespace RPG_GAME
                 data.gamedata[5] += user.Equipment[j, 1] + ";";
             }
         }
-
+        /// <summary>
+        /// Virtual map
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="data"></param>
+        /// <param name="sorc"></param>
+        /// <param name="war"></param>
+        /// <param name="mythings"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Dragon"></param>
+        /// <param name="Human"></param>
         public void Walk(Character user,Data data, Sorcerer sorc, Warrior war, Item mythings,Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
             bool toReturn = true;

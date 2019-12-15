@@ -20,3 +20,36 @@ C:\Users\marci\Documents\GitHub\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtim
 C:\Users\marci\Documents\GitHub\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.dev.json
 C:\Users\marci\Documents\GitHub\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.dll
 C:\Users\marci\Documents\GitHub\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.exe
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.deps.json
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.json
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.dev.json
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\OneDrive\Pulpit\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.exe
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.deps.json
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.json
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.dev.json
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\Desktop\RPG-GAME\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\Desktop\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
+C:\Users\marci\Desktop\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\Desktop\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\Desktop\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\Desktop\RPG-GAME\obj\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.exe
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.deps.json
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.json
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.runtimeconfig.dev.json
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\bin\Debug\netcoreapp3.0\RPG-GAME.pdb
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\obj\Debug\netcoreapp3.0\RPG-GAME.csprojAssemblyReference.cache
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfoInputs.cache
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\obj\Debug\netcoreapp3.0\RPG-GAME.AssemblyInfo.cs
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\obj\Debug\netcoreapp3.0\RPG-GAME.dll
+C:\Users\marci\OneDrive\Pulpit\Dragon's Shell v1.1\obj\Debug\netcoreapp3.0\RPG-GAME.pdb

@@ -5,6 +5,9 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 namespace RPG_GAME
 {
+    /// <summary>
+    /// All NPCs available in the game
+    /// </summary>
     class NPC
     {
        int money;
@@ -24,6 +27,12 @@ namespace RPG_GAME
         public int[] value2;
         public int[] ValueOfMYItem { get { return value2; } set { value2 = value; } }
         public int ShopKeeperMoney { get { return money; } set { money = value; } }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="nbofequipment">Total number of equipment</param>
+        /// <param name="mythings">Item list to draw </param>
+        /// <param name="user">User object</param>
         public NPC(int nbofequipment, Item mythings, Character user)
         {
             this.nbofequipment = nbofequipment;
@@ -46,6 +55,13 @@ namespace RPG_GAME
             ShopKeeperMoney = money;
 
         }
+        /// <summary>
+        /// Method for buying items from shopkeeper
+        /// </summary>
+        /// <param name="user">User object</param>
+        /// <param name="shopkeeper">Shopkeeper</param>
+        /// <param name="mythings">Items</param>
+        /// <param name="data">User's data</param>
         public void SellItemsToShopkeeper(Character user, NPC shopkeeper, Item mythings, Data data)
         {
             while (true)
@@ -128,6 +144,18 @@ namespace RPG_GAME
                 }
             }
         }
+        /// <summary>
+        /// Method for showing items
+        /// </summary>
+        /// <param name="user">User object</param>
+        /// <param name="user_sorcerer">User object</param>
+        /// <param name="user_warrior">User object</param>
+        /// <param name="mythings">Items</param>
+        /// <param name="data">User's data</param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Dragon"></param>
+        /// <param name="shopkeeper">Shopkeeper</param>
+        /// <param name="Human"></param>
         public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper, Enemy Human)
         {
             Console.Clear();
@@ -178,6 +206,16 @@ namespace RPG_GAME
             }
             Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon, Human);
         }
+        /// <summary>
+        /// Bartender for sorcerer
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="user_sorcerer"></param>
+        /// <param name="mythings"></param>
+        /// <param name="data"></param>
+        /// <param name="Mermaid"></param>
+        /// <param name="Dragon"></param>
+        /// <param name="Human"></param>
       public void GiveBeer_Sorcerer(Character user, Sorcerer user_sorcerer, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
            
@@ -238,7 +276,16 @@ namespace RPG_GAME
             Warrior user_warrior = null;
             Program.DefaultMenu(user,user_sorcerer,user_warrior,data,mythings,Mermaid,Dragon,Human);
         }
-        
+        /// <summary>
+        /// Bartender for warrior
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="user_warrior"></param>
+        /// <param name="data"></param>
+        /// <param name="mythings"></param>
+        /// <param name="mermaid"></param>
+        /// <param name="dragon"></param>
+        /// <param name="Human"></param>
         public void GiveBeer_Warrior(Character user, Warrior user_warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Sorcerer sor = null;
