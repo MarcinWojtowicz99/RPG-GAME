@@ -16,7 +16,7 @@ namespace RPG_GAME
         static int basic_hp;
         public static int Actual { get { return actual_hp; } }
         public static int Basic { get { return basic_hp; } }
-        int[,] equipment;
+        
         int[] arrayofindexes;
         public int[] ReturnToArray { get { return arrayofindexes; } set { arrayofindexes = value; } }
         int[] Value;
@@ -46,27 +46,94 @@ namespace RPG_GAME
             ShopKeeperMoney = money;
 
         }
-        
+        public void SellItemsToShopkeeper(Character user, NPC shopkeeper, Item mythings, Data data)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
+                Console.WriteLine("Your account value: " + user.Money_player);
+                Console.WriteLine("What do you wanna sell? ");
+                Console.WriteLine("Your equipment: ");
+                for (int i = 0; i < user.Equipment.Length / 2; i++)
+                {
+                    if (user.Equipment[i, 0] != 0)
+                    {
+                        if (shopkeeper.value2[i] == 0)
+                        {
+                            shopkeeper.value2[i] = mythings.unit[user.Equipment[i, 0]].Generate_Value();
+                            if (user.Equipment[i, 1] > 1)   Console.WriteLine("{0}. {1} x{2} Cost: {3} Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                           else   Console.WriteLine("{0}. {1}  Cost: {2} Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
+                            
+
+                        }
+                        else
+                        {
+                            if (user.Equipment[i, 1] > 1)  Console.WriteLine("{0}. {1} x{2} Cost: {3} Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
+                           else   Console.WriteLine("{0}. {1}  Cost: {2} Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
+                            
+                        }
+
+                    }
+                    else   Console.WriteLine("{0}. [Empty slot]", i);
+                }
+                Console.WriteLine("{0}. I resign", user.Equipment.Length / 2);
+                Console.Write("Select: ");
+                char nb2 = Console.ReadKey().KeyChar;
+                int key2 = CharUnicodeInfo.GetDecimalDigitValue(nb2);
+                Console.WriteLine();
+
+                try
+                {
+                    if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] != 0)
+                    {
+                        Console.WriteLine(user.Equipment[key2, 1]);
+                        if (user.Equipment[key2, 1] > 1)
+                        {
+                            do
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Please, write the number of items to sell: ");
+                                char nb = Console.ReadKey().KeyChar;
+                                int key3 = CharUnicodeInfo.GetDecimalDigitValue(nb);
+                                if (key3 < user.Equipment[key2, 1] && nb > 0)
+                                {
+                                    if (shopkeeper.money >= shopkeeper.value2[key2] * key3)
+                                    {
+                                        user.Equipment[key2, 1] -= key3;
+                                        user.AddMoney(shopkeeper.value2[key2] * key3, user, data);
+                                        shopkeeper.money -= shopkeeper.value2[key2] * key3;
+                                        break;
+                                    }
+                                    else Console.WriteLine("I don't have enopugh money!"); System.Threading.Thread.Sleep(2000);
+
+                                }
+                                else Console.WriteLine("Wrong key!"); System.Threading.Thread.Sleep(2000);
+                            } while (true);
+
+                        }
+                        else shopkeeper.ShopKeeperMoney = user.Sell(shopkeeper.value2[key2] * user.Equipment[key2, 1], key2, user, shopkeeper.ShopKeeperMoney, data);
+                    }
+                    else if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] == 0)
+                    {
+                        Console.WriteLine("Item does not exist");   System.Threading.Thread.Sleep(4000);
+                    }
+                    else if (key2 == user.Equipment.Length / 2) break;
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Unknown sign!");
+                    System.Threading.Thread.Sleep(2000);  Console.Clear();
+                }
+            }
+        }
         public void ShowItems(Character user, Sorcerer user_sorcerer, Warrior user_warrior, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, NPC shopkeeper, Enemy Human)
         {
             Console.Clear();
-            int additionalprize = 0;
-            if (data.gamedata[13] != "Watch out!"  && data.gamedata[13] != "NO DATA" && data.gamedata[20] == "NO DATA")
-                {
-                    Program.Print("I don't like people like you. Stay away from our Kingdom!", "yellow");
-                    additionalprize = 110;
-                }
-                else if (data.gamedata[20] == "+You saved the Queen"&&data.gamedata[13] != "Watch out!")
-                {
-                    Program.Print("You are a hero! You saved our queen! I've just realized how much I was wrong", "yellow");
-                }
-                else
-                {
-                    Program.Print("Welcome in my shop, traveler, what do you need?", "yellow");
-                }
-                System.Threading.Thread.Sleep(2000);
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.White;
+            int additionalprize = Scenario.ShopkeeperQuotes(data);
+
+
             while (true)
             {
                
@@ -96,162 +163,28 @@ namespace RPG_GAME
                 }
                 else if (key == shopkeeper.ReturnToArray.Length + 1)
                 {
-                    while (true)
-                    {
-
-                        Console.Clear();
-                        Console.WriteLine("Shopkeeper account value: " + shopkeeper.ShopKeeperMoney);
-                        Console.WriteLine("Your account value: " + user.Money_player);
-                        Console.WriteLine("What do you wanna sell? ");
-                        Console.WriteLine("Your equipment: ");
-                        for (int i = 0; i < user.Equipment.Length / 2; i++)
-                        {
-                            if (user.Equipment[i, 0] != 0)
-                            {
-                                if(shopkeeper.value2[i]==0)
-                                {
-                                    shopkeeper.value2[i]=mythings.unit[user.Equipment[i, 0]].Generate_Value();
-                                    if(user.Equipment[i,1]>1)
-                                    {
-                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("{0}. {1}  Cost: {2}Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem,  shopkeeper.value2[i]);
-                                    }
-                                   
-                                }
-                                else
-                                {
-                                    if (user.Equipment[i, 1] > 1)
-                                    {
-                                        Console.WriteLine("{0}. {1} x{2} Cost: {3}Dragon Coins [Total: {4}]", i, mythings.unit[user.Equipment[i, 0]].nameofitem, user.Equipment[i, 1], shopkeeper.value2[i], shopkeeper.value2[i] * user.Equipment[i, 1]);
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("{0}. {1}  Cost: {2}Dragon Coins", i, mythings.unit[user.Equipment[i, 0]].nameofitem, shopkeeper.value2[i]);
-                                    }
-                                }
-                                
-                            }
-                            else
-                            {
-                                Console.WriteLine("{0}. [Empty slot]",i);
-                            }
-                            
-
-                        }
-                        Console.WriteLine("{0}. I resign", user.Equipment.Length/2);
-                        Console.Write("Select: ");
-                        char nb2 = Console.ReadKey().KeyChar;
-                        int key2 = CharUnicodeInfo.GetDecimalDigitValue(nb2);
-                        Console.WriteLine();
-
-                        try
-                        {
-                            if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] != 0)
-                            {
-                                Console.WriteLine(user.Equipment[key2, 1]);
-                                if(user.Equipment[key2, 1]>1)
-                                {
-                                    do
-                                    {
-                                        Console.Clear();
-                                        Console.WriteLine("Please, write the number of items to sell: ");
-                                       char nb= Console.ReadKey().KeyChar;
-                                        int key3 = CharUnicodeInfo.GetDecimalDigitValue(nb);
-                                        if (key3 < user.Equipment[key2,1] &&nb>0)
-                                        {
-                                            if(shopkeeper.money>=shopkeeper.value2[key2] * key3)
-                                            {
-                                                user.Equipment[key2, 1] -= key3;
-                                                user.AddMoney(shopkeeper.value2[key2] * key3, user, data);
-                                                shopkeeper.money -= shopkeeper.value2[key2] * key3;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                Console.WriteLine("I don't have enopugh money!");
-                                                System.Threading.Thread.Sleep(2000);
-                                            }
-                                            
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Wrong key!");
-                                            System.Threading.Thread.Sleep(2000);
-
-                                        }
-                                    } while (true);
-                                    
-                                }
-                                else
-                                {
-                                    shopkeeper.ShopKeeperMoney = user.Sell(shopkeeper.value2[key2] * user.Equipment[key2, 1], key2, user, shopkeeper.ShopKeeperMoney, data);
-                                }
-                                
-
-                            }
-                            else if (key2 < user.Equipment.Length / 2 && user.Equipment[key2, 0] == 0)
-                            {
-                                Console.WriteLine("Item does not exist");
-                                System.Threading.Thread.Sleep(4000);
-                            }
-                            else if (key2 == user.Equipment.Length / 2)
-                            {
-                                break;
-                            }
-                        }
-                            
-                        
-                       catch(IndexOutOfRangeException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine("Unknown sign!");
-                            System.Threading.Thread.Sleep(2000);
-                            Console.Clear();
-                        }
-                        
-                            
-                        
-                       
-                    } 
+                    shopkeeper.SellItemsToShopkeeper(user,shopkeeper,mythings,data);
                 }
 
                 else if (key == shopkeeper.ReturnToArray.Length + 2)
                 {
                     Console.WriteLine("Bye");
-                    Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon,Human);
+                    break;
                 }
                 else
                 {
                     Console.WriteLine("Unknown option!");
                 }
             }
-}
+            Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, Mermaid, Dragon, Human);
+        }
       public void GiveBeer_Sorcerer(Character user, Sorcerer user_sorcerer, Item mythings, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
-            Warrior war = new Warrior("N",0,0,0,0,0);
+           
             char decision;
             do
             {
-                Console.Clear();
-                Random rnd3 = new Random();
-                int howmuch = rnd3.Next(50,150);
-                if (data.gamedata[13] != "Watch out!"&&howmuch<=70&& data.gamedata[13] != "NO DATA"&& data.gamedata[20] =="NO DATA")
-                {
-                    Program.Print("I heard that you made our princess upset. I have an advice for you for your safety do what she wants.","yellow");
-                }
-                else if(data.gamedata[20]== "+You saved the Queen")
-                {
-                    Program.Print("You are a hero! You saved our queen! It's on me! [Y/N]", "yellow");
-                    howmuch = 0;
-                }
-                else
-                {
-                    Program.Print("-Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", "yellow");
-                }
-                Console.ForegroundColor = ConsoleColor.White;
+                int howmuch = Scenario.BartenderQuotes(data);
                 decision = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 if (decision == 'y')
@@ -259,13 +192,9 @@ namespace RPG_GAME
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
                     user.Actual_hp = user.Basic_hp;
-                    Program.Print("Few hours later", "white");
+                    Program.Print("Few hours later", 'w');
                     System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
+                    Program.WaitDots();
                     actual_hp = basic_hp;
                     Random rnd = new Random();
                     int rand = rnd.Next(101);
@@ -275,13 +204,13 @@ namespace RPG_GAME
                         int cash = rnd2.Next(0, money_player);
                         user.RemoveMoney(cash, user,data);
                         Console.Clear();
-                        Program.Print("Unfortunatelly you offended someone in the tavern and lost "+Convert.ToString(cash)+" money","white");
+                        Program.Print("Unfortunatelly you offended someone in the tavern and lost "+Convert.ToString(cash)+" money",'w');
                         System.Threading.Thread.Sleep(5000);
 
                     }
                     else
                     {
-                        Program.Print("-See you again!","yellow");
+                        Program.Print("-See you again!",'y');
                         System.Threading.Thread.Sleep(5000);
                         Console.Clear();
                     }
@@ -290,7 +219,7 @@ namespace RPG_GAME
                 }
                 else if (decision == 'n')
                 {
-                    Program.Print("Okay, See you then...", "yellow");
+                    Program.Print("Okay, See you then...", 'y');
                     System.Threading.Thread.Sleep(5000);
                     Console.Clear();
 
@@ -306,34 +235,17 @@ namespace RPG_GAME
 
             } while (decision != 'y' && decision != 'n');
 
-            Warrior user_warrior = new Warrior("Fake",0,0,0,0,0);
+            Warrior user_warrior = null;
             Program.DefaultMenu(user,user_sorcerer,user_warrior,data,mythings,Mermaid,Dragon,Human);
         }
         
         public void GiveBeer_Warrior(Character user, Warrior user_warrior, Data data, Item mythings, Enemy mermaid, Enemy dragon, Enemy Human)
         {
-            Sorcerer sor = new Sorcerer("N", 0, 0, 0, 0);
+            Sorcerer sor = null;
             char decision;
             do
             {
-                Console.Clear();
-                Random rnd3 = new Random();
-                int howmuch = rnd3.Next(50, 150);
-                if (data.gamedata[13] != "Watch out!" && howmuch <= 70 && data.gamedata[13] != "NO DATA" && data.gamedata[20] == "NO DATA")
-                {
-                    Program.Print("I heard that you made our princess upset. I have an advice for you for your safety do what she wants.", "yellow");
-                }
-                else if (data.gamedata[20] == "+You saved the Queen")
-                {
-                    Program.Print("You are a hero! You saved our queen! It's on me! [Y/N]", "yellow");
-                    howmuch = 0;
-                }
-                else
-                {
-                    Program.Print("-Tough day, huh? Maybe wanna have some beer? Only " + Convert.ToString(howmuch) + " Dragon Coins *Type \"y\" for yes or \"n\" for no*", "yellow");
-                }
-                Console.ForegroundColor = ConsoleColor.White;
-
+                int howmuch = Scenario.BartenderQuotes(data);
                 user.Actual_hp = 0;
                 user.Actual_hp = user.Basic_hp;
                 user.Actual_hp = user_warrior.BoostMe();
@@ -344,13 +256,8 @@ namespace RPG_GAME
                     Console.Clear();
                     user.RemoveMoney(howmuch,user,data);
                    
-                    Console.WriteLine("Few hours later");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
-                    System.Threading.Thread.Sleep(1000);
-                    Console.Write(".");
+                    Console.Write("Few hours later");
+                    Program.WaitDots();
                    
                     Random rnd = new Random();
                     int rand = rnd.Next(101);
@@ -358,14 +265,13 @@ namespace RPG_GAME
                     {
                         Console.Clear();
                         Sorcerer sor2 = new Sorcerer("N", 0,  0, 0,0);
-                        Program.Print("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?","red");
+                        Program.Print("*BURP* HO-HOW D-DID YOU CALL MY MOTHER?",'r');
                         System.Threading.Thread.Sleep(4000);
                         Console.ForegroundColor = ConsoleColor.White;
                         user.Fight(Human,data,user,mythings,sor2, user_warrior, mermaid, dragon, Human);                    }
                     else
                     {
-                        Program.Print("-See you again!", "yellow");
-
+                        Program.Print("-See you again!", 'y');
                         System.Threading.Thread.Sleep(2000);
                         Console.Clear();
                     }
@@ -374,7 +280,7 @@ namespace RPG_GAME
                 }
                 else if (decision == 'n')
                 {
-                    Program.Print("Okay, See you then...", "yellow");
+                    Program.Print("Okay, See you then...", 'y');
                     Console.Clear();
 
                     break;
@@ -386,8 +292,7 @@ namespace RPG_GAME
 
 
             } while (decision != 'y' && decision != 'n');
-            Sorcerer user_sorcerer = new Sorcerer("Fake", 0, 0, 0, 0);
-            Program.DefaultMenu(user, user_sorcerer, user_warrior, data, mythings, mermaid, dragon, Human);
+            Program.DefaultMenu(user, sor, user_warrior, data, mythings, mermaid, dragon, Human);
         }
 
     }

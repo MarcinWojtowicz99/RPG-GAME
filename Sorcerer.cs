@@ -48,194 +48,162 @@ namespace RPG_GAME
                         if (ind < 2)
                         {
                             bool got = user.AddToEquipment(2, mythings, user, data);
+                            Console.Clear();
                             if (got == true)
                             {
-                                Console.Clear();
                                 Console.WriteLine("You have found jewels!");
                                 Console.WriteLine("+200 points!");
                                 user.Score += 200;
                                 user.UpdateScore(user, data);
-                                System.Threading.Thread.Sleep(2000);
-                                Console.Clear();
                             }
-                            else
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Your storage is full :c");
-                                System.Threading.Thread.Sleep(2000);
-                                Console.Clear();
-                            }
+                            else  Console.WriteLine("Your storage is full :c");
                         }
                         else
                         {
                             Console.Clear();
                             Console.WriteLine("Unfortunately you didn't find jewels :(");
-                            System.Threading.Thread.Sleep(2000);
-                            Console.Clear();
                         }
-
-
+                        System.Threading.Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                     case '2':
 
-                        Basic_damage *= 2;
+                        user_Sorcerer.Basic_damage *= 2;
                         user_Sorcerer.Activeskill = true;
                         Console.Clear();
                         Console.WriteLine("Your mana increased!");
                         System.Threading.Thread.Sleep(2000);
                         Console.Clear();
-                        
-
                         break;
                     case '3':
-
-
                         if (ring == true)
                         {
                             user.GameComplete = true;
                             user.Fight(dragon, data, user, mythings, user_Sorcerer, user_Warrior, mermaid, dragon, Human);
                             toReturn = true;
                         }
-                        else
-                        {
-                            Console.WriteLine("Wrong key!");
-                            System.Threading.Thread.Sleep(2000);
-                            Console.Clear();
-                            toReturn = false;
-                        }
+                        else  toReturn = Character.UnknownOption();
                         break;
                     default:
-
-                        Console.WriteLine("Wrong key!");
-                        toReturn = false;
-                        System.Threading.Thread.Sleep(2000);
-                        Console.Clear();
+                        toReturn = Character.UnknownOption();
                         break;
                 }
                 Console.Clear();
-
             } while (toReturn != true);
         }
-        public static double Sorcerer_Spells(double value,int type, Enemy enemy, Sorcerer user, Item mythings, Data data,bool firedamageenabled,Enemy Mermaid, Enemy Human, Enemy Dragon)
+        public static void GoldFish(Enemy enemy, Sorcerer user, Item mythings, Data data, Enemy Mermaid, Enemy Human, Enemy Dragon)
         {
-            Random rnd = new Random();
-            int random = rnd.Next(100);
-            if(random<=5)
+            bool ToReturn = true;
+            while (ToReturn != true)
             {
-                bool ToReturn = true;
-                do {
-                    
-                    Console.Clear();
-                Console.WriteLine("You summoned the goldfish! Now, make your wish...");
-                Console.WriteLine("1. Kill the monster");
-                Console.WriteLine("2. I want money");
-                Console.WriteLine("3. Leave me alone");
-                Console.WriteLine("4. I'll finish you!");
-                Console.Write("Select: ");
+                Scenario.FishyQuotes();
                 char key = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 Console.Clear();
                 switch (key)
                 {
                     case '1':
-                            Random rnd2 = new Random();
-                            int random2 = rnd2.Next(100);
+                        Random rnd2 = new Random();
+                        int random2 = rnd2.Next(100);
 
-                            if(random2<50)
-                            {
-                                user.Score += 200;
-                                enemy.RestoreHealth(enemy);
-                                Warrior war = new Warrior("FAKE",0,0,0,0,0);
-                                Console.Clear();
-                                Console.WriteLine("Monster has been killed");
-                                Console.WriteLine("+200 points");
-                                enemy.Drop_Item(user, mythings, data);
-                                enemy.EnemyKilled += 1;
-                                user.UpdateEnemyKilled(enemy, data);
-                                System.Threading.Thread.Sleep(4000);
-                                user.UpdateScore(user, data);
-                                Program.DefaultMenu(user,user,war,data,mythings,Mermaid,Dragon,Human);
-                                
-                            }
-                            else
-                            {
-                                Console.WriteLine("Oops.. Something went wrong!");
-                                enemy.RestoreHealth(enemy);
-                                Console.WriteLine("Enemy HP restored!");
-                                System.Threading.Thread.Sleep(1500);
-                            }
+                        if (random2 < 50)
+                        {
+                            user.Score += 200;
+                            enemy.RestoreHealth(enemy);
+                            Warrior war = null;
+                            Console.Clear();
+                            Console.WriteLine("Monster has been killed");
+                            Console.WriteLine("+200 points");
+                            enemy.Drop_Item(user, mythings, data);
+                            enemy.EnemyKilled += 1;
+                            user.UpdateEnemyKilled(enemy, data);
+                            System.Threading.Thread.Sleep(4000);
+                            user.UpdateScore(user, data);
+                            Program.DefaultMenu(user, user, war, data, mythings, Mermaid, Dragon, Human);
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Oops.. Something went wrong!");
+                            enemy.RestoreHealth(enemy);
+                            Console.WriteLine("Enemy HP restored!");
+                            System.Threading.Thread.Sleep(1500);
+                        }
 
                         break;
                     case '2':
-                            user.Money_player += 2000;
-                            Console.WriteLine("+2000");
-                            user.UpdateMoney(user, data);
-                            System.Threading.Thread.Sleep(1500);
-                            break;
+                        user.Money_player += 2000;
+                        Console.WriteLine("+2000");
+                        user.UpdateMoney(user, data);
+                        System.Threading.Thread.Sleep(1500);
+                        break;
                     case '3':
-                            Console.WriteLine("-Okay...");
-                            System.Threading.Thread.Sleep(1500);
-                            break;
+                        Console.WriteLine("-Okay...");
+                        System.Threading.Thread.Sleep(1500);
+                        break;
                     case '4':
-                           
-                            Random rnd3 = new Random();
-                            int random3 = rnd3.Next(100);
-                            bool isholywater = false ;
-                            for(int i=0;i<user.Equipment.Length/2;i++)
-                            {
-                                if(mythings.unit[user.Equipment[i,0]].nameofitem=="Holy water")
-                                {
-                                    isholywater = true;
-                                }
-                            }
-                            if (random3 < 50||isholywater==true)
-                            {
-                                Console.WriteLine("Congratulations! You used secret spell and defeated the demon! Unfortunately you lost half of you HP in this battle and your main enemy HP has been restored...");
-                                user.Money_player += 6000;
-                                Console.WriteLine("+"+user.Money_player);
-                                enemy.RestoreHealth(enemy);
-                                user.Score += 5000;
-                                Console.WriteLine("+{0} points", user.Money_player);
-                                user.Actual_hp /= 2;
-                                user.UpdateEnemyKilled(enemy, data);
-                                user.UpdateHealth(user, data);
-                                user.UpdateMoney(user, data);
-                                user.UpdateScore(user, data);
-                                Console.ReadKey();
-                                user.DemonsKilled++;
-                                data.gamedata[10] = "Unknowns: " + user.DemonsKilled;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Unfortunately goldfish has changed into the demon who took you soul");
-                                Console.WriteLine("GAME OVER!");
-                                user.Actual_hp = 0;
-                                Console.ReadKey();
-                            }
-                            break;
+
+                        Random rnd3 = new Random();
+                        int random3 = rnd3.Next(100);
+                        bool isholywater = false;
+                        for (int i = 0; i < user.Equipment.Length / 2; i++) if (mythings.unit[user.Equipment[i, 0]].nameofitem == "Holy water") isholywater = true;
+                        if (random3 < 50 || isholywater == true)
+                        {
+                            Console.WriteLine("Congratulations! You used secret spell and defeated the demon! Unfortunately you lost half of you HP in this battle and your main enemy HP has been restored...");
+                            user.Money_player += 6000;
+                            Console.WriteLine("+" + user.Money_player);
+                            enemy.RestoreHealth(enemy);
+                            user.Score += 5000;
+                            Console.WriteLine("+{0} points", user.Money_player);
+                            user.Actual_hp /= 2;
+                            user.UpdateEnemyKilled(enemy, data);
+                            user.UpdateHealth(user, data);
+                            user.UpdateMoney(user, data);
+                            user.UpdateScore(user, data);
+                            Console.ReadKey();
+                            user.DemonsKilled++;
+                            data.gamedata[10] = "Unknowns: " + user.DemonsKilled;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unfortunately goldfish has changed into the demon who took you soul");
+                            Console.WriteLine("GAME OVER!");
+                            user.Actual_hp = 0;
+                            Console.ReadKey();
+                        }
+                        break;
                     default:
-                        Console.WriteLine("Unknown option!");
-                            System.Threading.Thread.Sleep(1500);
-                            Console.Clear();
-                            ToReturn = false;
+                        Console.Clear();
+                        ToReturn = Character.UnknownOption();
                         break;
                 }
-                    
+            } 
+        }
+        public static double BasicSorcerer_Spells(double value,int type, Enemy enemy, Sorcerer user, Item mythings, Data data,bool firedamageenabled,Enemy Mermaid, Enemy Human, Enemy Dragon)
+        {
+            value = user.Basic_damage;
+            Random rnd = new Random();
+            int random = rnd.Next(100);
+            if(random<=5)
+            {
+                    GoldFish(enemy,user,mythings,data,Mermaid,Human,Dragon);
             }
-            while (ToReturn != true) ; 
+            if (firedamageenabled == true)
+            {
+                Console.WriteLine("+FLAMING DAMAGE");
+                Console.Clear();
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Your attack value: " + (value + (0.15 * enemy.Enemy_Actual_HP)));
+                System.Threading.Thread.Sleep(2000);
+                value += (0.15 * enemy.Enemy_Actual_HP);
             }
             if (type == '1')
             {
 
                 Console.Clear();
                 Console.Write("You used confusion... Your enemy is falling asleep");
-                for (int i = 0; i < 4; i++)
-                {
-                    System.Threading.Thread.Sleep(500);
-                    Console.Write(".");
-                    value *= 2;
-                    
-                }
+                Program.WaitDots();
+                value *= 2;
             }
             else if (type == '2')
             {
@@ -255,25 +223,178 @@ namespace RPG_GAME
                 Console.WriteLine("Your spell ricocheted!");
                 System.Threading.Thread.Sleep(3000);
                 user.Actual_hp -=Convert.ToInt32(value);
-                value = 0.0;
+                return 0.0;
 
             }
-            if (firedamageenabled == true)
-            {
-                Console.WriteLine("+FLAMING DAMAGE");
-                Console.Clear();
-                System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Your attack value: " + value);
-                System.Threading.Thread.Sleep(2000);
-                return value+(0.15*enemy.Enemy_Actual_HP);
-            }
-            else
-            {
+           
+           
                 return value;
-            }
-
-
            
         }
+        public static void Advanced_Sorcerer_Spells(int type,Enemy enemy, Sorcerer user)
+        {
+            if(type==6)
+            {
+                
+                    Console.Clear();
+                    enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.25;
+                    double shield = user.Score * 0.1;
+                    user.Actual_hp += Convert.ToInt32(shield);
+                    Console.WriteLine("You earned demon armor +" + Convert.ToInt32(shield));
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Clear();
+                    enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.02;
+                    Console.WriteLine("Demon attack: " + enemy.Enemy_Actual_HP * 0.02);
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Clear();
+                
+            }
+            else if(type==7)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("You used Interfectorem draconis");
+                Console.WriteLine("Attack value: " + enemy.Enemy_Actual_HP * 0.15);
+                enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.15;
+                System.Threading.Thread.Sleep(1000);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            
+        }
+        public void AttacksAvailable(Sorcerer user, Enemy enemy, bool Resurection_used)
+        {
+            Console.Clear();
+            Console.WriteLine("Enemy HP: " + enemy.Enemy_Actual_HP);
+            Console.WriteLine("Your HP: " + user.Actual_hp);
+            Console.WriteLine("What are you going to do?");
+            Console.WriteLine("1. Use Confusion");
+            Console.WriteLine("2. Use Fireball");
+            Console.WriteLine("3. Use teleportation");
+            Console.WriteLine("4. Manage equipment");
+            if (user.Score >= 3000 && Resurection_used == false)
+            {
+                Console.WriteLine("5. Resurrection");
+            }
+            if (user.DemonsKilled > 2)
+            {
+                Console.WriteLine("6. Little helper (Summons little demon)");
+            }
+            if (user.Score >= 6000)
+            {
+                Console.WriteLine("7. Interfectorem draconis");
+            }
+
+            Console.Write("Select: ");
+        }
+        public static void FireOnOff (bool firedamageenabled, int counter)
+        {
+            if (firedamageenabled == true)
+            {
+                if (counter > 3)
+                {
+                    counter = 0;
+                    firedamageenabled = false;
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+        }
+        public bool ContinueFight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human, bool firedamageenabled, bool used,out bool Resurection_used,int counter, bool toBreak, out bool sorcererResurection,out bool Exit)
+        {
+            Exit = false;
+            sorcererResurection = false;
+            Resurection_used = used;
+            do
+            {
+                if (sorcerer.Activeskill == true)
+                {
+                    sorcerer.Basic_damage /= 2;
+                }
+                FireOnOff(firedamageenabled, counter);
+                sorcerer.AttacksAvailable(sorcerer,enemy, Resurection_used);
+
+                char choice = Console.ReadKey().KeyChar;
+                double attack_sorc_value;
+                Console.WriteLine();
+
+                switch (choice)
+                {
+                    case '1':
+                        toBreak = true;
+                        attack_sorc_value = Sorcerer.BasicSorcerer_Spells(user.Attack(mythings, user), choice, enemy, sorcerer, mythings, data, firedamageenabled, mermaid, Human, dragon);
+                        enemy.Enemy_Actual_HP -= attack_sorc_value;
+                        System.Threading.Thread.Sleep(5000);
+                        break;
+                    case '2':
+                        toBreak = true;
+                        attack_sorc_value = Sorcerer.BasicSorcerer_Spells(user.Attack(mythings, user), choice, enemy, sorcerer, mythings, data, firedamageenabled, mermaid, Human, dragon);
+                        firedamageenabled = true;
+                        enemy.Enemy_Actual_HP -= attack_sorc_value;
+                        System.Threading.Thread.Sleep(5000);
+                        break;
+                    case '3':
+                        toBreak = true;
+                        Exit = true;
+                        enemy.RestoreHealth(enemy);
+                        user.UpdateHealth(user, data);
+                        Console.WriteLine("HOCUS POCUS!");
+                        System.Threading.Thread.Sleep(3000);
+                        break;
+                    case '4':
+                        user.ViewEquipment(mythings, user, sorcerer, warrior, data, mermaid, dragon, Human, true);
+                        toBreak = false;
+                        break;
+                    case '5':
+                        if (user.Score >= 3000 && Resurection_used == false)
+                        {
+                            sorcererResurection = true;
+                            Resurection_used = true;
+                            toBreak = true;
+                            Console.Clear();
+                            Console.WriteLine("You used resurrection. You are temporary immortal");
+                            System.Threading.Thread.Sleep(1000);
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            toBreak = UnknownOption();
+                            break;
+                        }
+                        break;
+                    case '6':
+                    if (sorcerer.DemonsKilled > 2)
+                        {
+                            toBreak = true;
+                            Advanced_Sorcerer_Spells(6, enemy, sorcerer);
+                        }
+                        else
+                        {
+                            toBreak = UnknownOption();
+                            break;
+                        }
+                        break;
+                    case '7':
+                        if (user.Score >= 6000)
+                        {
+                            toBreak = true;
+                            Advanced_Sorcerer_Spells(7, enemy, sorcerer);
+                        }
+                        else
+                        {
+                            toBreak = UnknownOption();
+                            break;
+                        }
+                        break;
+                    default:
+                        toBreak = UnknownOption();
+                        break;
+                }
+
+            } while (toBreak != true);
+            return true;
+        }
+
     }
 }

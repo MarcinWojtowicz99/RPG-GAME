@@ -102,7 +102,7 @@ namespace RPG_GAME
         {
            if(user.Money_player-value>=0)
             {
-                user.Money_player -= value;
+                user.RemoveMoney(value,user,data);
                 user.UpdateMoney(user, data);
                 AddToEquipment(indexnb, mythings, user,data);
                 shopkeeperCash += value;
@@ -121,7 +121,7 @@ namespace RPG_GAME
         {
             if(shopkeeperCash-value>=0)
             {
-                user.Money_player += value;
+                user.AddMoney(value,user,data);
                 user.UpdateMoney(user, data);
                 user.RemoveFromEquipment(indexEQ, user, data);
                 shopkeeperCash -= value;
@@ -137,6 +137,7 @@ namespace RPG_GAME
         {
             user.Money_player += cash;
             user.UpdateMoney(user, data);
+            data.AutoSaveGame(data);
             return money_player += cash;
         }
         public int RemoveMoney(int cash, Character user, Data data)
@@ -151,7 +152,7 @@ namespace RPG_GAME
                 user.Money_player = 0;
                 user.UpdateMoney(user, data);
             }
-            
+            data.AutoSaveGame(data);
             return money_player -= cash;
         }
         int equip;
@@ -184,32 +185,24 @@ namespace RPG_GAME
         }
         public void Heal(int index, Item mythings, Data data, Character user, Warrior user_warrior)
         {
-           
             user.Actual_hp += mythings.unit[index].damageorhealvalueafteruse;
             if (user.Actual_hp > user.Basic_hp)
             {
                 user.Actual_hp= user.Basic_hp;
-                if(data.Gamedata[1]=="Class Warrior")
+                if(data.Gamedata[1]==Program.Class['w'])
                 {
                     user.Actual_hp = 0;
                     user.Actual_hp = user.Basic_hp;
                     user.Actual_hp = user_warrior.BoostMe();
                 }
-                
-
-
-
             }
-            
-            
         }
         public void ViewEquipment(Item mythings, Character user, Sorcerer user_sorcerer, Warrior user_warrior, Data data, Enemy Mermaid, Enemy Dragon, Enemy Human, bool duringfight)
         {
-        
             do
             {
                 Console.Clear();
-                Console.WriteLine("Type number of equipment to equip or use [If you want to quit, hit ESC] ");
+                Console.WriteLine("Type number of equipment to equip or use *If you want to quit, hit ESC* ");
                 Console.WriteLine("Your equipment: ");
                 for (int i = 0; i < equipment.Length / 2; i++)
                 {
@@ -229,9 +222,6 @@ namespace RPG_GAME
                         Console.WriteLine("{0}. [EMPTY]", i + 1);
                     }
                 }
-               
-
-
                     var key1 = Console.ReadKey();
                     char key = key1.KeyChar;
                     if (key1.Key == ConsoleKey.Escape)
@@ -250,7 +240,7 @@ namespace RPG_GAME
                         }
                         else if (mythings.Type(index, mythings) == "Sword")
                         {
-                            if (data.gamedata[1] != "Class Sorcerer"&&user_warrior.Equip!=index)
+                            if (data.gamedata[1] != Program.Class['s']&&user_warrior.Equip!=index)
                             {
                             user_warrior.Equip_Character(index, mythings, user_warrior, data, user);
                             user.Equipment[nb, 1] -= 1;
@@ -297,16 +287,82 @@ namespace RPG_GAME
         {
             data.gamedata[3] = "Score: "+Convert.ToString(user.Score);
         }
-        public void Fight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
+        public static bool UnknownOption()
+        {
+            Console.WriteLine("Unknown option!");
+            System.Threading.Thread.Sleep(4000);
+            return false;
+        }
+        public void FightWon(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
+        {
+            Console.Clear();
+            Console.WriteLine("You've slain an enemy!");
+            System.Threading.Thread.Sleep(4000);
+            user.score += enemy.Enemyscore;
+            Console.WriteLine("+{0} points", user.Score);
+            enemy.Drop_Item(user, mythings, data);
+            enemy.EnemyKilled += 1;
+            user.UpdateEnemyKilled(enemy, data);
+            enemy.RestoreHealth(enemy);
+            user.UpdateHealth(user, data);
+            user.UpdateScore(user, data);
+            System.Threading.Thread.Sleep(7000);
+            if (user.GameComplete == true)
+            {
+                user.GameComplete = false;
+                Program.ending_screen(user, data, mythings);
+            }
+            Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
+            
+        }
+        public bool GameOverScreen()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("YOU ARE DEAD!");
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("YOUR SCORE WAS: " + score);
+                Console.WriteLine("Press \"r\" to go back to main menu or \"ESC\" to quit");
+                var key = Console.ReadKey();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
+
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    Console.WriteLine("Bye!");
+                    System.Threading.Thread.Sleep(5000);
+                    Environment.Exit(0);//terminate console
+
+                }
+                else if (key.KeyChar == 'r')
+                {
+                    System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);//start new process
+                                                                                                  //Close the current process
+                    Environment.Exit(0);
+                    Data data = null;
+                    Program.OpenMainMenu(data);
+                    return true;
+
+                }
+                else
+                {
+                    Console.Clear();
+                    UnknownOption();
+                }
+            }
+            return true;
+        }
+        public bool Fight(Enemy enemy, Data data, Character user, Item mythings, Sorcerer sorcerer, Warrior warrior, Enemy mermaid, Enemy dragon, Enemy Human)
         {
             Console.Clear();
             data.AutoSaveGame(data);
             Console.WriteLine("Let's start the fight!");
             System.Threading.Thread.Sleep(2000);
             Console.Clear();
-            int strength;
-            double finalattack;
             bool firedamageenabled = false;
+            bool Exit = false;
             bool toBreak = false ;
             int counter = 0;
             bool sorcererResurection = false;
@@ -315,366 +371,49 @@ namespace RPG_GAME
             {
                 if (enemy.Enemy_Actual_HP <= 0)
                 {
-                    Console.Clear();
-                    
-
-                        Console.WriteLine("You've slain an enemy!");
-                    System.Threading.Thread.Sleep(4000);
-                    user.score += enemy.Enemyscore;
-                    Console.WriteLine("+{0} points", user.Score);
-                    enemy.Drop_Item(user, mythings, data);
-                    enemy.EnemyKilled += 1;
-                    user.UpdateEnemyKilled(enemy, data);
-                    enemy.RestoreHealth(enemy);
-                    user.UpdateHealth(user, data);
-                    user.UpdateScore(user, data);
-                    System.Threading.Thread.Sleep(7000);
-                    if (user.GameComplete == true)
-                    {
-                        user.GameComplete = false;
-                        Program.ending_screen(user, data, mythings);
-                    }
-                    Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
-                    if(sorcerer.Activeskill==true)
-                    {
-                        sorcerer.Basic_damage /= 2;
-                    }
-                    break;
-
+                    user.FightWon(enemy,data,user,mythings,sorcerer,warrior,mermaid,dragon,Human);
+                    return true;
                 }
 
                 else
                 {
+                    
                     if (user.Actual_hp > 0 || sorcererResurection == true)
                     {
-                        if(user.Actual_hp<=0)
+                        if (user.Actual_hp <= 0)
                         {
                             user.Actual_hp = Basic_hp;
                             sorcererResurection = false;
                         }
-                        
-                        if (data.gamedata[1] != "Class Sorcerer")
+
+                        if (data.gamedata[1] != Program.Class['s'])
                         {
-                            do
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Enemy HP: " + enemy.Enemy_Actual_HP);
-                                Console.WriteLine("Your HP: " + user.Actual_hp);
-                                Console.WriteLine("What are you going to do?");
-                                Console.WriteLine("1. Use quick attack");
-                                Console.WriteLine("2. Use normal attack");
-                                Console.WriteLine("3. Use powerful attack");
-                                Console.WriteLine("4. Manage Equipment");
-                                Console.Write("Select: ");
-                                char choice = Console.ReadKey().KeyChar;
-
-                                Console.WriteLine();
-                                switch (choice)
-                                {
-                                    case '1':
-                                        strength = 1;
-                                     toBreak = true;
-                                        finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
-                                        enemy.Enemy_Actual_HP -= finalattack;
-                                        if (finalattack != 0)
-                                        {
-                                            if(warrior.Equip!=0)
-                                            {
-                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
-                                            }
-                                            Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack+ mythings.unit[warrior.Equip].damageorhealvalueafteruse);
-                                            System.Threading.Thread.Sleep(2000);
-                                        }
-
-                                        if (warrior.Equip != 0)
-                                        {
-                                            
-                                            warrior.NbOfUseEQ -= 1;
-                                            if (warrior.NbOfUseEQ <= 0)
-                                            {
-                                                Console.WriteLine("You broke your sword!");
-                                                System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior,mythings, data, user);
-                                            }
-                                        }
-                                        break;
-                                    case '2':
-                                        strength = 2;
-                                    toBreak = true;
-                                        finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
-                                        enemy.Enemy_Actual_HP -= finalattack;
-                                        if (finalattack != 0)
-                                        {
-                                            if (warrior.Equip != 0)
-                                            {
-                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
-                                            }
-                                            Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
-                                            System.Threading.Thread.Sleep(2000);
-                                        }
-                                        if (warrior.Equip != 0)
-                                        {
-                                            
-                                            warrior.NbOfUseEQ -= 1;
-                                            if (warrior.NbOfUseEQ <= 0)
-                                            {
-                                                Console.WriteLine("You broke your sword!");
-                                                System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior, mythings, data, user);
-                                            }
-                                        }
-                                        break;
-                                    case '3':
-                                        strength = 3;
-                                      toBreak = true;
-                                        finalattack = Warrior.WarriorAttacks(user.Attack(mythings, user), strength);
-                                        enemy.Enemy_Actual_HP -= finalattack;
-                                        if (finalattack != 0)
-                                        {
-                                            if (warrior.Equip != 0)
-                                            {
-                                                enemy.Enemy_Actual_HP += mythings.unit[warrior.Equip].damageorhealvalueafteruse;
-                                            }
-                                            Console.Clear();
-                                            Console.WriteLine("Your hit value: " + finalattack + mythings.unit[warrior.Equip].damageorhealvalueafteruse);
-                                            System.Threading.Thread.Sleep(2000);
-                                        }
-                                        if (warrior.Equip != 0)
-                                        {
-                                            
-                                            warrior.NbOfUseEQ -= 1;
-                                            if (warrior.NbOfUseEQ <= 0)
-                                            {
-                                                Console.WriteLine("You broke your sword!");
-                                                System.Threading.Thread.Sleep(2000);
-                                                warrior.UnEquip(warrior, mythings, data, user);
-                                            }
-                                            
-                                        }
-
-                                        break;
-                                    case '4':
-                                        user.ViewEquipment(mythings, user, sorcerer, warrior, data, mermaid, dragon, Human, true);
-                                        toBreak = false;
-                                        break;
-
-                                    default:
-                                        toBreak = false;
-                                        Console.WriteLine("Unknown option!");
-                                        System.Threading.Thread.Sleep(4000);
-                                        break;
-                                }
-                            } while (toBreak != true);
+                            warrior.ContinueFight(enemy, data, user, mythings, sorcerer, warrior, mermaid, dragon, Human,toBreak);
+                            enemy.Attack_Character(enemy,user);
                         }
                         else
                         {
-                            do
+                            bool used = Resurection_used;
+                            sorcerer.ContinueFight(enemy, data, user, mythings, sorcerer, warrior, mermaid, dragon, Human, firedamageenabled,used,out Resurection_used,counter, toBreak, out sorcererResurection, out Exit);
+                            if(Exit==true)
                             {
-                                if(firedamageenabled==true)
-                                {
-                                    if(counter>3)
-                                    {
-                                        counter = 0;
-                                        firedamageenabled = false;
-                                    }
-                                    else
-                                    {
-                                        counter++;
-                                    }
-                                }
-                                
-                                Console.Clear();
-                                Console.WriteLine("Enemy HP: " + enemy.Enemy_Actual_HP);
-                                Console.WriteLine("Your HP: " + user.Actual_hp);
-                                Console.WriteLine("What are you going to do?");
-                                Console.WriteLine("1. Use Confusion");
-                                Console.WriteLine("2. Use Fireball");
-                                Console.WriteLine("3. Use teleportation");
-                                Console.WriteLine("4. Manage equipment");
-                                if(user.Score >= 3000 && Resurection_used == false)
-                                {
-                                    Console.WriteLine("5. Resurrection");
-                                }
-                                if(sorcerer.DemonsKilled > 2)
-                                {
-                                    Console.WriteLine("6. Little helper (Summons little demon)");
-                                }
-                                if(user.Score >= 6000)
-                                {
-                                    Console.WriteLine("7. Interfectorem draconis");
-                                }
-                               
-                                Console.Write("Select: ");
-
-                                char choice = Console.ReadKey().KeyChar;
-                                double attack_sorc_value;
-                                Console.WriteLine();
-
-                                switch (choice)
-                                {
-                                    case '1':
-                                        toBreak = true;
-                                        attack_sorc_value = Sorcerer.Sorcerer_Spells(user.Attack(mythings, user), choice, enemy, sorcerer, mythings, data, firedamageenabled, mermaid, Human, dragon);
-                                        enemy.Enemy_Actual_HP -= attack_sorc_value;
-                                        System.Threading.Thread.Sleep(5000);
-                                        break;
-                                    case '2':
-                                        toBreak = true;
-                                        attack_sorc_value = Sorcerer.Sorcerer_Spells(user.Attack(mythings, user), choice, enemy, sorcerer, mythings, data, firedamageenabled, mermaid, Human, dragon);
-                                        firedamageenabled = true;
-                                        enemy.Enemy_Actual_HP -= attack_sorc_value;
-                                        System.Threading.Thread.Sleep(5000);
-                                        break;
-                                    case '3':
-                                        toBreak = true;
-                                        enemy.RestoreHealth(enemy);
-                                        user.UpdateHealth(user, data);
-                                        Console.WriteLine("HOCUS POCUS!");
-                                        System.Threading.Thread.Sleep(3000);
-                                        Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
-                                        break;
-                                    case '4':
-                                        user.ViewEquipment(mythings, user, sorcerer, warrior, data, mermaid, dragon, Human, true);
-                                        toBreak = false;
-                                        break;
-                                    case '5':
-                                        if(user.Score>=3000&& Resurection_used == false)
-                                        {
-                                            sorcererResurection = true;
-                                            Resurection_used = true;
-                                            Console.Clear();
-                                            Console.WriteLine("You used resurrection. You are temporary immortal");
-                                            System.Threading.Thread.Sleep(1000);
-                                            Console.Clear();
-                                        }
-                                        else
-                                        {
-                                            toBreak = false;
-                                            Console.WriteLine("Unknown option!");
-                                            System.Threading.Thread.Sleep(1000);
-                                            break;
-                                        }
-                                        break;
-                                    case '6':
-                                        if(sorcerer.DemonsKilled>2)
-                                        {
-                                            Console.Clear();
-                                            enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.25;
-                                            double shield= user.Score*0.1;
-                                            user.Actual_hp += Convert.ToInt32(shield);
-                                            Console.WriteLine("You earned demon armor +"+ Convert.ToInt32(shield));
-                                            System.Threading.Thread.Sleep(1000);
-                                            Console.Clear();
-                                            enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.02;
-                                            Console.WriteLine("Demon attack: "+ enemy.Enemy_Actual_HP * 0.02);
-                                            System.Threading.Thread.Sleep(1000);
-                                            Console.Clear();
-                                        }
-                                        else
-                                        {
-                                            toBreak = false;
-                                            Console.WriteLine("Unknown option!");
-                                            System.Threading.Thread.Sleep(1000);
-                                            break;
-                                        }
-                                        break;
-                                    case '7':
-                                        if (user.Score >= 6000)
-                                        {
-                                            Console.ForegroundColor = ConsoleColor.Blue;
-                                            Console.WriteLine("You used Interfectorem draconis");
-                                            Console.WriteLine("Attack value: "+ enemy.Enemy_Actual_HP * 0.15);
-                                            enemy.Enemy_Actual_HP -= enemy.Enemy_Actual_HP * 0.15;
-                                            System.Threading.Thread.Sleep(1000);
-                                            Console.Clear();
-                                            Console.ForegroundColor = ConsoleColor.White;
-                                        }
-                                        else
-                                        {
-                                            toBreak = false;
-                                            Console.WriteLine("Unknown option!");
-                                            System.Threading.Thread.Sleep(1000);
-                                            break;
-                                        }
-                                        break;
-                                    default:
-                                        toBreak = false;
-                                        Console.WriteLine("Unknown option!");
-                                        System.Threading.Thread.Sleep(1000);
-                                        break;
-                                }
-                                
-                            } while (toBreak != true);
-
-                        }
-                        if (enemy.Enemy_Actual_HP >= 0)
-                        {
-                            Console.Clear();
-                            Random random = new Random();
-                            int rand = random.Next(100);
-                            double value = 0;
-                            if (rand <= 80)
-                            {
-                                value = enemy.Attack_Character(enemy, user);
+                                Program.DefaultMenu(user, sorcerer, warrior, data, mythings, mermaid, dragon, Human);
+                                return true;
                             }
                             else
                             {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Enemy missed!");
-                                Console.ForegroundColor = ConsoleColor.White;
-
+                                enemy.Attack_Character(enemy, user);
                             }
-                            System.Threading.Thread.Sleep(4000);
+                            
+
                         }
-
-
+                        
                     }
-                        else
-                        {
-                            while (true)
-                            {
-                                Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("YOU ARE DEAD!");
-                                System.Threading.Thread.Sleep(2000);
-                                Console.WriteLine("YOUR SCORE WAS: " + score);
-                                Console.WriteLine("Press \"r\" to go back to main menu or \"ESC\" to quit");
-                                var key = Console.ReadKey();
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine();
-
-                                if (key.Key == ConsoleKey.Escape)
-                                {
-                                    Console.WriteLine("Bye!");
-                                    System.Threading.Thread.Sleep(5000);
-                                    Environment.Exit(0);//terminate console
-                                }
-                                else if (key.KeyChar == 'r')
-                                {
-
-                                System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);//start new process
-
-                                //Close the current process
-                                Environment.Exit(0);
-                                Program.OpenMainMenu(data);
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine("Unknown option!");
-                                    System.Threading.Thread.Sleep(5000);
-                                }
-
-
-
-                            }
-                        }
+                        else   {  user.GameOverScreen(); }
 
                     }
             } while (true);
+          
         }
         int nb;
         public bool FindInEquipment(Item mythings, Character user, string itemname)
@@ -739,10 +478,6 @@ namespace RPG_GAME
             return true;
             }
           
-
-        
-
-
         public void RemoveFromEquipment(int indexEQ,Character user, Data data)
         {
                         user.Equipment[indexEQ, 0] = 0;
@@ -755,32 +490,12 @@ namespace RPG_GAME
             }
         }
 
-
-
         public void Walk(Character user,Data data, Sorcerer sorc, Warrior war, Item mythings,Enemy Mermaid, Enemy Dragon, Enemy Human)
         {
             bool toReturn = true;
             do
             {
-                Console.Clear();
-                if (data.gamedata[1] == "Class Warrior")
-                {
-                    Console.WriteLine("Money: "+war.Money_player);
-                    Console.WriteLine("HP: "+war.Actual_hp);
-                    Console.WriteLine("Score: " + war.Score);
-                }
-                else
-                {
-                    Console.WriteLine("Money: " + sorc.Money_player);
-                    Console.WriteLine("HP: " + sorc.Actual_hp);
-                    Console.WriteLine("Score: " + sorc.Score);
-                }
-                Console.WriteLine("Where would you like to go? (Press [ESC] to go back)");
-                Console.WriteLine("1. Royal tavern" );
-                Console.WriteLine("2. Lake of truth");
-                Console.WriteLine("3. Local shop");
-                Console.WriteLine("4. Queen Ziva");
-                Console.Write("Select: ");
+                Scenario.WhereToGoMenu(user);
                 var a = Console.ReadKey();
                 Console.WriteLine();
                 NPC shopkeeper = new NPC(3, mythings,user);
@@ -793,7 +508,7 @@ namespace RPG_GAME
                 switch (choice)
                 {
                     case '1':
-                        if (data.gamedata[1]=="Class Warrior")
+                        if (data.gamedata[1]==Program.Class['w'])
                         {
                             war.UnEquip(war, mythings, data, user);
                             shopkeeper.GiveBeer_Warrior(user,war,data, mythings,Mermaid, Dragon,Human);
@@ -814,7 +529,7 @@ namespace RPG_GAME
                         shopkeeper.ShowItems(user,sorc,war,mythings,data,Mermaid,Dragon,shopkeeper,Human);
                         break;
                     case '4':
-                        Program.doPlot(data, user, Mermaid,sorc,war,mythings,Mermaid,Dragon,Human);
+                        Program.PlotManager(data, user, Mermaid,sorc,war,mythings,Mermaid,Dragon,Human);
                         break;
                     
                     default:

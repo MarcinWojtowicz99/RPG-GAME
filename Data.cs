@@ -69,7 +69,44 @@ namespace RPG_GAME
                 }
             }
         }
-
+        public static void ToDelete(string[] filePaths)
+        {
+            while (true)
+            {
+                Console.Clear();
+                string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
+                Console.WriteLine("Choose file or files to delete and press ENTER to continue");
+                for (int i = 0; i < filePathsUpdate.Length; i++)
+                {
+                    string[] filePathsToShow = filePaths[i].Split(@"\");
+                    Console.WriteLine("{0}. {1}", i, filePathsToShow[filePathsToShow.Length - 1]);
+                }
+                Console.Write("Select: ");
+                var A = Console.ReadKey();
+                if (A.Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+                int pather = CharUnicodeInfo.GetDecimalDigitValue(A.KeyChar);
+                if (pather <= filePathsUpdate.Length && pather >= 0)
+                {
+                    try
+                    {
+                        File.Delete(filePathsUpdate[pather]);
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        Console.WriteLine("Unknown path!");
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Unknown path!");
+                    Console.ReadKey();
+                }
+            }
+        }
         public void AutoSaveGame(Data data)
         {
             
@@ -101,10 +138,38 @@ namespace RPG_GAME
                         writer.Close();
                         EncryptFile(finalpathforsave, finalpathforsave3);
                         File.Delete(finalpathforsave);
-                      
-                   
-                
             }
+        }
+        public void LoadSave(string pather,string finalpathforsave3)
+        {
+            try
+            {
+                DecryptFile(pather, finalpathforsave3);
+                StreamReader reader = new StreamReader(finalpathforsave3);
+                for (int i = 0; i < Gamedata.Length; i++)
+                {
+
+                    Gamedata[i] = reader.ReadLine();
+
+
+                }
+                reader.Close();
+            }
+            catch (FormatException e)
+            {
+                Exception bex = new Exception("The file is corrupted!", e);
+                throw bex;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Wrong sign");
+                Console.ReadKey();
+                System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);//start new process
+
+                //Close the current process
+                Environment.Exit(0);
+            }
+            File.Delete(finalpathforsave3);
         }
         public void LoadGame(Data data)
         {
@@ -115,42 +180,7 @@ namespace RPG_GAME
                 filePaths = Directory.GetFiles(path + @"\SaveGame", "*.txt");
                 if (filePaths.Length > 10)
                 {
-                    do
-                    {
-
-                        Console.Clear();
-                        string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
-                        Console.WriteLine("Choose file or files to delete and press ENTER to continue");
-                        for (int i = 0; i < filePathsUpdate.Length; i++)
-                        {
-                            string[] filePathsToShow = filePaths[i].Split(@"\");
-                            Console.WriteLine("{0}. {1}", i, filePathsToShow[filePathsToShow.Length - 1]);
-                        }
-                        Console.Write("Select: ");
-                        var A = Console.ReadKey();
-                        if (A.Key == ConsoleKey.Enter)
-                        {
-                            break;
-                        }
-                        int pather = CharUnicodeInfo.GetDecimalDigitValue(A.KeyChar);
-                        if (pather <= filePathsUpdate.Length && pather >= 0)
-                        {
-                            try
-                            {
-                                File.Delete(filePathsUpdate[pather]);
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                Console.WriteLine("Unknown path!");
-                                Console.ReadKey();
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unknown path!");
-                            Console.ReadKey();
-                        }
-                    } while (true);
+                        ToDelete(filePaths);
                 }
                 } while (filePaths.Length > 10);
             Console.Clear();
@@ -163,7 +193,6 @@ namespace RPG_GAME
                             string[] filePathsToShow = filePaths[i].Split(@"\");
                             Console.WriteLine("{0}. {1}", i, filePathsToShow[filePathsToShow.Length - 1]);
                         }
-                        // int pather = Convert.ToInt32(Console.ReadLine());
                         Console.Write("Select: ");
                         char A = Console.ReadKey().KeyChar;
                         int pather = CharUnicodeInfo.GetDecimalDigitValue(A);//convert key character nb to integer value
@@ -171,36 +200,13 @@ namespace RPG_GAME
                         Console.WriteLine();
                         if (pather <= filePaths.Length && pather >= 0)
                         {
-
-
-                            try
-                            {
-                                DecryptFile(filePaths[pather], finalpathforsave3);
-                                StreamReader reader = new StreamReader(finalpathforsave3);
-                                for (int i = 0; i < Gamedata.Length; i++)
-                                {
-
-                                    Gamedata[i] = reader.ReadLine();
-
-
-                                }
-                                reader.Close();
-                            }
-                            catch (FormatException e)
-                            {
-                                Exception bex = new Exception("The file is corrupted!", e);
-                                throw bex;
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                Console.WriteLine("Wrong sign");
-                                Console.ReadKey();
-                                System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);//start new process
-
-                                //Close the current process
-                                Environment.Exit(0);
-                            }
-                            File.Delete(finalpathforsave3);
+                    try { data.LoadSave(filePaths[pather], finalpathforsave3); }
+                    catch(IndexOutOfRangeException)
+                    {
+                        Console.WriteLine("Unknown path!");
+                    }
+                    
+                            
                         }
                         else
                         {
@@ -217,34 +223,8 @@ namespace RPG_GAME
                     else if (filePaths.Length == 1)
                     {
                         string finalpathforsave3 = path + "NEW.txt";
-                        DecryptFile(filePaths[0], finalpathforsave3);
-                        try
-                        {
-                            StreamReader reader = new StreamReader(finalpathforsave3);
-                            for (int i = 0; i < Gamedata.Length; i++)
-                            {
-
-                                if (reader.ReadLine() != null)
-                                {
-                                    Gamedata[i] = reader.ReadLine();
-                                }
-                                else
-                                {
-                                    break;
-                                }
-
-                            }
-                            reader.Close();
-                            File.Delete(finalpathforsave3);
-                        }
-                        catch (FormatException e)
-                        {
-                            Exception bex = new Exception("The file is corrupted!", e);
-                            throw bex;
-                        }
-
-
-                    }
+                data.LoadSave(filePaths[0], finalpathforsave3);
+            }
                     else
                     {
                         Console.WriteLine("You have no savefile :c");
@@ -255,10 +235,6 @@ namespace RPG_GAME
                         //Close the current process
                         Environment.Exit(0);
                     }
-
-                
-
-            
         }
         public void SaveGame(Data data)
         {
@@ -287,19 +263,10 @@ namespace RPG_GAME
                 for (int i = 0; i < Gamedata.Length; i++)
                 {
 
-                    if (Gamedata[i] != null)
-                    {
-                        writer.WriteLine(Gamedata[i]);
-
-                    }
-                    else
-                    {
-
-                        break;
-                    }
-
-
-
+                    if (Gamedata[i] != null) writer.WriteLine(Gamedata[i]);
+                    
+                    else break;
+                    
                 }
 
                 writer.Close();
@@ -308,47 +275,10 @@ namespace RPG_GAME
                     break;
             }
 
-            else
-            {
+            else ToDelete(filePaths);
+                    
 
-
-                do
-                {
-                    Console.Clear();
-                    string[] filePathsUpdate = Directory.GetFiles(path + @"\SaveGame", "*.txt");
-                    Console.WriteLine("Choose file or files to delete and press ENTER to continue");
-                    for (int i = 0; i < filePathsUpdate.Length; i++)
-                    {
-                        string[] filePathsToShow = filePaths[i].Split(@"\");
-                        Console.WriteLine("{0}. {1}", i, filePathsToShow[filePathsToShow.Length - 1]);
-                    }
-                    Console.Write("Select: ");
-                    var A = Console.ReadKey();
-                    if (A.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                    int pather = CharUnicodeInfo.GetDecimalDigitValue(A.KeyChar);
-                    if (pather <= filePathsUpdate.Length && pather >= 0)
-                    {
-                        try
-                        {
-                            File.Delete(filePathsUpdate[pather]);
-                        }
-                        catch (IndexOutOfRangeException)
-                        {
-                            Console.WriteLine("Unknown path!");
-                            Console.ReadKey();
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unknown path!");
-                        Console.ReadKey();
-                    }
-                } while (true);
-
-            }
+                
         } while (true);
 
         }
@@ -356,7 +286,6 @@ namespace RPG_GAME
         {
             Gamedata = new String[nbofdata];
             gamedata = Gamedata;
-
         }
         
         public void ReadData(Data data, Character user, Warrior warrior, Item mythings, Sorcerer user_Sorcerer, Enemy dragon, Enemy human, Enemy mermaid)
@@ -369,8 +298,6 @@ namespace RPG_GAME
                     reader = data.gamedata[i].Split(' ');
                     datas[i] = reader[1];
             }
-            
-
             user.Money_player = Convert.ToInt32(datas[2]);
             user.Score=Convert.ToInt32(datas[3]);
             user.Actual_hp = Convert.ToInt32(datas[4]);
@@ -388,7 +315,7 @@ namespace RPG_GAME
             {
                 warrior.Equip_Character(Convert.ToInt32(datas[6]),mythings,warrior,data, user);
             }
-                if(warrior.name== "NAN")
+                if(warrior== null)
             {
                 user_Sorcerer.DemonsKilled=Convert.ToInt32(datas[10]);
             }

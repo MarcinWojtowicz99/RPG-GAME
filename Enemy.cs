@@ -60,14 +60,31 @@ namespace RPG_GAME
         }
         public int Attack_Character(Enemy enemy, Character user)
         {
-            Random rnd = new Random();
-            int random = rnd.Next(enemy.Nb_Of_EnemyAttacks);
-            int value = enemy.attack[random].attackvalue;
-            user.Actual_hp -= value;
-            Console.WriteLine("{0}...used {1} and you lost {2}hp",enemy.name, enemy.attack[random].name, enemy.attack[random].attackvalue);
-            Console.WriteLine(enemy.attack[random].specialinfo);
-            return value;
+            Console.Clear();
+            Random random = new Random();
+                            int rand = random.Next(100);
+                            double value = 0;
+                            if (rand <= 80)
+                            {
+                Random rnd = new Random();
+                int random2 = rnd.Next(enemy.Nb_Of_EnemyAttacks);
+                value = enemy.attack[random2].attackvalue;
+                user.Actual_hp -= Convert.ToInt32(value);
+                Console.WriteLine("{0}...used {1} and you lost {2}hp", enemy.name, enemy.attack[random2].name, enemy.attack[random2].attackvalue);
+                Console.WriteLine(enemy.attack[random2].specialinfo);
+                System.Threading.Thread.Sleep(4000);
+                return user.Actual_hp;
+            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Enemy missed!");
+                                Console.ForegroundColor = ConsoleColor.White;
+                System.Threading.Thread.Sleep(4000);
+                return 0;
 
+            }
+                           
         }
         public void Drop_Item(Character user, Item mythings, Data data)
         {
@@ -80,6 +97,33 @@ namespace RPG_GAME
             }
 
         }
+        public static void DragonDeath()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Dragon: AAAAAAAAAAAAAAAAAAARRRRRGH!");
+            System.Threading.Thread.Sleep(1400);
+            Console.BackgroundColor = ConsoleColor.White;
+            for (int i = 0; i < 100; i++)
+                Console.WriteLine();
+            System.Threading.Thread.Sleep(400);
+            Console.BackgroundColor = ConsoleColor.Red;
+            for (int i = 0; i < 100; i++)
+                Console.WriteLine();
+            System.Threading.Thread.Sleep(400);
+            Console.BackgroundColor = ConsoleColor.White;
+            for (int i = 0; i < 100; i++)
+                Console.WriteLine();
+            System.Threading.Thread.Sleep(400);
+            Console.BackgroundColor = ConsoleColor.Red;
+            for (int i = 0; i < 100; i++)
+                Console.WriteLine();
+            System.Threading.Thread.Sleep(400);
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Clear();
+            System.Threading.Thread.Sleep(4000);
+            Console.ForegroundColor = ConsoleColor.Blue;
+        }
+       
 
     }
 }

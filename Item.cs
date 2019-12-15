@@ -84,8 +84,10 @@ namespace RPG_GAME
             if(nb== "Rubber Duck")
             {
                 Console.WriteLine("QUACK!");
+                System.Threading.Thread.Sleep(2000);
             }
            
+
         }
 
     }
